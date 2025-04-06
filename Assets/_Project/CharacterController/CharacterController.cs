@@ -44,7 +44,7 @@ public class CharacterController : MonoBehaviour
             .SetNext(new LandingVelocityDampingApplicator())
             .SetNext(new VelocityApplicator())
             .SetNext(new GapPositionCorrector())
-            .SetNext(new ManageAttack())
+            //.SetNext(new ManageAttack())
             ;
     }
 

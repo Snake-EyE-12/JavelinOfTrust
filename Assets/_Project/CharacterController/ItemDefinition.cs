@@ -66,9 +66,10 @@ public abstract class JavelinItemDefinition : ItemDefinition
 
     private ProjectileVelocityData CalculateVelocity(Vector2 direction, float power, Vector2 inheritedVel)
     {
+        return null;
         Vector2 vel = direction.normalized * power;
         vel += inheritedVel * inheritedVelocityPercent;
-        return vel;
+        //return vel;
     }
     
     private void ThrowProjectile(ProjectileVelocityData velocityData, Transform parent)
