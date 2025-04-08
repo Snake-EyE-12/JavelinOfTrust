@@ -4171,6 +4171,7 @@ MonoBehaviour:
     minimumStopXVelocity: 0.1
     maxWalkSpeed: 10
     walkXAccelerationMultiplier: 1
+    facingDirection: 1
     apexYVelocityThreshold: 10
     apexBonusXAcceleration: 10
     apexAntiGravityMultiplier: 0.5
@@ -4200,7 +4201,7 @@ MonoBehaviour:
         outWeight: 0.11422845
       - serializedVersion: 3
         time: 1
-        value: 1
+        value: 1.05
         inSlope: 0.019878622
         outSlope: 0.019878622
         tangentMode: 0
@@ -4246,7 +4247,6 @@ MonoBehaviour:
     transform: {fileID: 1414430839}
     rigidBody: {fileID: 1414430841}
     inputSystem: {fileID: 1358916355}
-    projectilePrefab: {fileID: 3068710766226581325, guid: 970c7ba2527038a4eb54272ba3ba45eb, type: 3}
 --- !u!1 &1526133186
 GameObject:
   m_ObjectHideFlags: 0

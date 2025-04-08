@@ -52,10 +52,7 @@ public class CharacterController : MonoBehaviour
     private void Awake()
     {
         BuildProcess();
-        data.inventory.Acquire(javelin);
     }
-
-    [SerializeField] private JavelinItemDefinition javelin;
     [SerializeField] private CharacterData data;
     private void Update()
     {

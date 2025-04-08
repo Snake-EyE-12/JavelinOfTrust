@@ -4,50 +4,29 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
 
-    [SerializeField] private ProjectileData data;
-    
+    private float timeOfThrow;
+    private Vector2 throwVelocity;
+    private Vector2 inheritedVelocity;
+    [SerializeField] private Rigidbody2D rigidBody;
+    [SerializeField] private float inheritedVelocityPercent;
+    [SerializeField] private float inheritedVelocityFallOffTime;
 
-    public void Initialize(ProjectileVelocityData initialVel)
+
+    public void Launch(Vector2 ownerVelocity, Vector2 direction, float power)
     {
-        //body.linearVelocity = initialVel;
+        timeOfThrow = Time.time;
+        throwVelocity = direction * power;
+        inheritedVelocity = ownerVelocity;
     }
-    // Starting Velocity
-    // Additional Velocity due to Thrower
-    // Fall off (Thrower Velocity)
-    // Time of Fall Off
-    // Maximum Speed
-    // Maximum Distance
-    // 
-}
 
-public abstract class ProjectileProcessor : BaseProcessor<ProjectileData>
-{
-    
-}
-
-public class InitialVelocitySetter : ProjectileProcessor
-{
-    public override void Process(ProjectileData data)
+    private void Update()
     {
-        
-        base.Process(data);
+        float percent = Mathf.Clamp01(Time.time - timeOfThrow / inheritedVelocityFallOffTime);
+        ApplyVelocity((1 - Mathf.Clamp01(percent)) * inheritedVelocityPercent);
     }
-}
-public class LinearVelocityApplicator : ProjectileProcessor
-{
-    public override void Process(ProjectileData data)
-    {
-        data.rigidBody.linearVelocity = data.velocity;
-        
-        base.Process(data);
-    }
-}
 
-[Serializable]
-public class ProjectileData
-{
-    public Rigidbody2D rigidBody;
-    [HideInInspector] public Vector2 velocity;
-    [HideInInspector] public Vector2 throwVelocity;
-    [HideInInspector] public Vector2 inheritedVelocity;
+    private void ApplyVelocity(float percentInherited)
+    {
+        rigidBody.linearVelocity = inheritedVelocity * percentInherited + throwVelocity;
+    }
 }

@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Inventory/Item", fileName = "Item", order = 0)]
 public abstract class ItemDefinition : ScriptableObject
 {
     public abstract void StartUse(ItemUseData data);
@@ -27,13 +26,10 @@ public abstract class RockItemDefinition : ItemDefinition
 [CreateAssetMenu(menuName = "Inventory/Item", fileName = "Javelin", order = 0)]
 public abstract class JavelinItemDefinition : ItemDefinition
 {
-    [SerializeField] private Projectile projectile;
     [SerializeField] private float timeBeforeUse;
     [SerializeField] private float halfPower;
     [SerializeField] private float fullPowerChargeTime;
     [SerializeField] private float fullPower;
-    [SerializeField, Range(0,1)] private float inheritedVelocityPercent;
-    [SerializeField] private float inheritedVelocityFalloffTime;
 
     private float timeOfStartUse;
 
@@ -54,33 +50,19 @@ public abstract class JavelinItemDefinition : ItemDefinition
         if (heldDuration < fullPowerChargeTime)
         {
             //Throw at low power
-            ThrowProjectile(CalculateVelocity(data.useDirection, halfPower, data.ownerVelocity), data.owner);
+            //ThrowProjectile(CalculateVelocity(data.useDirection, halfPower, data.ownerVelocity), data.owner);
             return;
         }
         
-        ThrowProjectile(CalculateVelocity(data.useDirection, fullPower, data.ownerVelocity), data.owner);
+        //ThrowProjectile(CalculateVelocity(data.useDirection, fullPower, data.ownerVelocity), data.owner);
         
         //Throw at full power
 
     }
-
-    private ProjectileVelocityData CalculateVelocity(Vector2 direction, float power, Vector2 inheritedVel)
-    {
-        return null;
-        Vector2 vel = direction.normalized * power;
-        vel += inheritedVel * inheritedVelocityPercent;
-        //return vel;
-    }
-    
-    private void ThrowProjectile(ProjectileVelocityData velocityData, Transform parent)
-    {
-        Instantiate(projectile, parent).Initialize(velocityData);
-    }
-}
-
-public class ProjectileVelocityData
-{
-    
+    // private void ThrowProjectile(ProjectileVelocityData velocityData, Transform parent)
+    // {
+    //     //Instantiate(projectile, parent).Initialize(velocityData);
+    // }
 }
 
 public class ItemUseData

@@ -436,27 +436,34 @@ public class LandingVelocityDampingApplicator : CharacterProcessor
         base.Process(data);
     }
 }
-
-public class ManageAttack : CharacterProcessor
-{
-    public override void Process(CharacterData data)
-    {
-        if (data.input.attackStarted)
-        {
-            Vector2 useDirection = data.input.direction;
-            if (useDirection == Vector2.zero) useDirection.x = data.facingDirection;
-            data.inventory.GetSelectedItem().StartUse(new ItemUseData(data.transform, useDirection, data.velocity));
-        }
-        if(data.input.attackEnded) data.inventory.GetSelectedItem().EndUse(null);
-        
-        base.Process(data);
-    }
-}
+//
+// public class ReadAttackStart : CharacterProcessor
+// {
+//     public override void Process(CharacterData data)
+//     {
+//         //if(data.input.)
+//     }
+// }
+// public class ManageAttack : CharacterProcessor
+// {
+//     public override void Process(CharacterData data)
+//     {
+//         if (data.input.attackStarted)
+//         {
+//             Vector2 useDirection = data.input.direction;
+//             if (useDirection == Vector2.zero) useDirection.x = data.facingDirection;
+//             data.inventory.GetSelectedItem().StartUse(new ItemUseData(data.transform, useDirection, data.velocity));
+//         }
+//         if(data.input.attackEnded) data.inventory.GetSelectedItem().EndUse(null);
+//         
+//         base.Process(data);
+//     }
+// }
 
 [Serializable]
 public class CharacterData
 {
-    public Inventory inventory = new Inventory();
+    //public Inventory inventory = new Inventory();
     public CharacterFrameInput input;
     [HideInInspector] public Vector2 acceleration;
     [HideInInspector] public Vector2 velocity;
@@ -514,6 +521,7 @@ public class CharacterData
     //                                                                                                  Horizontal Speed => Jump Height Boost
     //                                                                                                  Jump Velocity Addition
     //Jump Buffer Still Holding Jump
+    //Have specific jump fall speed only while in jump and above jump start y
     
     // slopes
     // momentum
