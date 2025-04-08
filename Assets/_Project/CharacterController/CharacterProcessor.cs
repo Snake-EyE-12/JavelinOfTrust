@@ -261,6 +261,7 @@ public class AttemptJumpApplicator : CharacterProcessor
         if (data.canJump && !data.inJump)
         {
             data.inJump = true;
+            data.startingJumpPoint = data.transform.position;
             data.acceleration.y = 0;
             data.velocity.y = data.jumpForce * data.runningStartBonus.Evaluate(Mathf.Abs(data.velocity.x));
             data.timeOfJumpStart = Time.time;
@@ -436,34 +437,20 @@ public class LandingVelocityDampingApplicator : CharacterProcessor
         base.Process(data);
     }
 }
-//
-// public class ReadAttackStart : CharacterProcessor
-// {
-//     public override void Process(CharacterData data)
-//     {
-//         //if(data.input.)
-//     }
-// }
-// public class ManageAttack : CharacterProcessor
-// {
-//     public override void Process(CharacterData data)
-//     {
-//         if (data.input.attackStarted)
-//         {
-//             Vector2 useDirection = data.input.direction;
-//             if (useDirection == Vector2.zero) useDirection.x = data.facingDirection;
-//             data.inventory.GetSelectedItem().StartUse(new ItemUseData(data.transform, useDirection, data.velocity));
-//         }
-//         if(data.input.attackEnded) data.inventory.GetSelectedItem().EndUse(null);
-//         
-//         base.Process(data);
-//     }
-// }
+
+public class CalculateWithinJumpArc : CharacterProcessor
+{
+    public override void Process(CharacterData data)
+    {
+        data.inJumpArc = data.inJump && data.transform.position.y > data.startingJumpPoint.y;
+        
+        base.Process(data);
+    }
+}
 
 [Serializable]
 public class CharacterData
 {
-    //public Inventory inventory = new Inventory();
     public CharacterFrameInput input;
     [HideInInspector] public Vector2 acceleration;
     [HideInInspector] public Vector2 velocity;
@@ -501,6 +488,8 @@ public class CharacterData
     public AnimationCurve runningStartBonus;
     [Min(0)] public float landingAccelerationFrictionMultiplier;
     [Min(0)] public float landingVelocityDampingMultiplier;
+    [HideInInspector] public Vector3 startingJumpPoint;
+    [HideInInspector] public bool inJumpArc;
     
     #region Comments
     //                                                                                                  Calculate in Apex
@@ -533,8 +522,7 @@ public class CharacterData
     // drawing jump
     // 
     #endregion
-
-
+    
     [Header("Corrections")]
     public CharacterCorrectionRay missedLeftJump;
     public CharacterCorrectionRay missedRightJump;
