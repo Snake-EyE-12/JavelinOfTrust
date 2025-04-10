@@ -1,18 +1,18 @@
 using System;
 using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
-
     private CharacterProcessor chain;
 
     private void BuildProcess()
     {
 
         chain = new InputReceiver();
-        chain.SetNext(new GroundCollisionDetection())
+        chain.SetNext(new GroundCollisionDetection()) 
             .SetNext(new HeadCollisionAvoidance())
             .SetNext(new RoofCollisionDetection())
             .SetNext(new WallCollisionDetection())
@@ -45,6 +45,8 @@ public class CharacterController : MonoBehaviour
             .SetNext(new LandingVelocityDampingApplicator())
             .SetNext(new VelocityApplicator())
             .SetNext(new GapPositionCorrector())
+            .SetNext(new BeginChargedAttack())
+            .SetNext(new Attack())
             ;
     }
 
@@ -74,15 +76,15 @@ public class CharacterController : MonoBehaviour
         Gizmos.DrawWireCube(transform.position + data.roofCheckBounds.center, data.roofCheckBounds.size);
         
         Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position + (Vector3)data.missedLeftJump.origin + (Vector3)data.missedLeftJump.correction, data.missedLeftJump.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.missedRightJump.origin + (Vector3)data.missedRightJump.correction, data.missedRightJump.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.leftHeadAvoidance.origin + (Vector3)data.leftHeadAvoidance.correction, data.leftHeadAvoidance.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.rightHeadAvoidance.origin + (Vector3)data.rightHeadAvoidance.correction, data.rightHeadAvoidance.direction);
+        Gizmos.color = Color.cyan;
         Gizmos.DrawRay(transform.position + (Vector3)data.missedLeftJump.origin, data.missedLeftJump.direction);
         Gizmos.DrawRay(transform.position + (Vector3)data.missedRightJump.origin, data.missedRightJump.direction);
         Gizmos.DrawRay(transform.position + (Vector3)data.leftHeadAvoidance.origin, data.leftHeadAvoidance.direction);
         Gizmos.DrawRay(transform.position + (Vector3)data.rightHeadAvoidance.origin, data.rightHeadAvoidance.direction);
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawRay(transform.position + (Vector3)data.missedLeftJump.origin - (Vector3)data.missedLeftJump.correction, data.missedLeftJump.direction);
-        Gizmos.DrawRay(transform.position + (Vector3)data.missedRightJump.origin - (Vector3)data.missedRightJump.correction, data.missedRightJump.direction);
-        Gizmos.DrawRay(transform.position + (Vector3)data.leftHeadAvoidance.origin - (Vector3)data.leftHeadAvoidance.correction, data.leftHeadAvoidance.direction);
-        Gizmos.DrawRay(transform.position + (Vector3)data.rightHeadAvoidance.origin - (Vector3)data.rightHeadAvoidance.correction, data.rightHeadAvoidance.direction);
         //
         Gizmos.color = Color.red;
         Vector3 jumpCenter = data.inJumpArc ? data.startingJumpPoint + data.groundCheckBounds.center : transform.position + data.groundCheckBounds.center;

@@ -20,25 +20,37 @@ public class CharacterInput : MonoBehaviour
     public void OnAttackKeyEvaluated(InputAction.CallbackContext context)
     {
         if (context.performed) frameInput.attackStarted = true;
-        if(context.canceled) frameInput.attackEnded = true;
+        if (context.canceled) frameInput.attackEnded = true;
     }
 
     public void OnDashKeyEvaluated(InputAction.CallbackContext context)
     {
         if (context.performed) frameInput.dashStarted = true;
-        if(context.canceled) frameInput.dashEnded = true;
+        if (context.canceled) frameInput.dashEnded = true;
     }
     
     public void OnSprintKeyEvaluated(InputAction.CallbackContext context)
     {
         if (context.performed) frameInput.sprintStarted = true;
-        if(context.canceled) frameInput.sprintEnded = true;
+        if (context.canceled) frameInput.sprintEnded = true;
     }
     
     public void OnInteractKeyEvaluated(InputAction.CallbackContext context)
     {
         if (context.performed) frameInput.interactStarted = true;
-        if(context.canceled) frameInput.interactEnded = true;
+        if (context.canceled) frameInput.interactEnded = true;
+    }
+
+    public void OnCrouchKeyEvaluated(InputAction.CallbackContext context)
+    {
+        if (context.performed) frameInput.sprintStarted = true;
+        if (context.canceled) frameInput.sprintEnded = true;
+    }
+    
+    public void OnGripKeyEvaluated(InputAction.CallbackContext context)
+    {
+        if (context.performed) frameInput.gripStarted = true;
+        if (context.canceled) frameInput.gripEnded = true;
     }
 
     private void LateUpdate()
@@ -53,6 +65,8 @@ public class CharacterInput : MonoBehaviour
         frameInput.sprintEnded = false;
         frameInput.interactStarted = false;
         frameInput.interactEnded = false;
+        frameInput.crouchStarted = false;
+        frameInput.crouchEnded = false;
     }
 
     public CharacterFrameInput GetFrameInput()
@@ -70,10 +84,12 @@ public struct CharacterFrameInput
     public bool dashEnded;
     public bool attackStarted;
     public bool attackEnded;
-    public bool climbStarted;
-    public bool climbEnded;
+    public bool gripStarted;
+    public bool gripEnded;
     public bool interactStarted;
     public bool interactEnded;
     public bool sprintStarted;
     public bool sprintEnded;
+    public bool crouchStarted;
+    public bool crouchEnded;
 }

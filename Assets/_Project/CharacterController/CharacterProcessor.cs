@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 public abstract class CharacterProcessor : BaseProcessor<CharacterData>
 {
@@ -21,7 +20,7 @@ public class VelocityApplicator : CharacterProcessor
     public override void Process(CharacterData data)
     {
         data.rigidBody.linearVelocity = data.velocity;
-        if (data.velocity.x != 0) data.facingDirection = (int)data.velocity.x;
+        data.facingDirection = (int)Mathf.Sign(data.velocity.x);
         
         base.Process(data);
     }
@@ -40,7 +39,6 @@ public class WalkAcceleration : CharacterProcessor
         }
 
         data.walkXAccelerationMultiplier = 1;
-        
         base.Process(data);
     }
 }
@@ -176,11 +174,23 @@ public class FallSpeedClamper : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        if (data.velocity.y < -data.maxFallSpeed) data.velocity.y = -data.maxFallSpeed;
+        float maxFallSpeed = data.maxFallSpeed;
+        if (data.inJumpArc) maxFallSpeed = data.maxInJumpFallSpeed;
+        if (data.velocity.y < -maxFallSpeed) data.velocity.y = -maxFallSpeed;
         
         base.Process(data);
     }
 }
+//
+// public class CalculateWalkState : CharacterProcessor
+// {
+//     public override void Process(CharacterData data)
+//     {
+//         
+//         
+//         base.Process(data);
+//     }
+// }
 
 public class WalkSpeedClamper : CharacterProcessor
 {
@@ -355,7 +365,7 @@ public class RoofCollisionDetection : CharacterProcessor
     public override void Process(CharacterData data)
     {
         data.roofContact.Update(
-            Physics2D.OverlapBoxAll(data.transform.position + data.roofCheckBounds.center, data.roofCheckBounds.size, 0f, data.groundLayerMask).Length > 0
+            Physics2D.OverlapBoxAll(data.transform.position + data.roofCheckBounds.center, data.roofCheckBounds.size, 0f, data.roofLayerMask).Length > 0
         );
         
         base.Process(data);
@@ -369,11 +379,13 @@ public class GapPositionCorrector : CharacterProcessor
         int movementDirection = MathUtils.Sign(data.input.direction.x);
         if (data.velocity.y < 0 && !data.groundContact.Contact)
         {
-            if (movementDirection == -1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedLeftJump.origin, data.missedLeftJump.direction, data.missedLeftJump.direction.magnitude, data.groundLayerMask).Length > 0)
+            if (movementDirection == -1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedLeftJump.origin, data.missedLeftJump.direction, data.missedLeftJump.direction.magnitude, data.groundLayerMask).Length > 0 &&
+                Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedLeftJump.origin + (Vector3)data.missedLeftJump.correction, data.missedLeftJump.direction, data.missedLeftJump.direction.magnitude, data.groundLayerMask).Length == 0)
             {
                 data.transform.position += (Vector3)data.missedLeftJump.correction;
             }
-            else if (movementDirection == 1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedRightJump.origin, data.missedRightJump.direction, data.missedRightJump.direction.magnitude, data.groundLayerMask).Length > 0)
+            else if (movementDirection == 1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedRightJump.origin, data.missedRightJump.direction, data.missedRightJump.direction.magnitude, data.groundLayerMask).Length > 0 &&
+                     Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedRightJump.origin + (Vector3)data.missedRightJump.correction, data.missedRightJump.direction, data.missedRightJump.direction.magnitude, data.groundLayerMask).Length == 0)
             {
                 data.transform.position += (Vector3)data.missedRightJump.correction;
             }
@@ -391,13 +403,13 @@ public class HeadCollisionAvoidance : CharacterProcessor
         int movementDirection = MathUtils.Sign(data.input.direction.x);
         if (data.inJump && !data.earlyReleased)
         {
-            if (movementDirection != -1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.leftHeadAvoidance.origin, data.leftHeadAvoidance.direction, data.leftHeadAvoidance.direction.magnitude).Length == 0 &&
-                Physics2D.RaycastAll(data.transform.position + (Vector3)(data.leftHeadAvoidance.origin - data.leftHeadAvoidance.correction), data.leftHeadAvoidance.direction, data.leftHeadAvoidance.direction.magnitude).Length > 0)
+            if (movementDirection != -1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.leftHeadAvoidance.origin, data.leftHeadAvoidance.direction, data.leftHeadAvoidance.direction.magnitude).Length > 0 &&
+                Physics2D.RaycastAll(data.transform.position + (Vector3)(data.leftHeadAvoidance.origin + data.leftHeadAvoidance.correction), data.leftHeadAvoidance.direction, data.leftHeadAvoidance.direction.magnitude).Length == 0)
             {
                 data.transform.position += (Vector3)data.leftHeadAvoidance.correction;
             }
-            else if (movementDirection != 1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.rightHeadAvoidance.origin, data.rightHeadAvoidance.direction, data.rightHeadAvoidance.direction.magnitude).Length == 0 &&
-                     Physics2D.RaycastAll(data.transform.position + (Vector3)(data.rightHeadAvoidance.origin - data.rightHeadAvoidance.correction), data.rightHeadAvoidance.direction, data.rightHeadAvoidance.direction.magnitude).Length > 0)
+            else if (movementDirection != 1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.rightHeadAvoidance.origin, data.rightHeadAvoidance.direction, data.rightHeadAvoidance.direction.magnitude).Length > 0 &&
+                     Physics2D.RaycastAll(data.transform.position + (Vector3)(data.rightHeadAvoidance.origin + data.rightHeadAvoidance.correction), data.rightHeadAvoidance.direction, data.rightHeadAvoidance.direction.magnitude).Length == 0)
             {
                 data.transform.position += (Vector3)data.rightHeadAvoidance.correction;
             }
@@ -448,103 +460,32 @@ public class CalculateWithinJumpArc : CharacterProcessor
     }
 }
 
-[Serializable]
-public class CharacterData
+public class BeginChargedAttack : CharacterProcessor
 {
-    public CharacterFrameInput input;
-    [HideInInspector] public Vector2 acceleration;
-    [HideInInspector] public Vector2 velocity;
-    
-    [Header("Fall")]
-    public Vector2 gravity;
-    [HideInInspector] public Vector2 gravityMultiplier;
-    [Min(0)] public float maxFallSpeed;
-    
-    [Header("Walk")]
-    [Min(0)] public float walkAcceleration;
-    [Min(0)] public float walkDeceleration;
-    [Range(0, 1)] public float stoppingDamping;
-    [Min(0)] public float minimumStopXVelocity;
-    [Min(0)] public float maxWalkSpeed;
-    [HideInInspector] public float walkXAccelerationMultiplier;
-    [HideInInspector] public int facingDirection = 1;
+    public override void Process(CharacterData data)
+    {
+        if (data.input.attackStarted && data.inventory.IsHoldingObject())
+        {
+            data.timeOfAttackStart = Time.time;
+        }
+        
+        base.Process(data);
+    }
+}
 
-    [Header("Jump")]
-    [Min(0)] public float apexYVelocityThreshold;
-    [Min(0)] public float apexBonusXAcceleration;
-    [Min(0)] public float apexAntiGravityMultiplier;
-    [Min(0)] public float earlyReleaseGravityMultiplier;
-    [HideInInspector] public bool inApex;
-    [Min(0)] public float jumpForce;
-    [HideInInspector] public bool inJump;
-    [HideInInspector] public bool canJump;
-    [HideInInspector] public float timeOfJumpPress;
-    [Min(0)] public float jumpBufferTime;
-    [HideInInspector] public float timeOfJumpStart;
-    [Min(0)] public float jumpCoyoteTime;
-    [Min(0)] public float jumpDescendAcceleration;
-    [HideInInspector] public bool earlyReleased;
-    [Min(0)] public float airControlXAccelerationMultiplier;
-    public AnimationCurve runningStartBonus;
-    [Min(0)] public float landingAccelerationFrictionMultiplier;
-    [Min(0)] public float landingVelocityDampingMultiplier;
-    [HideInInspector] public Vector3 startingJumpPoint;
-    [HideInInspector] public bool inJumpArc;
-    
-    #region Comments
-    //                                                                                                  Calculate in Apex
-    //                                                                                                  Apply Bonus Apex Velocity
-    //                                                                                                  Apply Less Gravity in Apex
-    //                                                                                                  Apply More Gravity on Descend
-    //                                                                                                  Apply More Gravity on Early Release
-    //                                                                                                  Immediate Descend on Release
-    //                                                                                                  Roof Hitter Velocity Stop
-    //                                                                                                  Buffer Jump
-    //                                                                                                  Increase Friction on Land Backwards Pressed (Sticky Feet)
-    //                                                                                                  Air Speed Control
-    //                                                                                                  Coyote Time
-    //                                                                                                  Clamp Fall Speed
-    //                                                                                                  Missed Jump Correction (Upwards Margin)
-    //                                                                                                  Head Collision Avoidance
-    //Upwards Feet Clip Ground Avoidance
-    //                                                                                                  Horizontal Speed => Jump Height Boost
-    //                                                                                                  Jump Velocity Addition
-    //Jump Buffer Still Holding Jump
-    //Have specific jump fall speed only while in jump and above jump start y
-    
-    // slopes
-    // momentum
-    // wall jump
-    // multiple jumps
-    // fall damage
-    // minimum jump height
-    // 
-    // drawing jump
-    // 
-    #endregion
-    
-    [Header("Corrections")]
-    public CharacterCorrectionRay missedLeftJump;
-    public CharacterCorrectionRay missedRightJump;
-    public CharacterCorrectionRay leftHeadAvoidance;
-    public CharacterCorrectionRay rightHeadAvoidance;
-    
-    [Header("Collisions")]
-    public Bounds groundCheckBounds;
-    public LayerMask groundLayerMask;
-    public Bounds leftWallBounds;
-    public Bounds rightWallBounds;
-    public Bounds roofCheckBounds;
-    
-    public CharacterContact groundContact = new CharacterContact();
-    public CharacterContact leftWallContact = new CharacterContact();
-    public CharacterContact rightWallContact = new CharacterContact();
-    public CharacterContact roofContact = new CharacterContact();
-    
-    [Header("References")]
-    public Transform transform;
-    public Rigidbody2D rigidBody;
-    public CharacterInput inputSystem;
+public class Attack : CharacterProcessor
+{
+    public override void Process(CharacterData data)
+    {
+        if (data.input.attackEnded && data.inventory.IsHoldingObject())
+        {
+            Vector2 throwDirection = data.input.direction;
+            if (throwDirection == Vector2.zero) throwDirection.x = data.facingDirection;
+            data.inventory.UseObject(Time.time - data.timeOfAttackStart, data.velocity, data.transform, throwDirection.normalized);
+        }
+        
+        base.Process(data);
+    }
 }
 
 public class CharacterContact
