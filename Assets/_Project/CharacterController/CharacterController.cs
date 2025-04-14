@@ -70,10 +70,10 @@ public class CharacterController : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(transform.position + data.groundCheckBounds.center, data.groundCheckBounds.size);
-        Gizmos.DrawWireCube(transform.position + data.leftWallBounds.center, data.leftWallBounds.size);
-        Gizmos.DrawWireCube(transform.position + data.rightWallBounds.center, data.rightWallBounds.size);
-        Gizmos.DrawWireCube(transform.position + data.roofCheckBounds.center, data.roofCheckBounds.size);
+        //Gizmos.DrawWireCube(transform.position + data.groundCheckBounds.center, data.groundCheckBounds.size);
+        //Gizmos.DrawWireCube(transform.position + data.leftWallBounds.center, data.leftWallBounds.size);
+        //Gizmos.DrawWireCube(transform.position + data.rightWallBounds.center, data.rightWallBounds.size);
+        //Gizmos.DrawWireCube(transform.position + data.roofCheckBounds.center, data.roofCheckBounds.size);
         
         Gizmos.color = Color.blue;
         Gizmos.DrawRay(transform.position + (Vector3)data.missedLeftJump.origin + (Vector3)data.missedLeftJump.correction, data.missedLeftJump.direction);
@@ -87,13 +87,13 @@ public class CharacterController : MonoBehaviour
         Gizmos.DrawRay(transform.position + (Vector3)data.rightHeadAvoidance.origin, data.rightHeadAvoidance.direction);
         //
         Gizmos.color = Color.red;
-        Vector3 jumpCenter = data.inJumpArc ? data.startingJumpPoint + data.groundCheckBounds.center : transform.position + data.groundCheckBounds.center;
+        //Vector3 jumpCenter = data.inJumpArc ? data.startingJumpPoint + data.groundCheckBounds.center : transform.position + data.groundCheckBounds.center;
         float height = data.jumpForce * data.jumpForce / (2 * data.gravity.magnitude);
         float jumpDistanceAtHeight = data.maxWalkSpeed * data.jumpForce / data.gravity.magnitude;
         float totalDistance = data.maxWalkSpeed * -data.jumpForce / data.gravity.magnitude;
         
-        Vector3 peak = jumpCenter + new Vector3(jumpDistanceAtHeight, height);
-        Gizmos.DrawLine(jumpCenter, peak);
+        //Vector3 peak = jumpCenter + new Vector3(jumpDistanceAtHeight, height);
+        //Gizmos.DrawLine(jumpCenter, peak);
         float threshHeight = ((data.apexYVelocityThreshold * data.apexYVelocityThreshold) - (data.jumpForce * data.jumpForce)) / (2 * -data.gravity.magnitude);
         //Gizmos.DrawWireSphere(jumpCenter + Vector3.up * threshHeight, 0.1f);
 
@@ -101,7 +101,7 @@ public class CharacterController : MonoBehaviour
         float timeInDownwardsApex = data.apexYVelocityThreshold / (data.gravity.magnitude * data.apexAntiGravityMultiplier);
         float distanceTraveledInApex = data.maxWalkSpeed * (timeInUpwardsApex + timeInDownwardsApex);
         
-        Gizmos.DrawLine(peak, peak + Vector3.right * distanceTraveledInApex);
+        //Gizmos.DrawLine(peak, peak + Vector3.right * distanceTraveledInApex);
         
         //Gizmos.color = new Color(0.75f, 0.5f, 0.0f);
         //Gizmos.DrawLine(peak + Vector3.up * (threshHeight - height), peak + Vector3.right * distanceTraveledInApex + Vector3.up * (threshHeight - height));
@@ -110,11 +110,11 @@ public class CharacterController : MonoBehaviour
         float bufferZone = data.maxFallSpeed * data.jumpBufferTime;
         Vector2 coyoteZone = new Vector2(data.maxWalkSpeed * data.jumpCoyoteTime, 0.5f * -data.gravity.magnitude * data.jumpCoyoteTime * data.jumpCoyoteTime);
         Gizmos.color = Color.yellow;
-        Vector2 coyoteEndPoint = jumpCenter + (Vector3)coyoteZone;
-        Vector2 bufferEndPoint = jumpCenter + Vector3.down * bufferZone;
-        Gizmos.DrawLine(jumpCenter, coyoteEndPoint);
-        Gizmos.DrawLine(coyoteEndPoint + (0.1f * Vector2.Perpendicular(coyoteEndPoint - (Vector2)jumpCenter).normalized), coyoteEndPoint + (-0.1f * Vector2.Perpendicular(coyoteEndPoint - (Vector2)jumpCenter).normalized));
-        Gizmos.DrawLine(jumpCenter, bufferEndPoint);
-        Gizmos.DrawLine(bufferEndPoint + (0.1f * Vector2.left), bufferEndPoint + (0.1f * Vector2.right));
+        //Vector2 coyoteEndPoint = jumpCenter + (Vector3)coyoteZone;
+        //Vector2 bufferEndPoint = jumpCenter + Vector3.down * bufferZone;
+        // Gizmos.DrawLine(jumpCenter, coyoteEndPoint);
+        // Gizmos.DrawLine(coyoteEndPoint + (0.1f * Vector2.Perpendicular(coyoteEndPoint - (Vector2)jumpCenter).normalized), coyoteEndPoint + (-0.1f * Vector2.Perpendicular(coyoteEndPoint - (Vector2)jumpCenter).normalized));
+        // Gizmos.DrawLine(jumpCenter, bufferEndPoint);
+        // Gizmos.DrawLine(bufferEndPoint + (0.1f * Vector2.left), bufferEndPoint + (0.1f * Vector2.right));
     }
 }

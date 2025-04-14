@@ -99,13 +99,6 @@ public class CharacterData
     public CharacterCorrectionRay rightHeadAvoidance;
     
     [Header("Collisions")]
-    public LayerMask groundLayerMask;
-    public LayerMask roofLayerMask;
-    public Bounds groundCheckBounds;
-    public Bounds leftWallBounds;
-    public Bounds rightWallBounds;
-    public Bounds roofCheckBounds;
-    
     public CharacterContact groundContact = new CharacterContact();
     public CharacterContact leftWallContact = new CharacterContact();
     public CharacterContact rightWallContact = new CharacterContact();
@@ -124,6 +117,16 @@ public interface ICharacterSettingsData
     public CharacterInput InputSystem { get; set; }
     public Inventory Inventory { get; set; }
     
+    public CharacterCorrectionRay MissedLeftJump { get; set; }
+    public CharacterCorrectionRay MissedRightJump { get; set; }
+    public CharacterCorrectionRay LeftHeadAvoidance { get; set; }
+    public CharacterCorrectionRay RightHeadAvoidance { get; set; }
+
+    public CharacterContact GroundContact { get; set; }
+    public CharacterContact RoofContact { get; set; }
+    public CharacterContact LeftWallContact { get; set; }
+    public CharacterContact RightWallContact { get; set; }
+    
     
     
     
@@ -131,13 +134,17 @@ public interface ICharacterSettingsData
     public Vector2 Velocity { get; set; }
     public Vector2 Acceleration { get; set; }
     public float MaxFallSpeed { get; set; }
+    public Vector3 LeavingGroundPoint { get; set; }
+    public Vector3 LastApexPoint { get; set; }
     
     public bool  InApex { get; set; }
     public bool  InJump { get; set; }
+    public bool  InJumpArc { get; set; }
     public bool  CanJump { get; set; }
     public float TimeOfJumpPress { get; set; }
     public float TimeOfJumpStart { get; set; }
     public bool  ReleasedEarly { get; set; }
+    public Vector3 StartingJumpPoint { get; set; }
     
     
     
@@ -179,4 +186,11 @@ public interface ICharacterSettingsData
     public float BufferTime { get; set; }
     public float CoyoteTime { get; set; }
     public int   JumpCount { get; set; }
+}
+
+public enum CharacterMoveState
+{
+    Normal,
+    Crouching,
+    Sprinting
 }

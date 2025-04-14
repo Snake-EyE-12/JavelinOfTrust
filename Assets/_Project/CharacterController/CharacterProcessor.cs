@@ -30,13 +30,13 @@ public class WalkAcceleration : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        int movementDirection = MathUtils.Sign(data.input.direction.x);
-        int velDirection = MathUtils.Sign(data.velocity.x);
+        //int movementDirection = MathUtils.Sign(data.input.direction.x);
+        int velDirection = Utils.Sign(data.velocity.x);
 
-        if (movementDirection != 0 && (velDirection == movementDirection || velDirection == 0))
-        {
-            data.acceleration.x += data.walkAcceleration * data.walkXAccelerationMultiplier * movementDirection;
-        }
+        // if (movementDirection != 0 && (velDirection == movementDirection || velDirection == 0))
+        // {
+        //     data.acceleration.x += data.walkAcceleration * data.walkXAccelerationMultiplier * movementDirection;
+        // }
 
         data.walkXAccelerationMultiplier = 1;
         base.Process(data);
@@ -68,13 +68,13 @@ public class WalkDeceleration : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        int movementDirection = MathUtils.Sign(data.input.direction.x);
-        int velDirection = MathUtils.Sign(data.velocity.x);
+        //int movementDirection = MathUtils.Sign(data.input.direction.x);
+        int velDirection = Utils.Sign(data.velocity.x);
 
-        if (movementDirection != 0 && velDirection != 0 && movementDirection != velDirection)
-        {
-            data.acceleration.x += data.walkDeceleration * -velDirection;
-        }
+        // if (movementDirection != 0 && velDirection != 0 && movementDirection != velDirection)
+        // {
+        //     data.acceleration.x += data.walkDeceleration * -velDirection;
+        // }
         
         base.Process(data);
     }
@@ -84,13 +84,13 @@ public class StoppingDamping : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        int movementDirection = MathUtils.Sign(data.input.direction.x);
-        int velDirection = MathUtils.Sign(data.velocity.x);
+        //int movementDirection = MathUtils.Sign(data.input.direction.x);
+        int velDirection = Utils.Sign(data.velocity.x);
 
-        if (movementDirection == 0 && velDirection != 0)
-        {
-            data.velocity.x *= data.stoppingDamping;
-        }
+        // if (movementDirection == 0 && velDirection != 0)
+        // {
+        //     data.velocity.x *= data.stoppingDamping;
+        // }
         
         base.Process(data);
     }
@@ -100,11 +100,11 @@ public class MinimumStopXVelocity : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        if (MathUtils.Sign(data.input.direction.x) == 0 && data.velocity.x < data.minimumStopXVelocity && data.velocity.x > -data.minimumStopXVelocity)
-        {
-            data.velocity.x = 0;
-            data.acceleration.x = 0;
-        }
+        // if (MathUtils.Sign(data.input.direction.x) == 0 && data.velocity.x < data.minimumStopXVelocity && data.velocity.x > -data.minimumStopXVelocity)
+        // {
+        //     data.velocity.x = 0;
+        //     data.acceleration.x = 0;
+        // }
         
         base.Process(data);
     }
@@ -148,9 +148,9 @@ public class GroundCollisionDetection : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        data.groundContact.Update(
-                Physics2D.OverlapBoxAll(data.transform.position + data.groundCheckBounds.center, data.groundCheckBounds.size, 0f, data.groundLayerMask).Length > 0
-            );
+        // data.groundContact.Update(
+        //         Physics2D.OverlapBoxAll(data.transform.position + data.groundContact.bounds.center, data.groundContact.bounds.size, 0f, data.groundContact.mask).Length > 0
+        //     );
         
         base.Process(data);
     }
@@ -160,11 +160,11 @@ public class WallCollisionDetection : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        bool leftWallContact = Physics2D.OverlapBoxAll(data.transform.position + data.leftWallBounds.center, data.leftWallBounds.size, 0f, data.groundLayerMask).Length > 0;
-        bool rightWallContact = Physics2D.OverlapBoxAll(data.transform.position + data.rightWallBounds.center, data.rightWallBounds.size, 0f, data.groundLayerMask).Length > 0;
+        bool leftWallContact = Physics2D.OverlapBoxAll(data.transform.position + data.leftWallContact.bounds.center, data.leftWallContact.bounds.size, 0f, data.leftWallContact.mask).Length > 0;
+        bool rightWallContact = Physics2D.OverlapBoxAll(data.transform.position + data.rightWallContact.bounds.center, data.rightWallContact.bounds.size, 0f, data.rightWallContact.mask).Length > 0;
         
-        data.leftWallContact.Update(leftWallContact);
-        data.rightWallContact.Update(rightWallContact);
+        //data.leftWallContact.Update(leftWallContact);
+        //data.rightWallContact.Update(rightWallContact);
         
         base.Process(data);
     }
@@ -208,7 +208,7 @@ public class JumpBufferer : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        if(data.input.jumpStarted) data.timeOfJumpPress = Time.time;
+        //if(data.input.jumpStarted) data.timeOfJumpPress = Time.time;
         
         base.Process(data);
     }
@@ -218,11 +218,11 @@ public class ImmediateDescendOnReleaseJump : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        if (data.input.jumpEnded && data.inJump)
-        {
-            if (data.velocity.y > 0) data.velocity.y = 0;
-            if (data.acceleration.y > 0) data.acceleration.y = 0;
-        }
+        // if (data.input.jumpEnded && data.inJump)
+        // {
+        //     if (data.velocity.y > 0) data.velocity.y = 0;
+        //     if (data.acceleration.y > 0) data.acceleration.y = 0;
+        // }
         
         base.Process(data);
     }
@@ -255,10 +255,10 @@ public class JumpCoyoteInformant : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        if (data.input.jumpStarted && data.groundContact.TimeOfContactExit + data.jumpCoyoteTime > Time.time)
-        {
-            data.canJump = true;
-        }
+        // if (data.input.jumpStarted && data.groundContact.TimeOfContactExit + data.jumpCoyoteTime > Time.time)
+        // {
+        //     data.canJump = true;
+        // }
         
         base.Process(data);
     }
@@ -309,7 +309,7 @@ public class ApexXVelocityApplicator : CharacterProcessor
     {
         if (data.inApex)
         {
-            data.acceleration.x += data.apexBonusXAcceleration * MathUtils.Sign(data.input.direction.x);
+            //data.acceleration.x += data.apexBonusXAcceleration * MathUtils.Sign(data.input.direction.x);
         }
         
         base.Process(data);
@@ -343,7 +343,7 @@ public class EarlyReleaseCalculator : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        if(data.input.jumpEnded && data.inJump) data.earlyReleased = true;
+        //if(data.input.jumpEnded && data.inJump) data.earlyReleased = true;
         if (data.groundContact.Contact) data.earlyReleased = false;
         
         base.Process(data);
@@ -364,9 +364,9 @@ public class RoofCollisionDetection : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        data.roofContact.Update(
-            Physics2D.OverlapBoxAll(data.transform.position + data.roofCheckBounds.center, data.roofCheckBounds.size, 0f, data.roofLayerMask).Length > 0
-        );
+        // data.roofContact.Update(
+        //     Physics2D.OverlapBoxAll(data.transform.position + data.roofContact.bounds.center, data.roofContact.bounds.size, 0f, data.roofContact.mask).Length > 0
+        // );
         
         base.Process(data);
     }
@@ -376,19 +376,19 @@ public class GapPositionCorrector : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        int movementDirection = MathUtils.Sign(data.input.direction.x);
+        //int movementDirection = MathUtils.Sign(data.input.direction.x);
         if (data.velocity.y < 0 && !data.groundContact.Contact)
         {
-            if (movementDirection == -1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedLeftJump.origin, data.missedLeftJump.direction, data.missedLeftJump.direction.magnitude, data.groundLayerMask).Length > 0 &&
-                Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedLeftJump.origin + (Vector3)data.missedLeftJump.correction, data.missedLeftJump.direction, data.missedLeftJump.direction.magnitude, data.groundLayerMask).Length == 0)
-            {
-                data.transform.position += (Vector3)data.missedLeftJump.correction;
-            }
-            else if (movementDirection == 1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedRightJump.origin, data.missedRightJump.direction, data.missedRightJump.direction.magnitude, data.groundLayerMask).Length > 0 &&
-                     Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedRightJump.origin + (Vector3)data.missedRightJump.correction, data.missedRightJump.direction, data.missedRightJump.direction.magnitude, data.groundLayerMask).Length == 0)
-            {
-                data.transform.position += (Vector3)data.missedRightJump.correction;
-            }
+            // if (movementDirection == -1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedLeftJump.origin, data.missedLeftJump.direction, data.missedLeftJump.direction.magnitude, data.missedLeftJump.mask).Length > 0 &&
+            //     Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedLeftJump.origin + (Vector3)data.missedLeftJump.correction, data.missedLeftJump.direction, data.missedLeftJump.direction.magnitude, data.missedLeftJump.mask).Length == 0)
+            // {
+            //     data.transform.position += (Vector3)data.missedLeftJump.correction;
+            // }
+            // else if (movementDirection == 1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedRightJump.origin, data.missedRightJump.direction, data.missedRightJump.direction.magnitude, data.missedRightJump.mask).Length > 0 &&
+            //          Physics2D.RaycastAll(data.transform.position + (Vector3)data.missedRightJump.origin + (Vector3)data.missedRightJump.correction, data.missedRightJump.direction, data.missedRightJump.direction.magnitude, data.missedRightJump.mask).Length == 0)
+            // {
+            //     data.transform.position += (Vector3)data.missedRightJump.correction;
+            // }
         }
         
         base.Process(data);
@@ -400,19 +400,19 @@ public class HeadCollisionAvoidance : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        int movementDirection = MathUtils.Sign(data.input.direction.x);
+        //int movementDirection = MathUtils.Sign(data.input.direction.x);
         if (data.inJump && !data.earlyReleased)
         {
-            if (movementDirection != -1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.leftHeadAvoidance.origin, data.leftHeadAvoidance.direction, data.leftHeadAvoidance.direction.magnitude).Length > 0 &&
-                Physics2D.RaycastAll(data.transform.position + (Vector3)(data.leftHeadAvoidance.origin + data.leftHeadAvoidance.correction), data.leftHeadAvoidance.direction, data.leftHeadAvoidance.direction.magnitude).Length == 0)
-            {
-                data.transform.position += (Vector3)data.leftHeadAvoidance.correction;
-            }
-            else if (movementDirection != 1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.rightHeadAvoidance.origin, data.rightHeadAvoidance.direction, data.rightHeadAvoidance.direction.magnitude).Length > 0 &&
-                     Physics2D.RaycastAll(data.transform.position + (Vector3)(data.rightHeadAvoidance.origin + data.rightHeadAvoidance.correction), data.rightHeadAvoidance.direction, data.rightHeadAvoidance.direction.magnitude).Length == 0)
-            {
-                data.transform.position += (Vector3)data.rightHeadAvoidance.correction;
-            }
+            // if (movementDirection != -1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.leftHeadAvoidance.origin, data.leftHeadAvoidance.direction, data.leftHeadAvoidance.direction.magnitude).Length > 0 &&
+            //     Physics2D.RaycastAll(data.transform.position + (Vector3)(data.leftHeadAvoidance.origin + data.leftHeadAvoidance.correction), data.leftHeadAvoidance.direction, data.leftHeadAvoidance.direction.magnitude).Length == 0)
+            // {
+            //     data.transform.position += (Vector3)data.leftHeadAvoidance.correction;
+            // }
+            // else if (movementDirection != 1 && Physics2D.RaycastAll(data.transform.position + (Vector3)data.rightHeadAvoidance.origin, data.rightHeadAvoidance.direction, data.rightHeadAvoidance.direction.magnitude).Length > 0 &&
+            //          Physics2D.RaycastAll(data.transform.position + (Vector3)(data.rightHeadAvoidance.origin + data.rightHeadAvoidance.correction), data.rightHeadAvoidance.direction, data.rightHeadAvoidance.direction.magnitude).Length == 0)
+            // {
+            //     data.transform.position += (Vector3)data.rightHeadAvoidance.correction;
+            // }
         }
         
         base.Process(data);
@@ -424,12 +424,12 @@ public class LandingAccelerationFrictionApplicator : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        int movementDirection = MathUtils.Sign(data.input.direction.x);
-        int velocityDirection = MathUtils.Sign(data.velocity.x);
-        if (movementDirection != 0 && data.groundContact.EnteredContact && movementDirection != velocityDirection)
-        {
-            data.walkXAccelerationMultiplier *= data.landingAccelerationFrictionMultiplier;
-        }
+        //int movementDirection = MathUtils.Sign(data.input.direction.x);
+        int velocityDirection = Utils.Sign(data.velocity.x);
+        // if (movementDirection != 0 && data.groundContact.EnteredContact && movementDirection != velocityDirection)
+        // {
+        //     data.walkXAccelerationMultiplier *= data.landingAccelerationFrictionMultiplier;
+        // }
         
         base.Process(data);
     }
@@ -439,12 +439,12 @@ public class LandingVelocityDampingApplicator : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        int movementDirection = MathUtils.Sign(data.input.direction.x);
-        int velocityDirection = MathUtils.Sign(data.velocity.x);
-        if (movementDirection != 0 && data.groundContact.EnteredContact && movementDirection != velocityDirection)
-        {
-            data.velocity.x *= data.landingVelocityDampingMultiplier;
-        }
+        //int movementDirection = MathUtils.Sign(data.input.direction.x);
+        int velocityDirection = Utils.Sign(data.velocity.x);
+        // if (movementDirection != 0 && data.groundContact.EnteredContact && movementDirection != velocityDirection)
+        // {
+        //     data.velocity.x *= data.landingVelocityDampingMultiplier;
+        // }
         
         base.Process(data);
     }
@@ -464,10 +464,10 @@ public class BeginChargedAttack : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        if (data.input.attackStarted && data.inventory.IsHoldingObject())
-        {
-            data.timeOfAttackStart = Time.time;
-        }
+        // if (data.input.attackStarted && data.inventory.IsHoldingObject())
+        // {
+        //     data.timeOfAttackStart = Time.time;
+        // }
         
         base.Process(data);
     }
@@ -477,24 +477,28 @@ public class Attack : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        if (data.input.attackEnded && data.inventory.IsHoldingObject())
-        {
-            Vector2 throwDirection = data.input.direction;
-            if (throwDirection == Vector2.zero) throwDirection.x = data.facingDirection;
-            data.inventory.UseObject(Time.time - data.timeOfAttackStart, data.velocity, data.transform, throwDirection.normalized);
-        }
+        // if (data.input.attackEnded && data.inventory.IsHoldingObject())
+        // {
+        //     Vector2 throwDirection = data.input.direction;
+        //     if (throwDirection == Vector2.zero) throwDirection.x = data.facingDirection;
+        //     data.inventory.UseObject(Time.time - data.timeOfAttackStart, data.velocity, data.transform, throwDirection.normalized);
+        // }
         
         base.Process(data);
     }
 }
 
+[Serializable]
 public class CharacterContact
 {
+    [field: SerializeField] public Bounds bounds { get; private set; }
+    [field: SerializeField] public LayerMask mask { get; private set; }
     private bool inContact;
     private float lastTimeInContact;
     private bool newlyContacted;
-    public void Update(bool contacting)
+    public void Update(Transform character)
     {
+        bool contacting = Physics2D.OverlapBoxAll(character.position + bounds.center, bounds.size, character.rotation.eulerAngles.z, mask).Length > 0;
         if (inContact && !contacting)
         {
             lastTimeInContact = Time.time;
@@ -512,6 +516,7 @@ public class CharacterContact
 [Serializable]
 public class CharacterCorrectionRay
 {
+    public LayerMask mask;
     public Vector2 origin;
     public Vector2 direction;
     public Vector2 correction;
