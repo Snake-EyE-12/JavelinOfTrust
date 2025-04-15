@@ -1,34 +1,86 @@
 using System;
 using UnityEngine;
 
-public abstract class CharacterProcessor : BaseProcessor<CharacterData>
+public abstract class PlatformCharacterProcessor : BaseProcessor<ICharacterSettingsData>
 {
 }
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////
-
-public class InputReceiver : CharacterProcessor
+public class PCP_ : PlatformCharacterProcessor
 {
-    public override void Process(CharacterData data)
+    public override void Process(ICharacterSettingsData data)
     {
-        data.input = data.inputSystem.GetFrameInput();
+        
         
         base.Process(data);
     }
 }
 
-public class VelocityApplicator : CharacterProcessor
+
+public class PCP_GravityApplicator : PlatformCharacterProcessor
 {
-    public override void Process(CharacterData data)
+    public override void Process(ICharacterSettingsData data)
     {
-        data.rigidBody.linearVelocity = data.velocity;
-        data.facingDirection = (int)Mathf.Sign(data.velocity.x);
+        data.Acceleration += data.CalculatedGravity * data.GravityMultiplier;
+        data.CalculatedGravity = Vector2.zero;
+        data.GravityMultiplier = 1;
         
         base.Process(data);
     }
 }
+public class PCP_AccelerationApplicator : PlatformCharacterProcessor
+{
+    public override void Process(ICharacterSettingsData data)
+    {
+        data.Velocity += data.Acceleration * Time.deltaTime;
+        data.Acceleration = Vector2.zero;
+        
+        base.Process(data);
+    }
+}
+public class PCP_VelocityApplicator : PlatformCharacterProcessor
+{
+    public override void Process(ICharacterSettingsData data)
+    {
+        data.RigidBody.linearVelocity = data.Velocity;
+        
+        base.Process(data);
+    }
+}
+public class PCP_HorizontalAcceleration : PlatformCharacterProcessor
+{
+    public override void Process(ICharacterSettingsData data)
+    {
+        int movementDirection = Utils.Sign(data.InputSystem.GetFrameInput().InputDirection.Direction.x);
+        int velDirection = Utils.Sign(data.Velocity.x);
+        if (movementDirection != 0 && (velDirection == movementDirection || velDirection == 0))
+        {
+            float acc = data.WalkAcceleration;
+            if (data.InputSystem.GetFrameInput().Sprint.pressed) acc = data.SprintAcceleration;
+            if (data.InputSystem.GetFrameInput().Crouch.pressed) acc = data.CrouchAcceleration;
 
+            //data.Acceleration += acc;
+        }
+        
+        base.Process(data);
+    }
+}
+public class PCP_HorizontalVelocityApplicator : BaseProcessor<ICharacterSettingsData>
+{
+    // public override void Process(ICharacterSettingsData data)
+    // {
+    //     int movementDirection = Utils.Sign(data.InputSystem.GetFrameInput().InputDirection.Direction.x);
+    //     int velDirection = Utils.Sign(data.Velocity.x);
+    //
+    //     if (movementDirection != 0 && (velDirection == movementDirection || velDirection == 0))
+    //     {
+    //         data.acceleration.x += data.walkAcceleration * data.walkXAccelerationMultiplier * movementDirection;
+    //         data.Acceleration.x += data.
+    //     }
+    //
+    //     data.walkXAccelerationMultiplier = 1;
+    //     base.Process(data);
+    // }
+}
 public class WalkAcceleration : CharacterProcessor
 {
     public override void Process(CharacterData data)
@@ -56,16 +108,6 @@ public class AirControlXAccelerationMultiplier : CharacterProcessor
     }
 }
 
-public class AccelerationApplicator : CharacterProcessor
-{
-    public override void Process(CharacterData data)
-    {
-        data.velocity += data.acceleration * Time.deltaTime;
-        data.acceleration = Vector2.zero;
-        
-        base.Process(data);
-    }
-}
 
 public class WalkDeceleration : CharacterProcessor
 {
@@ -489,38 +531,4 @@ public class Attack : CharacterProcessor
         
         base.Process(data);
     }
-}
-
-[Serializable]
-public class CharacterContact
-{
-    [field: SerializeField] public Bounds bounds { get; private set; }
-    [field: SerializeField] public LayerMask mask { get; private set; }
-    private bool inContact;
-    private float lastTimeInContact;
-    private bool newlyContacted;
-    public void Update(Transform character)
-    {
-        bool contacting = Physics2D.OverlapBoxAll(character.position + bounds.center, bounds.size, character.rotation.eulerAngles.z, mask).Length > 0;
-        if (inContact && !contacting)
-        {
-            lastTimeInContact = Time.time;
-        }
-        
-        newlyContacted = !inContact && contacting;
-        
-        inContact = contacting;
-    }
-
-    public bool Contact => inContact;
-    public bool EnteredContact => newlyContacted;
-    public float TimeOfContactExit => lastTimeInContact;
-}
-[Serializable]
-public class CharacterCorrectionRay
-{
-    public LayerMask mask;
-    public Vector2 origin;
-    public Vector2 direction;
-    public Vector2 correction;
 }

@@ -110,12 +110,90 @@ public class CharacterData
     public CharacterInput inputSystem;
 }
 
+[Serializable]
+public class CharacterControlsData : ICharacterSettingsData
+{
+    [field: SerializeField, Header("References")] public Transform Transform { get; set; }
+    [field: SerializeField] public Rigidbody2D RigidBody { get; set; }
+    [field: SerializeField] public CharacterInput InputSystem { get; set; }
+    [field: SerializeField] public Inventory Inventory { get; set; }
+    
+    [field: SerializeField, Header("Corrections")] public CharacterCorrectionRay MissedLeftJump { get; set; }
+    [field: SerializeField] public CharacterCorrectionRay MissedRightJump { get; set; }
+    [field: SerializeField] public CharacterCorrectionRay LeftHeadAvoidance { get; set; }
+    [field: SerializeField] public CharacterCorrectionRay RightHeadAvoidance { get; set; }
+    
+    [field: SerializeField, Header("Collisions")] public CharacterContact GroundContact { get; set; }
+    [field: SerializeField] public CharacterContact RoofContact { get; set; }
+    [field: SerializeField] public CharacterContact LeftWallContact { get; set; }
+    [field: SerializeField] public CharacterContact RightWallContact { get; set; }
+    
+    [field: SerializeField, ReadOnly, AllowNesting, Header("Trajectory")] public Vector2 CalculatedGravity { get; set; }
+    public float GravityMultiplier { get; set; }
+    [field: SerializeField, ReadOnly, AllowNesting] public Vector2 Velocity { get; set; }
+    [field: SerializeField, ReadOnly, AllowNesting] public Vector2 Acceleration { get; set; }
+    [field: SerializeField, ReadOnly, AllowNesting] public float MaxFallSpeed { get; set; }
+    public Vector3 LeavingGroundPoint { get; set; }
+    public Vector3 LastApexPoint { get; set; }
+    public bool InApex { get; set; }
+    public bool InJump { get; set; }
+    public bool InJumpArc { get; set; }
+    public bool CanJump { get; set; }
+    public int CurrentJumpCount { get; set; }
+    public float TimeOfJumpPress { get; set; }
+    public float TimeOfJumpStart { get; set; }
+    public bool ReleasedEarly { get; set; }
+    public Vector3 StartingJumpPoint { get; set; }
+    public Vector2 FacingDirection { get; set; }
+    
+    [field: SerializeField, Header("Movement")] public Vector2 Gravity { get; set; }
+    [field: SerializeField] public float DefaultMaxFallSpeed { get; set; }
+    [field: SerializeField] public float WalkAcceleration { get; set; }
+    [field: SerializeField] public float WalkTurnAroundAcceleration { get; set; }
+    [field: SerializeField] public float WalkNoMovementDamping { get; set; }
+    [field: SerializeField] public float StopVelocityThreshold { get; set; }
+    [field: SerializeField] public float WalkMaxHorizontalSpeed { get; set; }
+    [field: SerializeField] public float DefaultAirControlMultiplier { get; set; }
+    
+    [field: SerializeField, Header("Sprint")] public float SprintAcceleration { get; set; }
+    [field: SerializeField] public float SprintTurnAroundAcceleration { get; set; }
+    [field: SerializeField] public float SprintNoMovementDamping { get; set; }
+    [field: SerializeField] public float SprintMaxHorizontalSpeed { get; set; }
+    
+    [field: SerializeField, Header("Crouch")] public float CrouchAcceleration { get; set; }
+    [field: SerializeField] public float CrouchTurnAroundAcceleration { get; set; }
+    [field: SerializeField] public float CrouchNoMovementDamping { get; set; }
+    [field: SerializeField] public float CrouchMaxHorizontalSpeed { get; set; }
+    
+    [field: SerializeField, Header("Jump")] public float ApexYVelocityThreshold { get; set; }
+    [field: SerializeField] public float ApexHorizontalBonusAcceleration { get; set; }
+    [field: SerializeField] public float ApexGravityMultiplier { get; set; }
+    [field: SerializeField] public float EarlyReleaseGravityMultiplier { get; set; }
+    [field: SerializeField] public float DescendingGravityMultiplier { get; set; }
+    [field: SerializeField] public float DescendingAccelerationAddition { get; set; }
+    [field: SerializeField] public float JumpAirControlMultiplier { get; set; }
+    [field: SerializeField] public float LandingAccelerationMultiplier { get; set; }
+    [field: SerializeField] public float LandingVelocityMultiplier { get; set; }
+    [field: SerializeField] public float StickyFeetDuration { get; set; }
+    [field: SerializeField] public Curve HorizontalVelocityHeightBonus { get; set; }
+    [field: SerializeField] public float BurstForce { get; set; }
+    [field: SerializeField] public float MinimumHeight { get; set; }
+    [field: SerializeField] public float JumpMaxFallSpeed { get; set; }
+    [field: SerializeField] public float BufferTime { get; set; }
+    [field: SerializeField] public float CoyoteTime { get; set; }
+    [field: SerializeField] public int JumpCount { get; set; }
+    [field: SerializeField] public float VelocityInputLerp { get; set; }
+    
+    [field: SerializeField, Header("Dash")] public float DashSpeed { get; set; }
+    [field: SerializeField] public float Duration { get; set; }
+    [field: SerializeField] public float BouncePercent { get; set; }
+}
+
 public interface ICharacterSettingsData
 {
     public Transform Transform { get; set; }
     public Rigidbody2D RigidBody { get; set; }
     public CharacterInput InputSystem { get; set; }
-    public Inventory Inventory { get; set; }
     
     public CharacterCorrectionRay MissedLeftJump { get; set; }
     public CharacterCorrectionRay MissedRightJump { get; set; }
@@ -131,6 +209,7 @@ public interface ICharacterSettingsData
     
     
     public Vector2 CalculatedGravity { get; set; }
+    public float GravityMultiplier { get; set; }
     public Vector2 Velocity { get; set; }
     public Vector2 Acceleration { get; set; }
     public float MaxFallSpeed { get; set; }
@@ -141,6 +220,7 @@ public interface ICharacterSettingsData
     public bool  InJump { get; set; }
     public bool  InJumpArc { get; set; }
     public bool  CanJump { get; set; }
+    public int CurrentJumpCount { get; set; }
     public float TimeOfJumpPress { get; set; }
     public float TimeOfJumpStart { get; set; }
     public bool  ReleasedEarly { get; set; }
@@ -158,6 +238,7 @@ public interface ICharacterSettingsData
     public float WalkNoMovementDamping { get; set; }
     public float StopVelocityThreshold { get; set; }
     public float WalkMaxHorizontalSpeed { get; set; }
+    public float DefaultAirControlMultiplier { get; set; }
     
     public float SprintAcceleration { get; set; }
     public float SprintTurnAroundAcceleration { get; set; }
@@ -175,7 +256,7 @@ public interface ICharacterSettingsData
     public float EarlyReleaseGravityMultiplier { get; set; }
     public float DescendingGravityMultiplier { get; set; }
     public float DescendingAccelerationAddition { get; set; }
-    public float AirControlMultiplier { get; set; }
+    public float JumpAirControlMultiplier { get; set; }
     public float LandingAccelerationMultiplier { get; set; }
     public float LandingVelocityMultiplier { get; set; }
     public float StickyFeetDuration { get; set; }
@@ -186,11 +267,8 @@ public interface ICharacterSettingsData
     public float BufferTime { get; set; }
     public float CoyoteTime { get; set; }
     public int   JumpCount { get; set; }
-}
-
-public enum CharacterMoveState
-{
-    Normal,
-    Crouching,
-    Sprinting
+    
+    public float DashSpeed { get; set; }
+    public float Duration { get; set; }
+    public float BouncePercent { get; set; }
 }

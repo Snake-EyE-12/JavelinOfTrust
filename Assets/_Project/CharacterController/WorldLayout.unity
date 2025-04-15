@@ -344,6 +344,63 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   CustomBlends: {fileID: 0}
+--- !u!1 &148051393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 148051396}
+  - component: {fileID: 148051395}
+  - component: {fileID: 148051394}
+  m_Layer: 0
+  m_Name: CharacterBuilder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &148051394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148051393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abbd58bbf493473191d45e606724142b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &148051395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148051393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27459bdc0948d914596fd4dfe4b04ad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &148051396
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 148051393}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &148393013
 GameObject:
   m_ObjectHideFlags: 0
@@ -4685,39 +4742,61 @@ MonoBehaviour:
     inventory: {fileID: 1414430843}
     timeOfAttackStart: 0
     missedLeftJump:
+      mask:
+        serializedVersion: 2
+        m_Bits: 0
       origin: {x: -0.5, y: -1}
       direction: {x: -0.4, y: 0}
       correction: {x: 0, y: 0.2}
     missedRightJump:
+      mask:
+        serializedVersion: 2
+        m_Bits: 0
       origin: {x: 0.5, y: -1}
       direction: {x: 0.4, y: 0}
       correction: {x: 0, y: 0.2}
     leftHeadAvoidance:
+      mask:
+        serializedVersion: 2
+        m_Bits: 0
       origin: {x: -0.5, y: 1}
       direction: {x: 0, y: 0.4}
       correction: {x: 0.2, y: 0}
     rightHeadAvoidance:
+      mask:
+        serializedVersion: 2
+        m_Bits: 0
       origin: {x: 0.5, y: 1}
       direction: {x: 0, y: 0.4}
       correction: {x: -0.2, y: 0}
-    groundLayerMask:
-      serializedVersion: 2
-      m_Bits: 768
-    roofLayerMask:
-      serializedVersion: 2
-      m_Bits: 256
-    groundCheckBounds:
-      m_Center: {x: 0, y: -1, z: 0}
-      m_Extent: {x: 0.4, y: 0.1, z: 0}
-    leftWallBounds:
-      m_Center: {x: -0.5, y: 0, z: 0}
-      m_Extent: {x: 0.1, y: 0.5, z: 0}
-    rightWallBounds:
-      m_Center: {x: 0.5, y: 0, z: 0}
-      m_Extent: {x: 0.1, y: 0.5, z: 0}
-    roofCheckBounds:
-      m_Center: {x: 0, y: 1, z: 0}
-      m_Extent: {x: 0.4, y: 0.1, z: 0}
+    groundContact:
+      <bounds>k__BackingField:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+      <mask>k__BackingField:
+        serializedVersion: 2
+        m_Bits: 0
+    leftWallContact:
+      <bounds>k__BackingField:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+      <mask>k__BackingField:
+        serializedVersion: 2
+        m_Bits: 0
+    rightWallContact:
+      <bounds>k__BackingField:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+      <mask>k__BackingField:
+        serializedVersion: 2
+        m_Bits: 0
+    roofContact:
+      <bounds>k__BackingField:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+      <mask>k__BackingField:
+        serializedVersion: 2
+        m_Bits: 0
     transform: {fileID: 1414430839}
     rigidBody: {fileID: 1414430841}
     inputSystem: {fileID: 1358916355}
@@ -5820,3 +5899,4 @@ SceneRoots:
   - {fileID: 555609331}
   - {fileID: 347139190}
   - {fileID: 616925206}
+  - {fileID: 148051396}

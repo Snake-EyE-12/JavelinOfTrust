@@ -3,11 +3,12 @@ using UnityEngine;
 
 public class PlatformCharacterController : MonoBehaviour, ICharacterCreator
 {
-    private CharacterProcessor chain;
+    [SerializeField] private CharacterControlsData data;
+    private PlatformCharacterProcessor chain;
     
     private void BuildProcess()
     {
-        
+        chain = new PCP_VelocityApplicator();
     }
     private void Awake()
     {
