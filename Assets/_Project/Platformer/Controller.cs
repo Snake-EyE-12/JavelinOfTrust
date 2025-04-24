@@ -2,76 +2,104 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace CharacterController.Platformer
 {
+    public static class PlayerBehaviorUtilities
+    {
+        public static int Sign(float value) => value > 0 ? 1 : value < 0 ? -1 : 0;
+    }
     public class Controller : MonoBehaviour
     {
-        private Blackboard data;
-        [SerializeField] private List<PlayerFunctionality> functionality = new();
+        private Blackboard blackboard = new Blackboard();
+        
+        [SerializeField] private List<PlayerBehavior> initialBehavior = new();
 
-        private List<PlayerFunctionality> funcs = new();
+        private List<PlayerBehavior> activeBehaviors = new();
 
         private void Awake()
         {
-            foreach (var f in functionality)
+            foreach (var behavior in initialBehavior)
             {
-                AddFunctionality(f);
+                AddBehavior(behavior);
             }
         }
-        public void AddFunctionality(PlayerFunctionality f)
-        {
-            funcs.Add(f);
-            f.Initialize(data);
-        }
-        public void RemoveFunctionality(PlayerFunctionality f) => funcs.Remove(f);
 
-        private List<Actionable> _actions = new();
+        private bool behaviorChainUpdated;
+        public void AddBehavior(PlayerBehavior behavior)
+        {
+            activeBehaviors.Add(behavior);
+            behavior.Initialize(blackboard);
+            behaviorChainUpdated = true;
+        }
+        public void RemoveBehavior(PlayerBehavior behavior)
+        {
+            activeBehaviors.Remove(behavior);
+            behaviorChainUpdated = true;
+        }
+
+        private List<PrioritizedAction> actions = new();
         private void Update()
         {
-            _actions.Clear();
-            foreach (var f in funcs)
+            if (behaviorChainUpdated)
             {
-                if(!f.enabled) continue;
-                _actions.AddRange(f.GetConditions());
+                RefreshOrder();
             }
-            _actions.OrderBy((x) => x.Priority).ToList().ForEach((x) => x.Play());
+            actions.ForEach((x) => x.Invoke());
+        }
+
+        private void RefreshOrder()
+        {
+            actions.Clear();
+            foreach (var behavior in activeBehaviors)
+            {
+                if(!behavior.enabled) continue;
+                actions.AddRange(behavior.GetActions());
+            }
+            actions = actions.OrderBy((x) => x.Priority).ToList();
         }
     }
 
-    public abstract class PlayerFunctionality : MonoBehaviour
+    public abstract class PlayerBehavior : MonoBehaviour
     {
         protected Blackboard blackboard;
-        public void Initialize(Blackboard blackboard) => this.blackboard = blackboard;
-        private void Awake()
+        public void Initialize(Blackboard blackboard)
         {
-            GenerateConditions();
+            this.blackboard = blackboard;
+            LoadGimmicks();
         }
-        protected abstract void GenerateConditions();
-        protected List<Actionable> actionables = new();
-        public List<Actionable> GetConditions() => actionables;
-        protected void AddCondition(Actionable c) => actionables.Add(c);
-        protected void IfDo(Func<bool> @if, Action @do, int priority) => AddCondition(new Actionable(@if, @do, priority));
+
+        protected abstract void LoadGimmicks();
+        protected List<Gimmick> gimmicks = new();
+
+        public List<PrioritizedAction> GetActions()
+        {
+            List<PrioritizedAction> actions = new();
+            foreach (var gimmick in gimmicks)
+            {
+                actions.AddRange(gimmick.GetActions());
+            }
+            return actions;
+        }
+        protected void Load(Gimmick gimmick)
+        {
+            gimmick.board = blackboard;
+            gimmicks.Add(gimmick);
+        }
 
     }
 
-    public class Actionable
+    public class PrioritizedAction
     {
-        private Func<bool> Check { get; }
         private Action Action { get; }
         public int Priority { get; }
-        public Actionable(Func<bool> check, Action action, int priority)
+        public PrioritizedAction(Action action, int priority)
         {
-            this.Check = check;
             this.Action = action;
             this.Priority = priority;
         }
-
-        public void Play()
-        {
-            if(Check.Invoke()) Action.Invoke();
-        }
-        
+        public void Invoke() => Action.Invoke();
     }
 
     public class Blackboard
@@ -86,6 +114,8 @@ namespace CharacterController.Platformer
                 value = (T)entries[key].Value;
                 return true;
             }
+
+            Debug.LogWarning("Missing variable: " + name);
             value = default;
             return false;
         }
@@ -94,7 +124,11 @@ namespace CharacterController.Platformer
         {
             BlackboardEntry entry = new BlackboardEntry(name, typeof(T), value);
             int key = entry.Key;
-            entries.Add(key, entry);
+            if (entries.ContainsKey(key))
+            {
+                entries[key] = entry;
+            }
+            else entries.Add(entry.Key, entry);
         }
 
         private class BlackboardEntry
@@ -111,5 +145,33 @@ namespace CharacterController.Platformer
             public object Value => value;
             public int Key => stringKey.GetHashCode() + type.GetHashCode();
         }
+    }
+    [Serializable]
+    public abstract class Gimmick
+    {
+        public Blackboard board { get; set; }
+        [SerializeField] private bool active;
+        [SerializeField] private int[] priorities;
+        private List<Action> actions;
+        public List<PrioritizedAction> GetActions()
+        {
+            List<PrioritizedAction> prioritizedActions = new();
+            for (int i = 0; i < priorities.Length; i++)
+            {
+                prioritizedActions.Add(new PrioritizedAction(actions[i], priorities[i]));
+            }
+            return prioritizedActions;
+        }
+
+        public void SetActions(List<Action> actions)
+        {
+            this.actions = actions;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Method, Inherited = false, AllowMultiple = true)]
+    public class PrioritizedAttribute : Attribute
+    {
+        
     }
 }

@@ -490,37 +490,3 @@ public abstract class CharacterProcessor : BaseProcessor<CharacterData>
 //         base.Process(data);
 //     }
 // }
-
-[Serializable]
-public class CharacterContact
-{
-    [field: SerializeField] public Bounds bounds { get; private set; }
-    // [field: SerializeField] public LayerMask mask { get; private set; }
-    // private bool inContact;
-    // private float lastTimeInContact;
-    // private bool newlyContacted;
-    // public void Update(Transform character)
-    // {
-    //     bool contacting = Physics2D.OverlapBoxAll(character.position + bounds.center, bounds.size, character.rotation.eulerAngles.z, mask).Length > 0;
-    //     if (inContact && !contacting)
-    //     {
-    //         lastTimeInContact = Time.time;
-    //     }
-    //     
-    //     newlyContacted = !inContact && contacting;
-    //     
-    //     inContact = contacting;
-    // }
-    //
-    // public bool Contact => inContact;
-    // public bool EnteredContact => newlyContacted;
-    // public float TimeOfContactExit => lastTimeInContact;
-}
-[Serializable]
-public class CharacterCorrectionRay
-{
-    // public LayerMask mask;
-    // public Vector2 origin;
-    // public Vector2 direction;
-    // public Vector2 correction;
-}

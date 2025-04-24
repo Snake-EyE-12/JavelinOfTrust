@@ -70,17 +70,18 @@ public class CharacterInput : MonoBehaviour
     }
 }
 
-public struct CharacterFrameInput
+public class CharacterFrameInput
 {
-    public InputDirection InputDirection { get; set; }
-    public InputBoolean Jump { get; set; }
-    public InputBoolean Dash { get; set; }
-    public InputBoolean Attack { get; set; }
-    public InputBoolean Grip { get; set; }
-    public InputBoolean Interact { get; set; }
-    public InputBoolean Sprint { get; set; }
-    public InputBoolean Crouch { get; set; }
+    public InputDirection InputDirection { get; set; } = new InputDirection();
+    public InputBoolean Jump { get; set; } = new InputBoolean();
+    public InputBoolean Dash { get; set; } = new InputBoolean();
+    public InputBoolean Attack { get; set; } = new InputBoolean();
+    public InputBoolean Grip { get; set; } = new InputBoolean();
+    public InputBoolean Interact { get; set; } = new InputBoolean();
+    public InputBoolean Sprint { get; set; } = new InputBoolean();
+    public InputBoolean Crouch { get; set; } = new InputBoolean();
 }
+
 
 public struct InputBoolean
 {

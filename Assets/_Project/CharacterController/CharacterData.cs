@@ -93,16 +93,16 @@ public class CharacterData
     #endregion
     
     [Header("Corrections")]
-    public CharacterCorrectionRay missedLeftJump;
-    public CharacterCorrectionRay missedRightJump;
-    public CharacterCorrectionRay leftHeadAvoidance;
-    public CharacterCorrectionRay rightHeadAvoidance;
+    // public CharacterCorrectionRay missedLeftJump;
+    // public CharacterCorrectionRay missedRightJump;
+    // public CharacterCorrectionRay leftHeadAvoidance;
+    // public CharacterCorrectionRay rightHeadAvoidance;
     
     [Header("Collisions")]
-    public CharacterContact groundContact = new CharacterContact();
-    public CharacterContact leftWallContact = new CharacterContact();
-    public CharacterContact rightWallContact = new CharacterContact();
-    public CharacterContact roofContact = new CharacterContact();
+    // public CharacterContact groundContact = new CharacterContact();
+    // public CharacterContact leftWallContact = new CharacterContact();
+    // public CharacterContact rightWallContact = new CharacterContact();
+    // public CharacterContact roofContact = new CharacterContact();
     
     [Header("References")]
     public Transform transform;
@@ -111,22 +111,22 @@ public class CharacterData
 }
 
 [Serializable]
-public class CharacterControlsData : ICharacterSettingsData
+public class CharacterControlsData
 {
     [field: SerializeField, Header("References")] public Transform Transform { get; set; }
     [field: SerializeField] public Rigidbody2D RigidBody { get; set; }
     [field: SerializeField] public CharacterInput InputSystem { get; set; }
     [field: SerializeField] public Inventory Inventory { get; set; }
-    
-    [field: SerializeField, Header("Corrections")] public CharacterCorrectionRay MissedLeftJump { get; set; }
-    [field: SerializeField] public CharacterCorrectionRay MissedRightJump { get; set; }
-    [field: SerializeField] public CharacterCorrectionRay LeftHeadAvoidance { get; set; }
-    [field: SerializeField] public CharacterCorrectionRay RightHeadAvoidance { get; set; }
-    
-    [field: SerializeField, Header("Collisions")] public CharacterContact GroundContact { get; set; }
-    [field: SerializeField] public CharacterContact RoofContact { get; set; }
-    [field: SerializeField] public CharacterContact LeftWallContact { get; set; }
-    [field: SerializeField] public CharacterContact RightWallContact { get; set; }
+    //
+    // [field: SerializeField, Header("Corrections")] public CharacterCorrectionRay MissedLeftJump { get; set; }
+    // [field: SerializeField] public CharacterCorrectionRay MissedRightJump { get; set; }
+    // [field: SerializeField] public CharacterCorrectionRay LeftHeadAvoidance { get; set; }
+    // [field: SerializeField] public CharacterCorrectionRay RightHeadAvoidance { get; set; }
+    //
+    // [field: SerializeField, Header("Collisions")] public CharacterContact GroundContact { get; set; }
+    // [field: SerializeField] public CharacterContact RoofContact { get; set; }
+    // [field: SerializeField] public CharacterContact LeftWallContact { get; set; }
+    // [field: SerializeField] public CharacterContact RightWallContact { get; set; }
     
     [field: SerializeField, ReadOnly, AllowNesting, Header("Trajectory")] public Vector2 CalculatedGravity { get; set; }
     public float GravityMultiplier { get; set; }
@@ -194,17 +194,17 @@ public interface ICharacterSettingsData
     public Transform Transform { get; set; }
     public Rigidbody2D RigidBody { get; set; }
     public CharacterInput InputSystem { get; set; }
-    
-    public CharacterCorrectionRay MissedLeftJump { get; set; }
-    public CharacterCorrectionRay MissedRightJump { get; set; }
-    public CharacterCorrectionRay LeftHeadAvoidance { get; set; }
-    public CharacterCorrectionRay RightHeadAvoidance { get; set; }
-
-    public CharacterContact GroundContact { get; set; }
-    public CharacterContact RoofContact { get; set; }
-    public CharacterContact LeftWallContact { get; set; }
-    public CharacterContact RightWallContact { get; set; }
-    
+    //
+    // public CharacterCorrectionRay MissedLeftJump { get; set; }
+    // public CharacterCorrectionRay MissedRightJump { get; set; }
+    // public CharacterCorrectionRay LeftHeadAvoidance { get; set; }
+    // public CharacterCorrectionRay RightHeadAvoidance { get; set; }
+    //
+    // public CharacterContact GroundContact { get; set; }
+    // public CharacterContact RoofContact { get; set; }
+    // public CharacterContact LeftWallContact { get; set; }
+    // public CharacterContact RightWallContact { get; set; }
+    //
     
     
     
