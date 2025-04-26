@@ -118,7 +118,6 @@ namespace CharacterController.Platformer
                         Controller controller = targetObject.GetComponent<Controller>();
                         if (controller != null)
                         {
-                            // Get the private field 'initialBehavior'
                             FieldInfo field = typeof(Controller).GetField("initialBehavior", BindingFlags.NonPublic | BindingFlags.Instance);
                             if (field != null)
                             {
@@ -129,7 +128,6 @@ namespace CharacterController.Platformer
                                 }
                             }
 
-                            // Mark the controller as dirty so Unity saves the change
                             EditorUtility.SetDirty(controller);
                         }
                     }
