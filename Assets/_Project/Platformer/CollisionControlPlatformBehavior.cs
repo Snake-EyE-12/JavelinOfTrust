@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CharacterController.Platformer
 {
-    public class CollisionControl : PlatformerPlayerBehavior
+    public class CollisionControlPlatformBehavior : PlatformerPlayerBehavior
     {
         [SerializeField] private CapsuleCollider2D capsuleCollider;
         [SerializeField] private BoxCollider2D boxCollider;

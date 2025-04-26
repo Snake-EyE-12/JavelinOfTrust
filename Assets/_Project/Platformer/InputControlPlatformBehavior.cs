@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 namespace CharacterController.Platformer
 {
-    public class InputControl : PlatformerPlayerBehavior
+    public class InputControlPlatformBehavior : PlatformerPlayerBehavior
     {
         private CharacterFrameInput frameInput = new CharacterFrameInput();
         public void OnDirectionEvaluated(InputAction.CallbackContext context)

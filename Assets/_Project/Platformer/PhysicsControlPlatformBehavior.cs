@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace CharacterController.Platformer
 {
-    public class PhysicsControl : PlatformerPlayerBehavior
+    public class PhysicsControlPlatformBehavior : PlatformerPlayerBehavior
     {
         [SerializeField] private Rigidbody2D rigidBody;
         protected override void OnLoad()
