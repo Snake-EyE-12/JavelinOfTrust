@@ -39,6 +39,17 @@ namespace CharacterController.Platformer
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
+            
+            GameObject go = ((MonoBehaviour)target).gameObject;
+            
+            if (go.GetComponent<Controller>() == null)
+            {
+                if (GUILayout.Button("Create Controller", GUILayout.MaxWidth(150), GUILayout.MinHeight(25)))
+                {
+                    Undo.AddComponent<Controller>(go);
+                }
+                EditorGUILayout.Space(20);
+            }
 
             EditorGUILayout.BeginHorizontal();
 
@@ -101,7 +112,27 @@ namespace CharacterController.Platformer
             {
                 if (index >= 0 && index < controllerTypes.Count)
                 {
-                    Undo.AddComponent(targetObject, controllerTypes[index]);
+                    Component addedComponent = Undo.AddComponent(targetObject, controllerTypes[index]);
+                    if (addedComponent is PlayerBehavior behavior)
+                    {
+                        Controller controller = targetObject.GetComponent<Controller>();
+                        if (controller != null)
+                        {
+                            // Get the private field 'initialBehavior'
+                            FieldInfo field = typeof(Controller).GetField("initialBehavior", BindingFlags.NonPublic | BindingFlags.Instance);
+                            if (field != null)
+                            {
+                                var list = field.GetValue(controller) as IList<PlayerBehavior>;
+                                if (list != null && !list.Contains(behavior))
+                                {
+                                    list.Add(behavior);
+                                }
+                            }
+
+                            // Mark the controller as dirty so Unity saves the change
+                            EditorUtility.SetDirty(controller);
+                        }
+                    }
                 }
             }
 
