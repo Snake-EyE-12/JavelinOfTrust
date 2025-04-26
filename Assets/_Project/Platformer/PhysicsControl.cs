@@ -2,10 +2,10 @@ using UnityEngine;
 
 namespace CharacterController.Platformer
 {
-    public class PhysicsControl : PlayerBehavior
+    public class PhysicsControl : PlatformerPlayerBehavior
     {
         [SerializeField] private Rigidbody2D rigidBody;
-        protected override void LoadGimmicks()
+        protected override void OnLoad()
         {
             blackboard.SetVariable("Velocity", Vector2.zero);
             blackboard.SetVariable("Acceleration", Vector2.zero);

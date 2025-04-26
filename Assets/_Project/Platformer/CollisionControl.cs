@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CharacterController.Platformer
 {
-    public class CollisionControl : PlayerBehavior
+    public class CollisionControl : PlatformerPlayerBehavior
     {
         [SerializeField] private CapsuleCollider2D capsuleCollider;
         [SerializeField] private BoxCollider2D boxCollider;
@@ -12,7 +12,7 @@ namespace CharacterController.Platformer
         [field: SerializeField] public CharacterContact RoofContact { get; set; }
         [field: SerializeField] public CharacterContact LeftWallContact { get; set; }
         [field: SerializeField] public CharacterContact RightWallContact { get; set; }
-        protected override void LoadGimmicks()
+        protected override void OnLoad()
         {
             //Do(UpdateGroundContact, 100);
             //Do(UpdateRoofContact, 100);

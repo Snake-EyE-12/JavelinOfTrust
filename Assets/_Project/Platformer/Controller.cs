@@ -64,13 +64,16 @@ namespace CharacterController.Platformer
     public abstract class PlayerBehavior : MonoBehaviour
     {
         protected Blackboard blackboard;
-        public void Initialize(Blackboard blackboard)
+        public void Initialize(Blackboard board)
         {
-            this.blackboard = blackboard;
-            LoadGimmicks();
+            blackboard = board;
+            OnLoad();
         }
 
-        protected abstract void LoadGimmicks();
+        /// <summary>
+        /// Use Load() to load all prioritized methods in list
+        /// </summary>
+        protected abstract void OnLoad();
         protected List<Gimmick> gimmicks = new();
 
         public List<PrioritizedAction> GetActions()
@@ -87,7 +90,16 @@ namespace CharacterController.Platformer
             gimmick.board = blackboard;
             gimmicks.Add(gimmick);
         }
+    }
 
+    public abstract class PlatformerPlayerBehavior : PlayerBehavior
+    {
+    }
+    public abstract class TopDownPlayerBehavior : PlayerBehavior
+    {
+    }
+    public abstract class ThreeDPlayerBehavior : PlayerBehavior
+    {
     }
 
     public class PrioritizedAction
@@ -152,20 +164,20 @@ namespace CharacterController.Platformer
         public Blackboard board { get; set; }
         [SerializeField] private bool active;
         [SerializeField] private int[] priorities;
-        private List<Action> actions;
+        private List<Action> actionList;
         public List<PrioritizedAction> GetActions()
         {
             List<PrioritizedAction> prioritizedActions = new();
             for (int i = 0; i < priorities.Length; i++)
             {
-                prioritizedActions.Add(new PrioritizedAction(actions[i], priorities[i]));
+                prioritizedActions.Add(new PrioritizedAction(actionList[i], priorities[i]));
             }
             return prioritizedActions;
         }
 
-        public void SetActions(List<Action> actions)
+        public void SetActions(List<Action> action)
         {
-            this.actions = actions;
+            actionList = action;
         }
     }
 

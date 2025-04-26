@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace CharacterController.Platformer
 {
-    public class Walk : PlayerBehavior
+    public class WalkControlPlatformBehavior : PlatformerPlayerBehavior
     {
         [Serializable]
         public class AccelerationGimmick : Gimmick
@@ -65,7 +65,7 @@ namespace CharacterController.Platformer
         [SerializeField] private VelocityMovementGimmick snapMovement;
         [SerializeField] private AccelerationGimmick dynamicAcceleration;
 
-        protected override void LoadGimmicks()
+        protected override void OnLoad()
         {
             Load(snapMovement);
             Load(dynamicAcceleration);
