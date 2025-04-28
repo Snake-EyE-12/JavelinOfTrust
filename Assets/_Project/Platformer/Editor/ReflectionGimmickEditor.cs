@@ -56,6 +56,7 @@ namespace CharacterController.Platformer
             }
         }
 
+        private string CamelCase(string s) => string.Concat(s.Select((x, i) => i > 0 && char.IsUpper(x) ? " " + x : x.ToString()));
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
@@ -125,7 +126,7 @@ namespace CharacterController.Platformer
                     {
                         GUILayout.Space(2);
                         EditorGUILayout.BeginHorizontal();
-                        EditorGUILayout.LabelField(actions[i].Method.Name);
+                        EditorGUILayout.LabelField(CamelCase(actions[i].Method.Name));
                         var singlePriority = prioritiesProp.GetArrayElementAtIndex(i);
                         EditorGUILayout.PropertyField(singlePriority, GUIContent.none, true);
                         EditorGUILayout.EndHorizontal();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -12,7 +13,7 @@ namespace CharacterController.Platformer
     }
     public class Controller : MonoBehaviour
     {
-        private Blackboard blackboard = new Blackboard();
+        private Blackboard blackboard = new Blackboard("Data");
         
         [SerializeField] private List<PlayerBehavior> initialBehavior = new();
 
@@ -116,6 +117,8 @@ namespace CharacterController.Platformer
 
     public class Blackboard
     {
+        public Blackboard(string defaultKey = null) => stringKey = defaultKey;
+        [CanBeNull] private string stringKey;
         private Dictionary<int, BlackboardEntry> entries = new();
         public bool GetVariable<T>(string name, out T value)
         {
@@ -131,6 +134,18 @@ namespace CharacterController.Platformer
             value = default;
             return false;
         }
+        public T GetVariable<T>(string name) => GetVariable<T>(name, out T value) ? value : default(T);
+        public T GetOrSetDefaultVariable<T>(string name)
+        {
+            if (GetVariable(name, out T value))
+            {
+                return value;
+            }
+            T defaultValue = default;
+            SetVariable(name, defaultValue);
+            return defaultValue;
+        }
+        public T Value<T>() => stringKey == null ? default(T) :GetOrSetDefaultVariable<T>(stringKey);
 
         public void SetVariable<T>(string name, T value)
         {

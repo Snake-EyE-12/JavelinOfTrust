@@ -64,6 +64,7 @@ namespace CharacterController.Platformer
         private bool inContact;
         private float lastTimeInContact;
         private bool newlyContacted;
+        private float timeOfContactEntered;
         public void Update(Transform character)
         {
             bool contacting = Physics2D.OverlapBoxAll(character.position + bounds.center, bounds.size, character.rotation.eulerAngles.z, mask).Length > 0;
@@ -73,12 +74,14 @@ namespace CharacterController.Platformer
             }
             
             newlyContacted = !inContact && contacting;
+            if (newlyContacted) timeOfContactEntered = Time.time;
             
             inContact = contacting;
         }
         
         public bool Contact => inContact;
         public bool EnteredContact => newlyContacted;
+        public float TimeOfContactEnter => timeOfContactEntered;
         public float TimeOfContactExit => lastTimeInContact;
     }
     

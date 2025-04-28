@@ -183,11 +183,11 @@ public class CharacterControlsData
     [field: SerializeField] public float BufferTime { get; set; }
     [field: SerializeField] public float CoyoteTime { get; set; }
     [field: SerializeField] public int JumpCount { get; set; }
-    [field: SerializeField] public float VelocityInputLerp { get; set; }
     
     [field: SerializeField, Header("Dash")] public float DashSpeed { get; set; }
     [field: SerializeField] public float Duration { get; set; }
     [field: SerializeField] public float BouncePercent { get; set; }
+    [field: SerializeField] public float VelocityInputLerp { get; set; }
 }
 
 public interface ICharacterSettingsData
