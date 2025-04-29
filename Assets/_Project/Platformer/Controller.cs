@@ -177,6 +177,7 @@ namespace CharacterController.Platformer
     public abstract class Gimmick
     {
         public Blackboard board { get; set; }
+        public bool Active => active;
         [SerializeField] private bool active;
         [SerializeField] private int[] priorities;
         private List<Action> actionList;

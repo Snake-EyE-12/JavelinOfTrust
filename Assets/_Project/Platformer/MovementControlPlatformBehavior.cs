@@ -20,11 +20,11 @@ namespace CharacterController.Platformer
             private void Accelerate()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                int movementDirection = PlayerBehaviorUtilities.Sign(data.input.InputDirection.Direction.x);
+                int movementDirection = PlayerBehaviorUtilities.Sign(data.Input.InputDirection.Direction.x);
                 int velDirection = PlayerBehaviorUtilities.Sign(data.Velocity.X);
                 if (movementDirection != 0 && (velDirection == movementDirection || velDirection == 0))
                 {
-                    data.HorizontalAcceleration = acceleration;
+                    data.Acceleration.@base.x = acceleration;
                 }
             }
 
@@ -32,11 +32,11 @@ namespace CharacterController.Platformer
             private void Decelerate()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                int movementDirection = PlayerBehaviorUtilities.Sign(data.input.InputDirection.Direction.x);
+                int movementDirection = PlayerBehaviorUtilities.Sign(data.Input.InputDirection.Direction.x);
                 int velDirection = PlayerBehaviorUtilities.Sign(data.Velocity.X);
                 if (movementDirection != 0 && (velDirection == movementDirection || velDirection == 0))
                 {
-                    data.HorizontalAcceleration = reversalAcceleration;
+                    data.Acceleration.@base.x = reversalAcceleration;
                 }
             }
             
@@ -44,11 +44,11 @@ namespace CharacterController.Platformer
             private void Coast()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                int movementDirection = PlayerBehaviorUtilities.Sign(data.input.InputDirection.Direction.x);
+                int movementDirection = PlayerBehaviorUtilities.Sign(data.Input.InputDirection.Direction.x);
                 int velDirection = PlayerBehaviorUtilities.Sign(data.Velocity.X);
                 if (movementDirection == 0 && velDirection != 0)
                 {
-                    data.Velocity.X *= coastalDamping;
+                    data.Velocity.multiplier.x *= coastalDamping;
                 }
             }
 
@@ -56,10 +56,10 @@ namespace CharacterController.Platformer
             private void Stop()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                if (PlayerBehaviorUtilities.Sign(data.input.InputDirection.Direction.x) == 0 && data.Velocity.X < stopThreshold && data.Velocity.X > -stopThreshold)
+                if (PlayerBehaviorUtilities.Sign(data.Input.InputDirection.Direction.x) == 0 && data.Velocity.X < stopThreshold && data.Velocity.X > -stopThreshold)
                 {
-                    data.Velocity.X = 0;
-                    data.Acceleration.X = 0;
+                    data.Velocity.additive.x = 0;
+                    data.Acceleration.additive.x = 0;
                 }
             }
 
@@ -111,7 +111,11 @@ namespace CharacterController.Platformer
             private void ClampSpeed()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                data.Velocity.X = Mathf.Clamp(data.Velocity.X, -data.MaxSpeed, data.MaxSpeed);
+                if (applyInAir && !data.GroundContact.Contact) return;
+                if (Mathf.Abs(data.Velocity.X) > data.MaxSpeed)
+                {
+                    data.Velocity.multiplier.x *= Mathf.Abs(data.Velocity.X) / data.MaxSpeed;
+                }
             }
         }
 
@@ -125,9 +129,10 @@ namespace CharacterController.Platformer
             private void LimitSpeed()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                if (applyInAir && !data.GroundContact.Contact) return;
                 if (Mathf.Abs(data.Velocity.X) > data.MaxSpeed)
                 {
-                    data.Velocity.X *= (1 - damping * Time.deltaTime);
+                    data.Velocity.multiplier *= (1 - damping * Time.deltaTime);
                 }
             }
 
@@ -156,11 +161,25 @@ namespace CharacterController.Platformer
                 if (data.ShouldJump)
                 {
                     data.InJump = true;
+                    data.ShouldJump = false;
                     data.JumpPoint.position = data.Transform.position;
                     data.JumpPoint.time = Time.time;
-                    data.Acceleration.X = 0;
-                    data.Velocity.Y = burstVelocity * data.JumpVelocityMultiplier;
+                    data.Acceleration.additive.y = 0;
+                    data.Velocity.additive.y = burstVelocity * data.JumpVelocityMultiplier;
+                    data.PerformedJumps++;
                 }
+            }
+
+            [Prioritized]
+            private void LandingReset()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                if (data.InJump && data.GroundContact.Contact)
+                {
+                    data.InJump = false;
+                    data.PerformedJumps = 0;
+                }
+                
             }
         }
         [Serializable]
@@ -183,7 +202,7 @@ namespace CharacterController.Platformer
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
                 if (data.InApex)
                 {
-                    data.HorizontalAccelerationMultiplier *= horizontalAccelerationMultiplier;
+                    data.Acceleration.multiplier.x *= horizontalAccelerationMultiplier;
                 }
             }
 
@@ -193,20 +212,35 @@ namespace CharacterController.Platformer
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
                 if (data.InApex)
                 {
-                    data.GravityMultiplier *= gravityMultiplier;
+                    data.Acceleration.multiplier.y *= gravityMultiplier;
                 }
             }
         }
         [Serializable]
         public class EarlyReleaseGimmick : Gimmick
         {
+            [SerializeField] private float minimumHeight;
+            private bool releasedJumpKeyInJump;
+
             [Prioritized]
-            private void ZeroUpwardsVelocity()
+            private void ListenToRelease()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                if (data.InJump && data.input.Jump.ended && data.Velocity.Y > 0)
+                if (data.InJump && data.Input.Jump.ended && data.Velocity.Y > 0 && !releasedJumpKeyInJump)
                 {
-                    data.Velocity.Y = 0;
+                    releasedJumpKeyInJump = true;
+                }
+            }
+            
+            [Prioritized]
+            private void ActivateEarlyRelease()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                if (releasedJumpKeyInJump && data.Transform.position.y - data.JumpPoint.position.y > minimumHeight)
+                {
+                    data.EarlyRelease = true;
+                    data.Velocity.additive.y = 0;
+                    releasedJumpKeyInJump = false;
                 }
             }
         }
@@ -219,7 +253,7 @@ namespace CharacterController.Platformer
             private void AlterGravity()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                if(data.InJump && data.Velocity.Y < 0) data.GravityMultiplier *= multiplier;
+                if(data.InJump && data.Velocity.Y < 0) data.Acceleration.multiplier.y *= multiplier;
             }
         }
         [Serializable]
@@ -229,7 +263,7 @@ namespace CharacterController.Platformer
             private void Descend()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                if(data.InJump && data.RoofContact.EnteredContact && data.Velocity.Y > 0) data.Velocity.Y = 0;
+                if(data.InJump && data.RoofContact.EnteredContact && data.Velocity.Y > 0) data.Velocity.additive.y = 0;
             }
         }
         [Serializable]
@@ -243,7 +277,7 @@ namespace CharacterController.Platformer
             private void ListenToJumpInput()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                if (data.input.Jump.pressed)
+                if (data.Input.Jump.pressed)
                 {
                     timeOfPress = Time.time;
                 }
@@ -265,7 +299,7 @@ namespace CharacterController.Platformer
             private void ListenToJumpInput()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                if (!data.InJump && data.input.Jump.pressed && Time.time - data.GroundContact.TimeOfContactExit < window)
+                if (!data.InJump && data.Input.Jump.pressed && Time.time - data.GroundContact.TimeOfContactExit < window)
                 {
                     data.ShouldJump = true;
                 }
@@ -282,10 +316,10 @@ namespace CharacterController.Platformer
             private void StickToGround()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                if (Time.time - data.GroundContact.TimeOfGroundContact < duration)
+                if (Time.time - data.GroundContact.TimeOfContactEnter < duration)
                 {
-                    data.HorizontalAccelerationMultiplier *= accelerationMultiplier;
-                    data.VelocityMultiplier *= velocityMultiplier;
+                    data.Acceleration.multiplier.x *= accelerationMultiplier;
+                    data.Velocity.multiplier.x *= velocityMultiplier;
                 }
             }
         }
@@ -293,43 +327,104 @@ namespace CharacterController.Platformer
         public class AirControlGimmick : Gimmick
         {
             [SerializeField, Range(0, 1)] private float inputResponsiveness;
+
+            [Prioritized]
+            private void AlterInputMagnitude()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                data.Acceleration.@base *= inputResponsiveness;
+            }
         }
         [Serializable]
         public class AirBreakGimmick : Gimmick
         {
-            [SerializeField, Range(0, 1)] private float accelerationDamping;
+            [SerializeField, Range(0, 1)] private float velocityDamping;
+
+            [Prioritized]
+            private void BreakInAir()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                int movementDirection = PlayerBehaviorUtilities.Sign(data.Input.InputDirection.Direction.x);
+                if (!data.GroundContact.Contact && movementDirection == 0)
+                {
+                    data.Velocity.multiplier.x *= velocityDamping;
+                }
+            }
         }
         [Serializable]
         public class AdjustInJumpTerminalFallSpeedGimmick : Gimmick
         {
             [SerializeField] private float maxFallSpeed;
+
+            [Prioritized]
+            private void CalculateInJumpParabola()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                data.InJumpArc = data.InJump && data.Transform.position.y > data.JumpPoint.position.y;
+            }
+
+            [Prioritized]
+            private void AlterFallSpeed()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                if (data.InJumpArc) data.maxFallSpeed = maxFallSpeed;
+            }
         }
         [Serializable]
         public class ClipRoofCornerGimmick : Gimmick
         {
             [SerializeField] private CharacterCorrectionRay leftHeadAvoidance;
             [SerializeField] private CharacterCorrectionRay rightHeadAvoidance;
+
+            [Prioritized]
+            private void ClipRoofCorner()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                int movementDirection = PlayerBehaviorUtilities.Sign(data.Input.InputDirection.Direction.x);
+                if (data.InJump && data.EarlyRelease)
+                {
+                    
+                    if (movementDirection != -1 && Physics2D.RaycastAll(data.Transform.position + (Vector3)leftHeadAvoidance.origin, leftHeadAvoidance.direction, leftHeadAvoidance.direction.magnitude).Length > 0 &&
+                        Physics2D.RaycastAll(data.Transform.position + (Vector3)(leftHeadAvoidance.origin + leftHeadAvoidance.correction), leftHeadAvoidance.direction, leftHeadAvoidance.direction.magnitude).Length == 0)
+                    {
+                        data.Transform.position += (Vector3)leftHeadAvoidance.correction;
+                    }
+                    else if (movementDirection != 1 && Physics2D.RaycastAll(data.Transform.position + (Vector3)rightHeadAvoidance.origin, rightHeadAvoidance.direction, rightHeadAvoidance.direction.magnitude).Length > 0 && 
+                             Physics2D.RaycastAll(data.Transform.position + (Vector3)(rightHeadAvoidance.origin + rightHeadAvoidance.correction), rightHeadAvoidance.direction, rightHeadAvoidance.direction.magnitude).Length == 0)
+                    { 
+                        data.Transform.position += (Vector3)rightHeadAvoidance.correction;
+                    }
+                }
+            }
         }
         [Serializable]
         public class RunningJumpBoostGimmick : Gimmick
         {
             [SerializeField] private Curve boost;
-        }
-        [Serializable]
-        public class MinimumJumpHeightBeforeReleaseGimmick : Gimmick
-        {
-            [SerializeField] private float height;
+
+            [Prioritized]
+            private void BoostJumpHeight()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                if(data.ShouldJump) data.JumpVelocityMultiplier = boost.Evaluate(data.Velocity.X);
+            }
         }
         [Serializable]
         public class MultipleJumpCountGimmick : Gimmick
         {
-            [SerializeField] private int count;
+            [SerializeField, Min(2)] private int count;
+
+            [Prioritized]
+            private void ExtraJump()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                if(data.PerformedJumps < count && data.InJump) data.ShouldJump = true;
+            }
         }
         
         [SerializeField] private JumpApplicationGimmick jumpApplication;
         [SerializeField] private ApexBoostGimmick apexBoost;
         [SerializeField] private EarlyReleaseGimmick earlyRelease;
-        [SerializeField] private ImmediateDescendGimmick immediateDescend;
         [SerializeField] private DescendingGravityGimmick descendingGravity;
         [SerializeField] private RoofDescendGimmick roofDescend;
         [SerializeField] private BufferJumpInputGimmick bufferJumpInput;
@@ -340,12 +435,24 @@ namespace CharacterController.Platformer
         [SerializeField] private AdjustInJumpTerminalFallSpeedGimmick adjustInJumpTerminalFallSpeed;
         [SerializeField] private ClipRoofCornerGimmick clipRoofCorner;
         [SerializeField] private RunningJumpBoostGimmick runningJumpBoost;
-        [SerializeField] private MinimumJumpHeightBeforeReleaseGimmick minimumJumpHeightBeforeRelease;
         [SerializeField] private MultipleJumpCountGimmick multipleJumpCount;
         
         protected override void OnLoad()
         {
-            
+            Load(jumpApplication);
+            Load(apexBoost);
+            Load(earlyRelease);
+            Load(descendingGravity);
+            Load(roofDescend);
+            Load(bufferJumpInput);
+            Load(coyoteTimeBuffer);
+            Load(stickyFeet);
+            Load(airControl);
+            Load(airBreak);
+            Load(adjustInJumpTerminalFallSpeed);
+            Load(clipRoofCorner);
+            Load(runningJumpBoost);
+            Load(multipleJumpCount);
         }
     }
     
@@ -383,9 +490,23 @@ namespace CharacterController.Platformer
     
     public class FallControlPlatformBehavior : PlatformerPlayerBehavior
     {
+        [Serializable]
+        public class FallGimmick : Gimmick
+        {
+            [SerializeField] private float gravity;
+
+            [Prioritized]
+            private void ApplyGravity()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                data.Acceleration.additive.y += gravity;
+                
+            }
+        }
+        [SerializeField] private FallGimmick gravity;
         protected override void OnLoad()
         {
-            throw new NotImplementedException();
+            Load(gravity);
         }
     }
     

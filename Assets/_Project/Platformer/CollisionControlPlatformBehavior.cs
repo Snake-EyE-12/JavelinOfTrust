@@ -7,49 +7,44 @@ namespace CharacterController.Platformer
     {
         [SerializeField] private CapsuleCollider2D capsuleCollider;
         [SerializeField] private BoxCollider2D boxCollider;
+
+        [Serializable]
+        public class CollisionDetectionGimmick : Gimmick
+        {
+            [SerializeField] public CharacterContact contact;
+            
+            [Prioritized]
+            private void UpdateContact()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                contact.Update(data.Transform);
+            }
+        }
         
-        [field: SerializeField, Header("Collisions")] public CharacterContact GroundContact { get; set; }
-        [field: SerializeField] public CharacterContact RoofContact { get; set; }
-        [field: SerializeField] public CharacterContact LeftWallContact { get; set; }
-        [field: SerializeField] public CharacterContact RightWallContact { get; set; }
+        [SerializeField] private CollisionDetectionGimmick GroundContact;
+        [SerializeField] private CollisionDetectionGimmick RoofContact;
+        [SerializeField] private CollisionDetectionGimmick LeftWallContact;
+        [SerializeField] private CollisionDetectionGimmick RightWallContact;
         protected override void OnLoad()
         {
-            //Do(UpdateGroundContact, 100);
-            //Do(UpdateRoofContact, 100);
-            //Do(UpdateLeftWallContact, 100);
-            //Do(UpdateRightWallContact, 100);
+            Load(GroundContact);
+            Load(RoofContact);
+            Load(LeftWallContact);
+            Load(RightWallContact);
+            ICustomCharacterSettingsData data = blackboard.Value<CustomCharacterSettingsData>();
+            data.GroundContact = GroundContact.contact;
+            data.RoofContact = RoofContact.contact;
+            data.LeftWallContact = LeftWallContact.contact;
+            data.RightWallContact = RightWallContact.contact;
         }
 
-        private void UpdateGroundContact()
+        private void OnDrawGizmosSelected()
         {
-            if(blackboard.GetVariable("Transform", out Transform character))
-            {
-                GroundContact.Update(character);
-            }
-        }
-        
-        private void UpdateRoofContact()
-        {
-            if(blackboard.GetVariable("Transform", out Transform character))
-            {
-                RoofContact.Update(character);
-            }
-        }
-        
-        private void UpdateLeftWallContact()
-        {
-            if(blackboard.GetVariable("Transform", out Transform character))
-            {
-                LeftWallContact.Update(character);
-            }
-        }
-        
-        private void UpdateRightWallContact()
-        {
-            if(blackboard.GetVariable("Transform", out Transform character))
-            {
-                RightWallContact.Update(character);
-            }
+            Gizmos.color = Color.green;
+            if(GroundContact.Active) GroundContact.contact.DrawGizmos(transform);
+            if(RoofContact.Active) RoofContact.contact.DrawGizmos(transform);
+            if(LeftWallContact.Active) LeftWallContact.contact.DrawGizmos(transform);
+            if(RightWallContact.Active) RightWallContact.contact.DrawGizmos(transform);
         }
     }
     
@@ -77,6 +72,10 @@ namespace CharacterController.Platformer
             if (newlyContacted) timeOfContactEntered = Time.time;
             
             inContact = contacting;
+        }
+        public void DrawGizmos(Transform character)
+        {
+            Gizmos.DrawWireCube(character.position + bounds.center, bounds.size);
         }
         
         public bool Contact => inContact;

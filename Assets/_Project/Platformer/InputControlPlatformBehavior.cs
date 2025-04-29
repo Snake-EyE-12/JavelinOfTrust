@@ -18,14 +18,13 @@ namespace CharacterController.Platformer
             private void GatherInput()
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                data.input = frameInput;
+                data.Input = frameInput;
             }
 
             [Prioritized]
             private void ResetInput()
             {
-                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
-                data.input.Reset();
+                frameInput.Reset();
             }
         }
         public void OnDirectionEvaluated(InputAction.CallbackContext context)

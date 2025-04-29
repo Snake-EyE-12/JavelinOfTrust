@@ -174,6 +174,21 @@ Transform:
   - {fileID: 1089933693}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!115 &102243320
+MonoScript:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 7
+  m_DefaultReferences: {}
+  m_Icon: {fileID: 0}
+  m_Type: 0
+  m_ExecutionOrder: 0
+  m_ClassName: FallControlPlatformBehavior
+  m_Namespace: CharacterController.Platformer
+  m_AssemblyName: Assembly-CSharp
 --- !u!1 &130674700
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,9 +200,14 @@ GameObject:
   - component: {fileID: 130674701}
   - component: {fileID: 130674706}
   - component: {fileID: 130674705}
-  - component: {fileID: 130674704}
-  - component: {fileID: 130674703}
-  - component: {fileID: 130674702}
+  - component: {fileID: 130674715}
+  - component: {fileID: 130674714}
+  - component: {fileID: 130674713}
+  - component: {fileID: 130674712}
+  - component: {fileID: 130674711}
+  - component: {fileID: 130674709}
+  - component: {fileID: 130674708}
+  - component: {fileID: 130674716}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
@@ -214,59 +234,6 @@ Transform:
   - {fileID: 1334586508}
   m_Father: {fileID: 1862895815}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &130674702
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130674700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30c77d71ca0f40afb726a9065cf4bc5d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rigidBody: {fileID: 130674705}
---- !u!114 &130674703
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130674700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 933fa589a8dd4a6a8e9e431921c63aff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  snapMovement:
-    active: 0
-    priorities: 
-    speed: 0
-    normalized: 0
-  dynamicAcceleration:
-    active: 0
-    priorities: 
-    acceleration: 0
-    reversalAcceleration: 0
-    coastalDamping: 0
-    stopThreshold: 0
---- !u!114 &130674704
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 130674700}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 51f4dc2f5c08d3d46a2270821f472523, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialBehavior:
-  - {fileID: 1045493951}
-  - {fileID: 130674703}
-  - {fileID: 130674702}
 --- !u!50 &130674705
 Rigidbody2D:
   serializedVersion: 5
@@ -331,6 +298,201 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: 0}
   m_Size: {x: 1, y: 2}
   m_Direction: 0
+--- !u!114 &130674708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130674700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 102243320}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gravity:
+    active: 1
+    priorities: 64000000
+    gravity: -100
+--- !u!114 &130674709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130674700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30c77d71ca0f40afb726a9065cf4bc5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rigidBody: {fileID: 0}
+  eulerPhysics:
+    active: 1
+    priorities: d007000034080000
+    body: {fileID: 130674705}
+--- !u!114 &130674711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130674700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 933fa589a8dd4a6a8e9e431921c63aff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  snapMovement:
+    active: 0
+    priorities: 00000000
+    speed: 0
+    normalized: 0
+  walkAcceleration:
+    active: 1
+    priorities: 2c0100002c0100002c0100002d0100002c010000
+    acceleration: 48.43
+    reversalAcceleration: 75.25
+    coastalDamping: 1.2
+    stopThreshold: 0.06
+    maxSpeed: 40.89
+  sprintingAcceleration:
+    active: 0
+    priorities: 0000000000000000000000000000000000000000
+    acceleration: 0
+    reversalAcceleration: 0
+    coastalDamping: 0
+    stopThreshold: 0
+    maxSpeed: 0
+  crouchingAcceleration:
+    active: 0
+    priorities: 0000000000000000000000000000000000000000
+    acceleration: 0
+    reversalAcceleration: 0
+    coastalDamping: 0
+    stopThreshold: 0
+    maxSpeed: 0
+--- !u!114 &130674712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130674700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a78a9fb3900d4fd28cd532e8203cd9bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  capsuleCollider: {fileID: 0}
+  boxCollider: {fileID: 0}
+  GroundContact:
+    active: 1
+    priorities: c8000000
+    contact:
+      <bounds>k__BackingField:
+        m_Center: {x: 0, y: -0.99, z: 0}
+        m_Extent: {x: 0.32, y: 0.13, z: 0}
+      <mask>k__BackingField:
+        serializedVersion: 2
+        m_Bits: 768
+  RoofContact:
+    active: 1
+    priorities: c8000000
+    contact:
+      <bounds>k__BackingField:
+        m_Center: {x: 0, y: 1, z: 0}
+        m_Extent: {x: 0.28, y: 0.14, z: 0}
+      <mask>k__BackingField:
+        serializedVersion: 2
+        m_Bits: 0
+  LeftWallContact:
+    active: 1
+    priorities: c8000000
+    contact:
+      <bounds>k__BackingField:
+        m_Center: {x: -0.53, y: 0, z: 0}
+        m_Extent: {x: 0.17, y: 0.62, z: 0}
+      <mask>k__BackingField:
+        serializedVersion: 2
+        m_Bits: 0
+  RightWallContact:
+    active: 1
+    priorities: c8000000
+    contact:
+      <bounds>k__BackingField:
+        m_Center: {x: 0.5, y: 0, z: 0}
+        m_Extent: {x: 0.14, y: 0.6, z: 0}
+      <mask>k__BackingField:
+        serializedVersion: 2
+        m_Bits: 0
+--- !u!114 &130674713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130674700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2909175324e3418386988ec30deeb23b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  input:
+    active: 1
+    priorities: 6400000000000000
+--- !u!114 &130674714
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130674700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51f4dc2f5c08d3d46a2270821f472523, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialBehavior:
+  - {fileID: 130674713}
+  - {fileID: 130674712}
+  - {fileID: 130674711}
+  - {fileID: 130674709}
+  - {fileID: 130674708}
+  - {fileID: 130674716}
+--- !u!114 &130674715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130674700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea60e4059b1b453486403ce1f07676dd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &130674716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 130674700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 486620676}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speedClamper:
+    active: 1
+    priorities: 90010000
+    applyInAir: 0
+  speedLimiter:
+    active: 0
+    priorities: 00000000
+    applyInAir: 0
+    damping: 0
 --- !u!1 &131404542
 GameObject:
   m_ObjectHideFlags: 0
@@ -581,10 +743,10 @@ MonoBehaviour:
     <BufferTime>k__BackingField: 0
     <CoyoteTime>k__BackingField: 0
     <JumpCount>k__BackingField: 0
-    <VelocityInputLerp>k__BackingField: 0
     <DashSpeed>k__BackingField: 0
     <Duration>k__BackingField: 0
     <BouncePercent>k__BackingField: 0
+    <VelocityInputLerp>k__BackingField: 0
 --- !u!114 &148051395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1713,6 +1875,21 @@ Transform:
   - {fileID: 717221445}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!115 &486620676
+MonoScript:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 7
+  m_DefaultReferences: {}
+  m_Icon: {fileID: 0}
+  m_Type: 0
+  m_ExecutionOrder: 0
+  m_ClassName: SpeedControlPlatformBehavior
+  m_Namespace: CharacterController.Platformer
+  m_AssemblyName: Assembly-CSharp
 --- !u!1 &498985297
 GameObject:
   m_ObjectHideFlags: 0
@@ -3105,7 +3282,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1045493948}
   - component: {fileID: 1045493950}
-  - component: {fileID: 1045493951}
   m_Layer: 0
   m_Name: Input
   m_TagString: Untagged
@@ -3155,8 +3331,9 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1045493951}
-        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControl, Assembly-CSharp
+      - m_Target: {fileID: 130674713}
+        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControlPlatformBehavior,
+          Assembly-CSharp
         m_MethodName: OnDirectionEvaluated
         m_Mode: 0
         m_Arguments:
@@ -3175,8 +3352,9 @@ MonoBehaviour:
     m_ActionName: 'Player/Look[/Mouse/delta]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1045493951}
-        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControl, Assembly-CSharp
+      - m_Target: {fileID: 130674713}
+        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControlPlatformBehavior,
+          Assembly-CSharp
         m_MethodName: OnAttackKeyEvaluated
         m_Mode: 0
         m_Arguments:
@@ -3191,8 +3369,9 @@ MonoBehaviour:
     m_ActionName: 'Player/Attack[/Mouse/leftButton,/Keyboard/enter]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1045493951}
-        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControl, Assembly-CSharp
+      - m_Target: {fileID: 130674713}
+        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControlPlatformBehavior,
+          Assembly-CSharp
         m_MethodName: OnInteractKeyEvaluated
         m_Mode: 0
         m_Arguments:
@@ -3207,8 +3386,9 @@ MonoBehaviour:
     m_ActionName: 'Player/Interact[/Keyboard/e]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1045493951}
-        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControl, Assembly-CSharp
+      - m_Target: {fileID: 130674713}
+        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControlPlatformBehavior,
+          Assembly-CSharp
         m_MethodName: OnCrouchKeyEvaluated
         m_Mode: 0
         m_Arguments:
@@ -3223,8 +3403,9 @@ MonoBehaviour:
     m_ActionName: 'Player/Crouch[/Keyboard/c]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1045493951}
-        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControl, Assembly-CSharp
+      - m_Target: {fileID: 130674713}
+        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControlPlatformBehavior,
+          Assembly-CSharp
         m_MethodName: OnJumpKeyEvaluated
         m_Mode: 0
         m_Arguments:
@@ -3247,8 +3428,9 @@ MonoBehaviour:
     m_ActionName: 'Player/Next[/Keyboard/2]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1045493951}
-        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControl, Assembly-CSharp
+      - m_Target: {fileID: 130674713}
+        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControlPlatformBehavior,
+          Assembly-CSharp
         m_MethodName: OnSprintKeyEvaluated
         m_Mode: 0
         m_Arguments:
@@ -3303,8 +3485,9 @@ MonoBehaviour:
     m_ActionName: UI/TrackedDeviceOrientation
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1045493951}
-        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControl, Assembly-CSharp
+      - m_Target: {fileID: 130674713}
+        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControlPlatformBehavior,
+          Assembly-CSharp
         m_MethodName: OnDashKeyEvaluated
         m_Mode: 0
         m_Arguments:
@@ -3319,8 +3502,9 @@ MonoBehaviour:
     m_ActionName: 'Player/Dash[/Mouse/rightButton]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1045493951}
-        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControl, Assembly-CSharp
+      - m_Target: {fileID: 130674713}
+        m_TargetAssemblyTypeName: CharacterController.Platformer.InputControlPlatformBehavior,
+          Assembly-CSharp
         m_MethodName: OnGripKeyEvaluated
         m_Mode: 0
         m_Arguments:
@@ -3338,18 +3522,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &1045493951
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1045493947}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2909175324e3418386988ec30deeb23b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1046827611
 GameObject:
   m_ObjectHideFlags: 0
@@ -6244,7 +6416,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1862895815}
-  - component: {fileID: 1862895816}
   m_Layer: 0
   m_Name: NewChar
   m_TagString: Untagged
@@ -6268,30 +6439,6 @@ Transform:
   - {fileID: 130674701}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1862895816
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1862895814}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 933fa589a8dd4a6a8e9e431921c63aff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  snapMovement:
-    active: 0
-    priorities: 00000000
-    speed: 0
-    normalized: 0
-  dynamicAcceleration:
-    active: 1
-    priorities: 0a00000000000000
-    acceleration: 0
-    reversalAcceleration: 0
-    coastalDamping: 0
-    stopThreshold: 0
 --- !u!1 &1892569153
 GameObject:
   m_ObjectHideFlags: 0

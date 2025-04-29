@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace CharacterController.Platformer
@@ -5,36 +6,32 @@ namespace CharacterController.Platformer
     public class PhysicsControlPlatformBehavior : PlatformerPlayerBehavior
     {
         [SerializeField] private Rigidbody2D rigidBody;
+
+        [Serializable]
+        public class EulerPhysicsGimmick : Gimmick
+        {
+            [SerializeField] private Rigidbody2D body;
+
+            [Prioritized]
+            private void ApplyAcceleration()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                data.Velocity.additive += data.Acceleration.Value;
+                data.Acceleration.Reset();
+            }
+            [Prioritized]
+            private void ApplyVelocity()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                body.linearVelocity = data.Velocity.Value;
+                data.Velocity.Reset();
+            }
+        }
+        
+        [SerializeField] private EulerPhysicsGimmick eulerPhysics;
         protected override void OnLoad()
         {
-            blackboard.SetVariable("Velocity", Vector2.zero);
-            blackboard.SetVariable("Acceleration", Vector2.zero);
-            
-            //Do(ApplyAcceleration, 997);
-            //Do(LoadVelocity, 1000);
-        }
-
-        private void ApplyAcceleration()
-        {
-            if (blackboard.GetVariable("Acceleration", out Vector2 a))
-            {
-                if(blackboard.GetVariable("Velocity", out Vector2 v))
-                {
-                    if(blackboard.GetVariable("HorizontalAcceleration", out float h))
-                    {
-                        blackboard.SetVariable("Velocity", v + a + (h * Vector2.right));
-                        blackboard.SetVariable("Acceleration", Vector2.zero);
-                        blackboard.SetVariable("HorizontalAcceleration", Vector2.zero);
-                    }
-                }
-            }
-        }
-        private void LoadVelocity()
-        {
-            if (blackboard.GetVariable("Velocity", out Vector2 v))
-            {
-                rigidBody.linearVelocity = v;
-            }
+            Load(eulerPhysics);
         }
     }
 }
