@@ -21,6 +21,9 @@ namespace CharacterController.Platformer
 
         private void Awake()
         {
+            var data = new CustomCharacterSettingsData();
+            data.Transform = transform;
+            blackboard.SetVariable("Data", data);
             foreach (var behavior in initialBehavior)
             {
                 AddBehavior(behavior);
@@ -90,6 +93,7 @@ namespace CharacterController.Platformer
         {
             gimmick.board = blackboard;
             gimmicks.Add(gimmick);
+            gimmick.Load();
         }
     }
 
@@ -194,6 +198,11 @@ namespace CharacterController.Platformer
         public void SetActions(List<Action> action)
         {
             actionList = action;
+        }
+
+        public virtual void Load()
+        {
+            
         }
     }
 

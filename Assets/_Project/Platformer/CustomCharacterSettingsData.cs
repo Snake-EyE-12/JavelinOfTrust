@@ -31,10 +31,10 @@ namespace CharacterController.Platformer
     public class CustomCharacterSettingsData : ICustomCharacterSettingsData
     {
         public CharacterFrameInput Input { get; set; }
-        public AxisAccumulation Velocity { get; set; }
-        public AxisAccumulation Acceleration { get; set; }
+        public AxisAccumulation Velocity { get; set; } = new AxisAccumulation();
+        public AxisAccumulation Acceleration { get; set; } = new AxisAccumulation();
         public float MaxSpeed { get; set; }
-        public JumpPoint JumpPoint { get; set; }
+        public JumpPoint JumpPoint { get; set; } = new JumpPoint();
         public Transform Transform { get; set; }
         public bool InJump { get; set; }
         public bool ShouldJump { get; set; }

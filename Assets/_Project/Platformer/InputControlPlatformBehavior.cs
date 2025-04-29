@@ -26,6 +26,13 @@ namespace CharacterController.Platformer
             {
                 frameInput.Reset();
             }
+
+            public override void Load()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                frameInput = new CharacterFrameInput();
+                data.Input = frameInput;
+            }
         }
         public void OnDirectionEvaluated(InputAction.CallbackContext context)
         {
