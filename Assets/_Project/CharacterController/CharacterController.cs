@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Project.Merge;
 using NaughtyAttributes;
 using UnityEditor;
 using UnityEngine;
@@ -54,7 +55,10 @@ public class CharacterController : MonoBehaviour
     private void Awake()
     {
         BuildProcess();
+        animator.data = data;
     }
+
+    [SerializeField] private CharacterAnimator animator;
     [SerializeField] private CharacterData data;
     private void Update()
     {
@@ -67,7 +71,7 @@ public class CharacterController : MonoBehaviour
     
     
     
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawWireCube(transform.position + data.groundCheckBounds.center, data.groundCheckBounds.size);
