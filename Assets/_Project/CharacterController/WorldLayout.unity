@@ -1868,7 +1868,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   minMaxCharge: {x: 0, y: 1}
-  minMaxPower: {x: 20, y: 30}
+  minMaxPower: {x: 29.999996, y: 60}
 --- !u!4 &616925206
 Transform:
   m_ObjectHideFlags: 0
