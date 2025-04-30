@@ -61,13 +61,21 @@ namespace CharacterController.Platformer
 
     public class AxisAccumulation
     {
-        public Vector2 multiplier;
+        public Vector2 multiplier = Vector2.one;
         public Vector2 additive;
         public Vector2 @base;
         public float X => (@base.x + additive.x) * multiplier.x;
         public float Y => (@base.y + additive.y) * multiplier.y;
 
-        public Vector2 Value => new Vector2(X, Y);
+        public Vector2 Value
+        {
+            get
+            {
+                Debug.Log("Vel: " + "multiplier: " + multiplier + " additive: " + additive + " base: " + @base);
+                return new Vector2(X, Y);
+            }
+        }
+
         public void Reset() {
             @base = Vector2.zero; additive = Vector2.zero; multiplier = Vector2.one;
         }

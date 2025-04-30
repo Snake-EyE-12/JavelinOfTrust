@@ -15,6 +15,7 @@ namespace CharacterController.Platformer
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
                 data.Acceleration.additive.y += gravity;
+                if(data.Velocity.X > 100f) Debug.Log("Warning");
                 
             }
         }

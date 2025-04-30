@@ -271,7 +271,7 @@ CapsuleCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: cb0fbf32aa76ddb429678525aeda18e2, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -313,7 +313,7 @@ MonoBehaviour:
   gravity:
     active: 1
     priorities: 64000000
-    gravity: -100
+    gravity: -3
 --- !u!114 &130674709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,6 +331,8 @@ MonoBehaviour:
     active: 1
     priorities: d007000034080000
     body: {fileID: 130674705}
+    velocity: {x: 0, y: 0}
+    acceleration: {x: 0, y: 0}
 --- !u!114 &130674711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -351,11 +353,11 @@ MonoBehaviour:
   walkAcceleration:
     active: 1
     priorities: 2c0100002c0100002c0100002d0100002c010000
-    acceleration: 48.43
-    reversalAcceleration: 75.25
-    coastalDamping: 1.2
+    acceleration: 0.01
+    reversalAcceleration: 0.02
+    coastalDamping: 5
     stopThreshold: 0.06
-    maxSpeed: 40.89
+    maxSpeed: 5
   sprintingAcceleration:
     active: 0
     priorities: 0000000000000000000000000000000000000000
@@ -386,46 +388,49 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   capsuleCollider: {fileID: 0}
   boxCollider: {fileID: 0}
-  GroundContact:
+  groundContact:
     active: 1
     priorities: c8000000
     contact:
       <bounds>k__BackingField:
-        m_Center: {x: 0, y: -0.99, z: 0}
-        m_Extent: {x: 0.32, y: 0.13, z: 0}
+        m_Center: {x: 0, y: -1.02, z: 0}
+        m_Extent: {x: 0.2, y: 0.08, z: 0}
       <mask>k__BackingField:
         serializedVersion: 2
         m_Bits: 768
-  RoofContact:
+  roofContact:
     active: 1
     priorities: c8000000
     contact:
       <bounds>k__BackingField:
-        m_Center: {x: 0, y: 1, z: 0}
-        m_Extent: {x: 0.28, y: 0.14, z: 0}
+        m_Center: {x: 0, y: 1.03, z: 0}
+        m_Extent: {x: 0.22, y: 0.1, z: 0}
       <mask>k__BackingField:
         serializedVersion: 2
-        m_Bits: 0
-  LeftWallContact:
+        m_Bits: 768
+  leftWallContact:
     active: 1
     priorities: c8000000
     contact:
       <bounds>k__BackingField:
-        m_Center: {x: -0.53, y: 0, z: 0}
-        m_Extent: {x: 0.17, y: 0.62, z: 0}
+        m_Center: {x: -0.49, y: 0, z: 0}
+        m_Extent: {x: 0.16, y: 0.47, z: 0}
       <mask>k__BackingField:
         serializedVersion: 2
-        m_Bits: 0
-  RightWallContact:
+        m_Bits: 768
+  rightWallContact:
     active: 1
     priorities: c8000000
     contact:
       <bounds>k__BackingField:
         m_Center: {x: 0.5, y: 0, z: 0}
-        m_Extent: {x: 0.14, y: 0.6, z: 0}
+        m_Extent: {x: 0.18, y: 0.45, z: 0}
       <mask>k__BackingField:
         serializedVersion: 2
-        m_Bits: 0
+        m_Bits: 768
+  velocityStopper:
+    active: 1
+    priorities: 6c0700006c070000
 --- !u!114 &130674713
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -467,7 +472,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 130674700}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ea60e4059b1b453486403ce1f07676dd, type: 3}
   m_Name: 
@@ -481,7 +486,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 130674700}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 486620676}
+  m_Script: {fileID: 11500000, guid: 9c6a02cce54d437fbd1204ca0d710530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speedClamper:
@@ -1875,21 +1880,6 @@ Transform:
   - {fileID: 717221445}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!115 &486620676
-MonoScript:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  serializedVersion: 7
-  m_DefaultReferences: {}
-  m_Icon: {fileID: 0}
-  m_Type: 0
-  m_ExecutionOrder: 0
-  m_ClassName: SpeedControlPlatformBehavior
-  m_Namespace: CharacterController.Platformer
-  m_AssemblyName: Assembly-CSharp
 --- !u!1 &498985297
 GameObject:
   m_ObjectHideFlags: 0
@@ -2714,7 +2704,7 @@ MonoBehaviour:
   m_StreamingVersion: 20241001
   m_LegacyPriority: 0
   Target:
-    TrackingTarget: {fileID: 295547889}
+    TrackingTarget: {fileID: 1046827612}
     LookAtTarget: {fileID: 0}
     CustomLookAtTarget: 0
   Lens:

@@ -25,6 +25,7 @@ namespace CharacterController.Platformer
                 if (movementDirection != 0 && (velDirection == movementDirection || velDirection == 0))
                 {
                     data.Acceleration.@base.x = acceleration * Mathf.Sign(movementDirection);
+                    if(data.Velocity.X > 100f) Debug.Log("Warning");
                 }
             }
 
@@ -34,9 +35,10 @@ namespace CharacterController.Platformer
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
                 int movementDirection = PlayerBehaviorUtilities.Sign(data.Input.InputDirection.Direction.x);
                 int velDirection = PlayerBehaviorUtilities.Sign(data.Velocity.X);
-                if (movementDirection != 0 && (velDirection == movementDirection || velDirection == 0))
+                if (movementDirection != 0 && velDirection != 0 && movementDirection != velDirection)
                 {
                     data.Acceleration.@base.x = reversalAcceleration * Mathf.Sign(movementDirection);
+                    if(data.Velocity.X > 100f) Debug.Log("Warning");
                 }
             }
             
@@ -48,7 +50,8 @@ namespace CharacterController.Platformer
                 int velDirection = PlayerBehaviorUtilities.Sign(data.Velocity.X);
                 if (movementDirection == 0 && velDirection != 0)
                 {
-                    data.Velocity.multiplier.x *= coastalDamping;
+                    data.Velocity.multiplier.x *= (1 - coastalDamping * Time.deltaTime);
+                    if(data.Velocity.X > 100f) Debug.Log("Warning");
                 }
             }
 
@@ -60,6 +63,7 @@ namespace CharacterController.Platformer
                 {
                     data.Velocity.additive.x = 0;
                     data.Acceleration.additive.x = 0;
+                    if(data.Velocity.X > 100f) Debug.Log("Warning");
                 }
             }
 

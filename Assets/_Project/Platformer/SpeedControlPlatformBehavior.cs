@@ -16,7 +16,9 @@ namespace CharacterController.Platformer
                 if (applyInAir && !data.GroundContact.Contact) return;
                 if (Mathf.Abs(data.Velocity.X) > data.MaxSpeed)
                 {
-                    data.Velocity.multiplier.x *= Mathf.Abs(data.Velocity.X) / data.MaxSpeed;
+                    //data.Velocity.multiplier.x *= data.MaxSpeed / Mathf.Abs(data.Velocity.X);
+                    data.Velocity.additive.x = Mathf.Sign(data.Velocity.X) * data.MaxSpeed;
+                    if(data.Velocity.X > 100f) Debug.Log("Warning");
                 }
             }
         }

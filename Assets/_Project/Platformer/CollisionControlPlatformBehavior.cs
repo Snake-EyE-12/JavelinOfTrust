@@ -18,33 +18,68 @@ namespace CharacterController.Platformer
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
                 contact.Update(data.Transform);
+                if(data.Velocity.X > 100f) Debug.Log("Warning");
+            }
+        }
+
+        [Serializable]
+        public class VelocityStopGimmick : Gimmick
+        {
+            [Prioritized]
+            private void ZeroGround()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                if (data.GroundContact.Contact && data.Velocity.Y < 0)
+                {
+                    data.Velocity.multiplier.y = 0;
+                    data.Acceleration.multiplier.y = 0;
+                }
+            }
+
+            [Prioritized]
+            private void ZeroWall()
+            {
+                ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
+                if (data.LeftWallContact.Contact && data.Velocity.X < 0)
+                {
+                    data.Velocity.multiplier.x = 0;
+                    data.Acceleration.multiplier.x = 0;
+                }
+
+                if (data.RightWallContact.Contact && data.Velocity.X > 0)
+                {
+                    data.Velocity.multiplier.x = 0;
+                    data.Acceleration.multiplier.x = 0;
+                }
             }
         }
         
-        [SerializeField] private CollisionDetectionGimmick GroundContact;
-        [SerializeField] private CollisionDetectionGimmick RoofContact;
-        [SerializeField] private CollisionDetectionGimmick LeftWallContact;
-        [SerializeField] private CollisionDetectionGimmick RightWallContact;
+        [SerializeField] private CollisionDetectionGimmick groundContact;
+        [SerializeField] private CollisionDetectionGimmick roofContact;
+        [SerializeField] private CollisionDetectionGimmick leftWallContact;
+        [SerializeField] private CollisionDetectionGimmick rightWallContact;
+        [SerializeField] private VelocityStopGimmick velocityStopper;
         protected override void OnLoad()
         {
-            Load(GroundContact);
-            Load(RoofContact);
-            Load(LeftWallContact);
-            Load(RightWallContact);
+            Load(groundContact);
+            Load(roofContact);
+            Load(leftWallContact);
+            Load(rightWallContact);
+            Load(velocityStopper);
             ICustomCharacterSettingsData data = blackboard.Value<CustomCharacterSettingsData>();
-            data.GroundContact = GroundContact.contact;
-            data.RoofContact = RoofContact.contact;
-            data.LeftWallContact = LeftWallContact.contact;
-            data.RightWallContact = RightWallContact.contact;
+            data.GroundContact = groundContact.contact;
+            data.RoofContact = roofContact.contact;
+            data.LeftWallContact = leftWallContact.contact;
+            data.RightWallContact = rightWallContact.contact;
         }
 
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.green;
-            if(GroundContact.Active) GroundContact.contact.DrawGizmos(transform);
-            if(RoofContact.Active) RoofContact.contact.DrawGizmos(transform);
-            if(LeftWallContact.Active) LeftWallContact.contact.DrawGizmos(transform);
-            if(RightWallContact.Active) RightWallContact.contact.DrawGizmos(transform);
+            if(groundContact.Active) groundContact.contact.DrawGizmos(transform);
+            if(roofContact.Active) roofContact.contact.DrawGizmos(transform);
+            if(leftWallContact.Active) leftWallContact.contact.DrawGizmos(transform);
+            if(rightWallContact.Active) rightWallContact.contact.DrawGizmos(transform);
         }
     }
     

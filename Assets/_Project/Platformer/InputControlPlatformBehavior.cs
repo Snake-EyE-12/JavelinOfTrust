@@ -19,6 +19,7 @@ namespace CharacterController.Platformer
             {
                 ICustomCharacterSettingsData data = board.Value<CustomCharacterSettingsData>();
                 data.Input = frameInput;
+                if(data.Velocity.X > 100f) Debug.Log("Warning");
             }
 
             [Prioritized]
