@@ -16,6 +16,7 @@ namespace _Project.Merge
 
         [SerializeField] private CharacterAnimationVisual idle;
         [SerializeField] private CharacterAnimationVisual jump;
+        [SerializeField] private CharacterAnimationVisual wield;
 
         [HideInInspector] public CharacterData data;
 
@@ -23,7 +24,8 @@ namespace _Project.Merge
 
         private void UpdateState()
         {
-            if (data.inJump) activeVisual = jump;
+            if (data.isAttacking) activeVisual = wield;
+            else if (data.inJump) activeVisual = jump;
             else activeVisual = idle;
         }
         private void Update()

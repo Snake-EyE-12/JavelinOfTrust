@@ -5609,6 +5609,7 @@ MonoBehaviour:
     inJumpArc: 0
     inventory: {fileID: 1414430843}
     timeOfAttackStart: 0
+    isAttacking: 0
     missedLeftJump:
       origin: {x: -0.5, y: -1}
       direction: {x: -0.4, y: 0}
@@ -6394,13 +6395,14 @@ GameObject:
   - component: {fileID: 1704221285}
   - component: {fileID: 1704221284}
   - component: {fileID: 1704221287}
+  - component: {fileID: 1704221288}
   m_Layer: 0
   m_Name: Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1704221283
 Transform:
   m_ObjectHideFlags: 0
@@ -6462,6 +6464,7 @@ MonoBehaviour:
   rightFoot: {fileID: 922172098}
   idle: {fileID: 1704221284}
   jump: {fileID: 1704221287}
+  wield: {fileID: 1704221288}
   data:
     acceleration: {x: 0, y: 0}
     velocity: {x: 0, y: 0}
@@ -6505,6 +6508,7 @@ MonoBehaviour:
     inJumpArc: 0
     inventory: {fileID: 0}
     timeOfAttackStart: 0
+    isAttacking: 0
     missedLeftJump:
       origin: {x: 0, y: 0}
       direction: {x: 0, y: 0}
@@ -6576,6 +6580,25 @@ MonoBehaviour:
   _leftFootPos: {x: -0.1, y: -0.59}
   _rightFootPos: {x: 0.16, y: -0.55}
   color: {r: 0, g: 1, b: 0.2099402, a: 1}
+--- !u!114 &1704221288
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704221282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3200ebab4eff45beb2631173e6936c5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _headPos: {x: 0, y: 0.87}
+  _bodyPos: {x: 0, y: 0}
+  _leftHandPos: {x: -0.56, y: 0.56}
+  _rightHandPos: {x: 0.61, y: -0.09}
+  _leftFootPos: {x: -0.28, y: -0.83}
+  _rightFootPos: {x: 0.36, y: -1.03}
+  color: {r: 1, g: 0.44582647, b: 0, a: 1}
 --- !u!1 &1720174236
 GameObject:
   m_ObjectHideFlags: 0

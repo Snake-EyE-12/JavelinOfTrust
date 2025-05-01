@@ -467,6 +467,7 @@ public class BeginChargedAttack : CharacterProcessor
         if (data.input.attackStarted && data.inventory.IsHoldingObject())
         {
             data.timeOfAttackStart = Time.time;
+            data.isAttacking = true;
         }
         
         base.Process(data);
@@ -479,6 +480,7 @@ public class Attack : CharacterProcessor
     {
         if (data.input.attackEnded && data.inventory.IsHoldingObject())
         {
+            data.isAttacking = false;
             Vector2 throwDirection = data.input.direction;
             if (throwDirection == Vector2.zero) throwDirection.x = data.facingDirection;
             data.inventory.UseObject(Time.time - data.timeOfAttackStart, data.velocity, data.transform, throwDirection.normalized);

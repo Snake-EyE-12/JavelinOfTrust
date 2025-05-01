@@ -55,6 +55,7 @@ public class CharacterData
     [Header("Attack")]
     public Inventory inventory;
     [HideInInspector] public float timeOfAttackStart;
+    [HideInInspector] public bool isAttacking;
     
     #region Comments
     //                                                                                                  Calculate in Apex
