@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -179,4 +181,70 @@ public interface ICharacterSettingsData
     public float BufferTime { get; set; }
     public float CoyoteTime { get; set; }
     public int   JumpCount { get; set; }
+}
+
+public class CharacterData2
+{
+    [Header("Locomotion")]
+    [Question]
+    public bool IsUsingAcceleration { get; set; }
+    public CharacterLocomotionStateContext HorizontalLocomotionStateController { get; set; }
+    public float HorizontalCutOffVelocity { get; set; }
+    [Question]
+    public bool IsUsingSlopeControl { get; set; }
+    public float MaximumClimbAngle { get; set; }
+    public float MaximumSlideDownAngle { get; set; }
+    public bool StayOnGround { get; set; }
+    public float SlopeCheckDistance { get; set; }
+    
+    [Header("Gravity")]
+    [Question]
+    public bool IsUsingGravity { get; set; }
+    public float Gravity { get; set; }
+    public float TerminalVelocity { get; set; }
+    [Question]
+    public bool IsUsingHoverTime { get; set; }
+    public float HoverDuration { get; set; }
+    public Curve GravityMultiplierCurve { get; set; }
+    [Question]
+    public bool IsUsingMass { get; set; }
+    public float Weight { get; set; }
+    
+    [Header("Collision")]
+    [Question]
+    public bool IsUsingStandOnEdgeCollision { get; set; }
+    
+}
+
+public class CharacterStateContextBase
+{
+    
+}
+
+public class CharacterLocomotionStateContext : CharacterStateContextBase
+{
+    [SerializeField] private List<CharacterLocomotionState> speedStates;
+    public CharacterLocomotionState GetSpeedState(string state)
+    {
+        CharacterLocomotionState speedState = speedStates.FirstOrDefault(x => x.Name.Equals(state));
+        if (speedState == null) speedState = speedStates[0];
+        return speedState;
+    }
+
+}
+public class CharacterLocomotionState
+{
+    public string Name { get; set; }
+    public float Speed { get; set; }
+    public bool Normalized { get; set; }
+    public float Acceleration { get; set; }
+    public float ReversalAcceleration { get; set; }
+    public float CoastDamping { get; set; }
+    
+}
+
+
+public class QuestionAttribute : Attribute
+{
+    
 }
