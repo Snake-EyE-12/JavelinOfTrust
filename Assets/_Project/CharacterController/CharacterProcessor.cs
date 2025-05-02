@@ -148,9 +148,9 @@ public class GroundCollisionDetection : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        data.groundContact.Update(
-                Physics2D.OverlapBoxAll(data.transform.position + data.groundCheckBounds.center, data.groundCheckBounds.size, 0f, data.groundLayerMask).Length > 0
-            );
+        // data.groundContact.Update(
+        //         Physics2D.OverlapBoxAll(data.transform.position + data.groundCheckBounds.center, data.groundCheckBounds.size, 0f, data.groundLayerMask).Length > 0
+        //     );
         
         base.Process(data);
     }
@@ -163,8 +163,8 @@ public class WallCollisionDetection : CharacterProcessor
         bool leftWallContact = Physics2D.OverlapBoxAll(data.transform.position + data.leftWallBounds.center, data.leftWallBounds.size, 0f, data.groundLayerMask).Length > 0;
         bool rightWallContact = Physics2D.OverlapBoxAll(data.transform.position + data.rightWallBounds.center, data.rightWallBounds.size, 0f, data.groundLayerMask).Length > 0;
         
-        data.leftWallContact.Update(leftWallContact);
-        data.rightWallContact.Update(rightWallContact);
+        //data.leftWallContact.Update(leftWallContact);
+        //data.rightWallContact.Update(rightWallContact);
         
         base.Process(data);
     }
@@ -364,9 +364,9 @@ public class RoofCollisionDetection : CharacterProcessor
 {
     public override void Process(CharacterData data)
     {
-        data.roofContact.Update(
-            Physics2D.OverlapBoxAll(data.transform.position + data.roofCheckBounds.center, data.roofCheckBounds.size, 0f, data.roofLayerMask).Length > 0
-        );
+        // data.roofContact.Update(
+        //     Physics2D.OverlapBoxAll(data.transform.position + data.roofCheckBounds.center, data.roofCheckBounds.size, 0f, data.roofLayerMask).Length > 0
+        // );
         
         base.Process(data);
     }
@@ -486,33 +486,4 @@ public class Attack : CharacterProcessor
         
         base.Process(data);
     }
-}
-
-public class CharacterContact
-{
-    private bool inContact;
-    private float lastTimeInContact;
-    private bool newlyContacted;
-    public void Update(bool contacting)
-    {
-        if (inContact && !contacting)
-        {
-            lastTimeInContact = Time.time;
-        }
-        
-        newlyContacted = !inContact && contacting;
-        
-        inContact = contacting;
-    }
-
-    public bool Contact => inContact;
-    public bool EnteredContact => newlyContacted;
-    public float TimeOfContactExit => lastTimeInContact;
-}
-[Serializable]
-public class CharacterCorrectionRay
-{
-    public Vector2 origin;
-    public Vector2 direction;
-    public Vector2 correction;
 }

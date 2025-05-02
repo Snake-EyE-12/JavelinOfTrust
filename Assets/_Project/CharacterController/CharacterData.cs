@@ -188,8 +188,14 @@ public class CharacterData2
     [Header("Locomotion")]
     [Question]
     public bool IsUsingAcceleration { get; set; }
-    public CharacterLocomotionStateContext HorizontalLocomotionStateController { get; set; }
+    public CharacterLocomotionState WalkLocomotion { get; set; }
     public float HorizontalCutOffVelocity { get; set; }
+    [Question]
+    public bool IsUsingSprint { get; set; }
+    public CharacterLocomotionState SprintLocomotion { get; set; }
+    [Question]
+    public bool IsUsingCrouch { get; set; }
+    public CharacterLocomotionState CrouchLocomotion { get; set; }
     [Question]
     public bool IsUsingSlopeControl { get; set; }
     public float MaximumClimbAngle { get; set; }
@@ -210,28 +216,176 @@ public class CharacterData2
     public bool IsUsingMass { get; set; }
     public float Weight { get; set; }
     
+    [Header("Landing")]
+    [Question]
+    public bool IsUsingLandingStickyFeet { get; set; }
+    public float StickyFeetDuration { get; set; }
+    public Curve StickyFeetVelocityTimeToMultiplier { get; set; }
+    public Curve StickyFeetAccelerationTimeToMultiplier { get; set; }
+    [Question]
+    public bool IsUsingLandingDirectionLock { get; set; }
+    public float LandingDirectionLockDuration { get; set; }
+    [Question]
+    public bool IsUsingLandingStun { get; set; }
+    public Curve LandingStunHeightToDuration { get; set; }
+    [Question]
+    public bool IsUsingLandingVelocityBurst { get; set; }
+    public float LandingBurstAngle { get; set; }
+    public float LandingBurstForce { get; set; }
+    
+    
+    [Header("Jump")]
+    public float JumpBurstForce { get; set; }
+    [Question]
+    public bool IsUsingJumpApexBonus { get; set; }
+    public float ApexYVelocityThreshold { get; set; }
+    public float ApexHorizontalBonusAcceleration { get; set; }
+    public float ApexGravityMultiplier { get; set; }
+    [Question]
+    public bool IsUsingJumpEarlyRelease { get; set; }
+    public float EarlyReleaseGravityMultiplier { get; set; }
+    [Question]
+    public bool IsUsingJumpImmediateDescend { get; set; }
+    [Question]
+    public bool IsUsingJumpMinimumHeight { get; set; }
+    public float MinimumJumpHeight { get; set; }
+    [Question]
+    public bool IsUsingJumpStrongerGravityDescend { get; set; }
+    public float DescendingGravityMultiplier { get; set; }
+    [Question]
+    public bool IsUsingJumpInputBuffer { get; set; }
+    public float BufferTime { get; set; }
+    [Question]
+    public bool IsUsingJumpCoyoteTime { get; set; }
+    public float CoyoteTime { get; set; }
+    [Question]
+    public bool IsUsingJumpUniqueAirControl { get; set; }
+    public CharacterLocomotionState AirLocomotion { get; set; }
+    [Question]
+    public bool IsUsingJumpArcTerminalFall { get; set; }
+    public float JumpArcTerminalVelocity { get; set; }
+    [Question]
+    public bool IsUsingJumpRunningStart { get; set; }
+    public float RunningStartBoostAngle { get; set; }
+    public Curve RunningStartBonusVelocity { get; set; }
+    [Question]
+    public bool IsUsingMultipleJumps { get; set; }
+    public int MultipleJumpCount { get; set; }
+    [Question]
+    public bool IsUsingJumpChargeUp { get; set; }
+    public Curve ChargePowerCurve { get; set; }
+    [Question]
+    public bool IsUsingJumpPreviousVelocityAlteration { get; set; }
+    public Vector2 PreviousVelocityMultiplier { get; set; }
+    
+    [Header("Dash")]
+    public float DashTime { get; set; }
+    public float DashDuration { get; set; }
+    [Question]
+    public bool IsUsingDashChargeUp { get; set; }
+    [Question]
+    public bool IsUsingDashInVelocityDirection { get; set; }
+    [Question]
+    public bool IsUsingDashCooldown { get; set; }
+    [Question]
+    public bool IsUsingDashLimitToGrounded { get; set; }
+    [Question]
+    public bool IsUsingDashLimitToAirborne { get; set; }
+    [Question]
+    public bool IsUsingDashSurfaceBounce { get; set; }
+    [Question]
+    public bool IsUsingDashLimitedCount { get; set; }
+    [Question]
+    public bool IsUsingDashStopGravity { get; set; }
+    [Question]
+    public bool IsUsingDashAimAssist { get; set; } // Figure Out if this needs to aim towards something DashTarget
+    [Question]
+    public bool IsUsingDashInputSteering { get; set; }
+    [Question]
+    public bool IsUsingDashDashBuffer { get; set; }
+    public float DashBufferTime { get; set; }
+    [Question]
+    public bool IsUsingDashEarlyRelease { get; set; }
+    [Question]
+    public bool IsUsingDashPreviousVelocityAlteration { get; set; }
+    [Question]
+    public bool IsUsingDashCollisionCancel { get; set; }
+    
+    /*
+Clipping Correction
+Corner Correction
+Charge Time
+Distance
+Velocity
+In Current Vel Direction
+In Input Direction
+Recharge
+Bounce
+Ground / Air
+Multiple
+Gravity
+Aim Assist
+Input Steering
+Dash Buffer
+Early Release
+Full Velocity Cancel
+Early Out - Ground | Wall | Jump
+
+     */
+    
+    [Header("Adjustment")]
+    [Question]
+    public bool IsUsingAdjustmentAscendingGroundCornerClip { get; set; }
+    [Question]
+    public bool IsUsingAdjustmentAscendingRoofCornerClip { get; set; }
+    [Question]
+    public bool IsUsingAdjustmentLedgeLander { get; set; }
+    
     [Header("Collision")]
     [Question]
-    public bool IsUsingStandOnEdgeCollision { get; set; }
+    public bool IsUsingCollisionStandOnEdge { get; set; }
+    public CharacterContact GroundContact { get; set; }
+    public CharacterContact RoofContact { get; set; }
+    public CharacterContact WallContact { get; set; }
+    public CharacterCorrectionRay LedgeDetector { get; set; }
+    public CharacterCorrectionRay RoofDetector { get; set; }
+    //Dash Rays
+    
+    [Header("Physics")]
+    [Question]
+    public bool IsUsingPhysicsEuler { get; set; }
+    [Question]
+    public bool IsUsingPhysicsVerlet { get; set; }
+    
+    [Header("Speed")]
+    [Question]
+    public bool IsUsingSpeedClamp { get; set; }
+    [Question]
+    public bool IsUsingSpeedLimiter { get; set; }
+    public float Damping { get; set; }
+    public float MaxSpeed { get; set; }
     
 }
 
-public class CharacterStateContextBase
-{
-    
-}
 
-public class CharacterLocomotionStateContext : CharacterStateContextBase
-{
-    [SerializeField] private List<CharacterLocomotionState> speedStates;
-    public CharacterLocomotionState GetSpeedState(string state)
-    {
-        CharacterLocomotionState speedState = speedStates.FirstOrDefault(x => x.Name.Equals(state));
-        if (speedState == null) speedState = speedStates[0];
-        return speedState;
-    }
+/*
+ 
+Apex
+Early release
+Decending gravity
+Roof descend
+Jump buffer
+Coyote time
+Sticky feet
+Air control
+Air break
+Terminal fall
+Clip roof ascend
+Running start
+multiple
 
-}
+ */
+[Serializable]
 public class CharacterLocomotionState
 {
     public string Name { get; set; }
@@ -247,4 +401,48 @@ public class CharacterLocomotionState
 public class QuestionAttribute : Attribute
 {
     
+}
+
+
+    
+[Serializable]
+public class CharacterContact
+{
+    [field: SerializeField] public Bounds bounds { get; private set; }
+    [field: SerializeField] public LayerMask mask { get; private set; }
+    private bool inContact;
+    private float lastTimeInContact;
+    private bool newlyContacted;
+    private float timeOfContactEntered;
+    public void Update(Transform character)
+    {
+        bool contacting = Physics2D.OverlapBoxAll(character.position + bounds.center, bounds.size, character.rotation.eulerAngles.z, mask).Length > 0;
+        if (inContact && !contacting)
+        {
+            lastTimeInContact = Time.time;
+        }
+            
+        newlyContacted = !inContact && contacting;
+        if (newlyContacted) timeOfContactEntered = Time.time;
+            
+        inContact = contacting;
+    }
+    public void DrawGizmos(Transform character)
+    {
+        Gizmos.DrawWireCube(character.position + bounds.center, bounds.size);
+    }
+        
+    public bool Contact => inContact;
+    public bool EnteredContact => newlyContacted;
+    public float TimeOfContactEnter => timeOfContactEntered;
+    public float TimeOfContactExit => lastTimeInContact;
+}
+    
+[Serializable]
+public class CharacterCorrectionRay
+{
+    public LayerMask mask;
+    public Vector2 origin;
+    public Vector2 direction;
+    public Vector2 correction;
 }
