@@ -33,6 +33,7 @@ public class CharacterController2 : MonoBehaviour
             .SetNext(new CalculateRunningJumpForce())
             .SetNext(new GoingToJumpMovementAdjuster())
             .SetNext(new AttemptJumpApplicator())
+            .SetNext(new EnforceMinimumJumpHeight())
             .SetNext(new ImmediateDescendOnReleaseJump())
             .SetNext(new GravityJumpDescendAccelerator())
             .SetNext(new ApexCalculator())
@@ -49,6 +50,7 @@ public class CharacterController2 : MonoBehaviour
             .SetNext(new LandingDirectionLockApplicator())
             .SetNext(new ApexHeightCalculator())
             .SetNext(new FallHeightCalculator())
+            .SetNext(new GravityToAcceleration())
             .SetNext(new LandingStunApplicator())
             .SetNext(new AccelerationApplicator())
             .SetNext(new FallSpeedClamper())
@@ -79,6 +81,17 @@ public class CharacterController2 : MonoBehaviour
         if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.RoofContact.bounds, data.RigidBody.transform.position);
         if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.LeftWallContact.bounds, data.RigidBody.transform.position);
         if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.RightWallContact.bounds, data.RigidBody.transform.position);
+        
+        Gizmos.color = Color.blue;
+        Gizmos.DrawRay(transform.position + (Vector3)data.LeftLedgeDetector.origin + (Vector3)data.LeftLedgeDetector.correction, data.LeftLedgeDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.RightLedgeDetector.origin + (Vector3)data.RightLedgeDetector.correction, data.RightLedgeDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.LeftRoofDetector.origin + (Vector3)data.LeftRoofDetector.correction, data.LeftRoofDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.RightRoofDetector.origin + (Vector3)data.RightRoofDetector.correction, data.RightRoofDetector.direction);
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawRay(transform.position + (Vector3)data.LeftLedgeDetector.origin, data.LeftLedgeDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.RightLedgeDetector.origin, data.RightLedgeDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.LeftRoofDetector.origin, data.LeftRoofDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.RightRoofDetector.origin, data.RightRoofDetector.direction);
     }
 
     

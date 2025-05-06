@@ -254,22 +254,23 @@ public class CharacterData2
     
     //---------------------------------------------------------------------------------------
 
-    [Header("Jump")]
+    [Header("Jump")] // Holding Jump
     [SerializeField] public float JumpBurstForce;
     [SerializeField] public bool IsUsingJumpApexBonus;
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpApexBonus))] public float ApexYVelocityThreshold;
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpApexBonus))] public float ApexHorizontalBonusAcceleration;
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpApexBonus))] public float ApexGravityMultiplier;
     [SerializeField] public bool IsUsingJumpEarlyRelease;
-    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpEarlyRelease))] public float EarlyReleaseGravityMultiplier;
-    [SerializeField] public bool IsUsingJumpImmediateDescend;
-    [SerializeField] public bool IsUsingJumpMinimumHeight;
-    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpMinimumHeight))] public float MinimumJumpHeight;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpEarlyRelease))] public bool IsUsingJumpEarlyReleaseGravityMultiplier;
+    [SerializeField, AllowNesting, ShowIf(EConditionOperator.And, nameof(IsUsingJumpEarlyRelease), nameof(IsUsingJumpEarlyReleaseGravityMultiplier))] public float EarlyReleaseGravityMultiplier;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpEarlyRelease))] public bool IsUsingJumpImmediateDescend;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpEarlyRelease))] public bool IsUsingJumpMinimumHeight;
+    [SerializeField, AllowNesting, ShowIf(EConditionOperator.And, nameof(IsUsingJumpEarlyRelease), nameof(IsUsingJumpMinimumHeight))] public float MinimumJumpHeight;
     [SerializeField] public bool IsUsingJumpStrongerGravityDescend;
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpStrongerGravityDescend))] public float DescendingGravityMultiplier;
     [SerializeField] public bool IsUsingJumpInputBuffer;
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpInputBuffer))] public float JumpBufferTime;
-    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpInputBuffer))] public bool AppliesIfCanceled;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpInputBuffer))] public bool JumpBuffersTaps;
     [SerializeField] public bool IsUsingJumpCoyoteTime;
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpCoyoteTime))] public float JumpCoyoteTime;
     [SerializeField] public bool IsUsingJumpUniqueAirControl;
@@ -287,7 +288,6 @@ public class CharacterData2
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpPreviousVelocityAlteration))] public Vector2 JumpingPreviousVelocityMultiplier;
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpPreviousVelocityAlteration))] public Vector2 JumpingPreviousAccelerationMultiplier;
     /**/
-    [HideInInspector] public bool InAir;
     [HideInInspector] public bool InApex;
     [HideInInspector] public float TimeOfJumpPressed;
     [HideInInspector] public bool JumpEarlyRelease;
@@ -357,7 +357,7 @@ Early Out - Ground | Wall | Jump
 
      */
 
-    [Header("Adjustment")]
+    [Header("Adjustment")] //Should use a precision system to determine what is the best correction for the character
     [SerializeField] public bool IsUsingAdjustmentAscendingGroundCornerClip;
     [SerializeField] public bool IsUsingAdjustmentAscendingRoofCornerClip;
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingAdjustmentAscendingRoofCornerClip))] public CharacterCorrectionRay LeftRoofDetector = new();

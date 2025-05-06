@@ -44,7 +44,7 @@ namespace CharacterProcess
         public override void Operate(CharacterData2 data)
         {
             if (!data.IsUsingJumpUniqueAirControl) return;
-            if (data.InAir) data.ActiveLocomotion = data.AirLocomotion;
+            if (!data.GroundContact.Contact) data.ActiveLocomotion = data.AirLocomotion;
         }
     }
 
@@ -63,6 +63,16 @@ namespace CharacterProcess
         {
             if (!data.IsUsingSprint) return;
             if (data.Input.crouch.Pressed) data.ActiveLocomotion = data.CrouchLocomotion;
+        }
+    }
+    
+    public class GravityToAcceleration : CharacterProcessor2
+    {
+        public override void Operate(CharacterData2 data)
+        {
+            if (!data.IsUsingGravity) return;
+            data.Acceleration.Additive.y += data.CalculatedGravity.y;
+            data.CalculatedGravity.Reset();
         }
     }
 
@@ -136,7 +146,7 @@ namespace CharacterProcess
         public override void Operate(CharacterData2 data)
         {
             if (!data.IsUsingGravity) return;
-            data.Acceleration.Additive.y -= data.Gravity;
+            data.CalculatedGravity.Additive.y -= data.Gravity;
         }
     }
 
@@ -243,7 +253,7 @@ namespace CharacterProcess
             if (!data.IsUsingJumpInputBuffer) return;
             if (data.GroundContact.EnteredContact && data.TimeOfJumpPressed + data.JumpBufferTime > Time.time)
             {
-                data.ShouldJump = true;
+                if (data.JumpBuffersTaps || data.Input.jump.Pressed) data.ShouldJump = true;
             }
         }
     }
@@ -340,7 +350,7 @@ namespace CharacterProcess
         public override void Operate(CharacterData2 data)
         {
             if (!data.IsUsingJumpStrongerGravityDescend) return;
-            if (data.InJump && data.Velocity.Value.y < 0 && data.Acceleration.y < 0) data.Acceleration.Multiplicative.y *= data.DescendingGravityMultiplier;
+            if (data.InJump && data.Velocity.Value.y < 0) data.CalculatedGravity.Multiplicative.y *= data.DescendingGravityMultiplier;
         }
     }
 
@@ -370,7 +380,7 @@ namespace CharacterProcess
         public override void Operate(CharacterData2 data)
         {
             if (!data.IsUsingJumpApexBonus) return;
-            if (data.InApex) data.Acceleration.Multiplicative.y *= data.ApexGravityMultiplier;
+            if (data.InApex) data.CalculatedGravity.Multiplicative.y *= data.ApexGravityMultiplier;
         }
     }
 
@@ -378,10 +388,10 @@ namespace CharacterProcess
     {
         public override void Operate(CharacterData2 data)
         {
-            if (!data.IsUsingJumpEarlyRelease) return;
+            if (!(data.IsUsingJumpEarlyRelease && data.IsUsingJumpEarlyReleaseGravityMultiplier)) return;
             if (data.EarlyOutJump)
             {
-                data.Acceleration.Multiplicative.y *= data.EarlyReleaseGravityMultiplier;
+                data.CalculatedGravity.Multiplicative.y *= data.EarlyReleaseGravityMultiplier;
             }
         }
     }
