@@ -75,10 +75,10 @@ public class CharacterController2 : MonoBehaviour
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        GizmoExtensions.DrawBounds(data.GroundContact.bounds, data.RigidBody.transform.position);
-        GizmoExtensions.DrawBounds(data.RoofContact.bounds, data.RigidBody.transform.position);
-        GizmoExtensions.DrawBounds(data.LeftWallContact.bounds, data.RigidBody.transform.position);
-        GizmoExtensions.DrawBounds(data.RightWallContact.bounds, data.RigidBody.transform.position);
+        if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.GroundContact.bounds, data.RigidBody.transform.position);
+        if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.RoofContact.bounds, data.RigidBody.transform.position);
+        if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.LeftWallContact.bounds, data.RigidBody.transform.position);
+        if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.RightWallContact.bounds, data.RigidBody.transform.position);
     }
 
     

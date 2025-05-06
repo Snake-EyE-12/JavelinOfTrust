@@ -79,7 +79,6 @@ namespace CharacterProcess
     {
         public override void Operate(CharacterData2 data)
         {
-            if (!data.IsUsingAcceleration) return;
             int movementDirection = MathUtils.Sign(data.Input.direction.x);
             int velDirection = MathUtils.Sign(data.Velocity.Value.x);
 
@@ -94,7 +93,6 @@ namespace CharacterProcess
     {
         public override void Operate(CharacterData2 data)
         {
-            if (!data.IsUsingAcceleration) return;
             int movementDirection = MathUtils.Sign(data.Input.direction.x);
             int velDirection = MathUtils.Sign(data.Velocity.Value.x);
 
@@ -109,7 +107,6 @@ namespace CharacterProcess
     {
         public override void Operate(CharacterData2 data)
         {
-            if (!data.IsUsingAcceleration) return;
             int movementDirection = MathUtils.Sign(data.Input.direction.x);
             int velDirection = MathUtils.Sign(data.Velocity.Value.x);
 

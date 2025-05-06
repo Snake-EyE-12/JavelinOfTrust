@@ -188,143 +188,116 @@ public interface ICharacterSettingsData
 [Serializable]
 public class CharacterData2
 {
-    [field:Header("Input")]
-    [field:SerializeField] public CharacterInput InputSystem { get; set; }
+    [Header("Input")]
+    [SerializeField] public CharacterInput InputSystem;
     /**/
-    public CharacterFrameInput Input { get; set; }
+    [HideInInspector] public CharacterFrameInput Input;
     //---------------------------------------------------------------------------------------
-    
-    [field:Header("Speed")]
-    [Question]
-    [field:SerializeField] public bool IsUsingSpeedClamp { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingSpeedLimiter { get; set; }
-    [field:SerializeField] public float Damping { get; set; }
+
+    [Header("Speed")]
+    [SerializeField, AllowNesting, HideIf(nameof(IsUsingSpeedLimiter))] public bool IsUsingSpeedClamp;
+    [SerializeField, AllowNesting, HideIf(nameof(IsUsingSpeedClamp))] public bool IsUsingSpeedLimiter;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingSpeedLimiter))] public float Damping;
     /**/
     
     //---------------------------------------------------------------------------------------
 
-    [field:Header("Locomotion")]
-    [field:SerializeField] public Velocity Velocity { get; set; }
-    [field:SerializeField] public MovementVector2 Acceleration { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingAcceleration { get; set; }
-    [field:SerializeField] public CharacterLocomotionState WalkLocomotion { get; set; }
-    [field:SerializeField] public float HorizontalCutOffVelocity { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingSprint { get; set; }
-    [field:SerializeField] public CharacterLocomotionState SprintLocomotion { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingCrouch { get; set; }
-    [field:SerializeField] public CharacterLocomotionState CrouchLocomotion { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingSlopeControl { get; set; }
-    [field:SerializeField] public float MaximumClimbAngle { get; set; }
-    [field:SerializeField] public float MaximumSlideDownAngle { get; set; }
-    [field:SerializeField] public bool StayOnGround { get; set; }
-    [field:SerializeField] public float SlopeCheckDistance { get; set; }
+    [Header("Locomotion")]
+    [SerializeField] public Velocity Velocity;
+    [SerializeField] public MovementVector2 Acceleration;
+    [SerializeField] public CharacterLocomotionState WalkLocomotion;
+    [SerializeField] public float HorizontalCutOffVelocity;
+    [SerializeField] public bool IsUsingSprint;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingSprint))] public CharacterLocomotionState SprintLocomotion;
+    [SerializeField] public bool IsUsingCrouch;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingCrouch))] public CharacterLocomotionState CrouchLocomotion;
+    [SerializeField] public bool IsUsingSlopeControl;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingSlopeControl))] public float MaximumClimbAngle;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingSlopeControl))] public float MaximumSlideDownAngle;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingSlopeControl))] public bool StayOnGround;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingSlopeControl))] public float SlopeCheckDistance;
     /**/
-    public CharacterLocomotionState ActiveLocomotion { get; set; }
+    [HideInInspector] public CharacterLocomotionState ActiveLocomotion;
     //---------------------------------------------------------------------------------------
-    
-    [field:Header("Gravity")]
-    [Question]
-    [field:SerializeField] public bool IsUsingGravity { get; set; }
-    [field:SerializeField] public float Gravity { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingTerminalVelocity { get; set; }
-    [field:SerializeField] public float TerminalVelocity { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingHoverTime { get; set; }
-    [field:SerializeField] public float HoverDuration { get; set; }
-    [field:SerializeField] public Curve GravityMultiplierCurve { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingMass { get; set; }
-    [field:SerializeField] public float Weight { get; set; }
+
+    [Header("Gravity")]
+    [SerializeField] public bool IsUsingGravity;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingGravity))] public float Gravity;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingGravity))] public bool IsUsingTerminalVelocity;
+    [SerializeField, AllowNesting, ShowIf(EConditionOperator.And, nameof(IsUsingGravity), nameof(IsUsingTerminalVelocity))] public float TerminalVelocity;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingGravity))] public bool IsUsingHoverTime;
+    [SerializeField, AllowNesting, ShowIf(EConditionOperator.And, nameof(IsUsingGravity), nameof(IsUsingHoverTime))] public float HoverDuration;
+    [SerializeField, AllowNesting, ShowIf(EConditionOperator.And, nameof(IsUsingGravity), nameof(IsUsingHoverTime))] public Curve GravityMultiplierCurve;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingGravity))] public bool IsUsingMass;
+    [SerializeField, AllowNesting, ShowIf(EConditionOperator.And, nameof(IsUsingGravity), nameof(IsUsingMass))] public float Weight;
     /**/
-    public float CalculatedMaxFallSpeed { get; set; }
+    [HideInInspector] public float CalculatedMaxFallSpeed;
+    [HideInInspector] public MovementVector2 CalculatedGravity;
     //---------------------------------------------------------------------------------------
-    
-    [field:Header("Landing")] //G - bunny hop
-    [Question]
-    [field:SerializeField] public bool IsUsingLandingStickyFeet { get; set; }
-    [field:SerializeField] public float StickyFeetDuration { get; set; }
-    [field:SerializeField] public Curve StickyFeetVelocityTimeToMultiplier { get; set; }
-    [field:SerializeField] public Curve StickyFeetAccelerationTimeToMultiplier { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingLandingDirectionLock { get; set; }
-    [field:SerializeField] public float LandingDirectionLockDuration { get; set; }
-    [field:SerializeField] public float LockedOtherDirectionDamper { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingLandingStun { get; set; }
-    [field:SerializeField] public Curve LandingStunHeightToDuration { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingLandingVelocityBurst { get; set; }
-    [field:SerializeField] public float LandingBurstAngle { get; set; }
-    [field:SerializeField] public float LandingBurstForce { get; set; }
+
+    [Header("Landing")] //G - bunny hop
+    [SerializeField] public bool IsUsingLandingStickyFeet;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingStickyFeet))] public float StickyFeetDuration;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingStickyFeet))] public Curve StickyFeetVelocityTimeToMultiplier;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingStickyFeet))] public Curve StickyFeetAccelerationTimeToMultiplier;
+    [SerializeField] public bool IsUsingLandingDirectionLock;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingDirectionLock))] public float LandingDirectionLockDuration;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingDirectionLock))] public float LockedOtherDirectionDamper;
+    [SerializeField] public bool IsUsingLandingStun;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingStun))] public Curve LandingStunHeightToDuration;
+    [SerializeField] public bool IsUsingLandingVelocityBurst;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingVelocityBurst))] public float LandingBurstAngle;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingVelocityBurst))] public float LandingBurstForce;
     /**/
-    public float PeakHeight { get; set; }
-    public float FallHeight { get; set; }
+    [HideInInspector] public float PeakHeight;
+    [HideInInspector] public float FallHeight;
     
     //---------------------------------------------------------------------------------------
-    
-    [field:Header("Jump")]
-    [field:SerializeField] public float JumpBurstForce { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpApexBonus { get; set; }
-    [field:SerializeField] public float ApexYVelocityThreshold { get; set; }
-    [field:SerializeField] public float ApexHorizontalBonusAcceleration { get; set; }
-    [field:SerializeField] public float ApexGravityMultiplier { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpEarlyRelease { get; set; }
-    [field:SerializeField] public float EarlyReleaseGravityMultiplier { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpImmediateDescend { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpMinimumHeight { get; set; }
-    [field:SerializeField] public float MinimumJumpHeight { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpStrongerGravityDescend { get; set; }
-    [field:SerializeField] public float DescendingGravityMultiplier { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpInputBuffer { get; set; }
-    [field:SerializeField] public float JumpBufferTime { get; set; }
-    [field:SerializeField] public bool AppliesIfCanceled { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpCoyoteTime { get; set; }
-    [field:SerializeField] public float JumpCoyoteTime { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpUniqueAirControl { get; set; }
-    [field:SerializeField] public CharacterLocomotionState AirLocomotion { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpArcTerminalFall { get; set; }
-    [field:SerializeField] public float JumpArcTerminalVelocity { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpRunningStart { get; set; }
-    [field:SerializeField] public float RunningStartBoostAngle { get; set; }
-    [field:SerializeField] public Curve RunningStartBonusVelocity { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingMultipleJumps { get; set; }
-    [field:SerializeField] public int MultipleJumpCount { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpChargeUp { get; set; }
-    [field:SerializeField] public Curve ChargePowerCurve { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingJumpPreviousVelocityAlteration { get; set; }
-    [field:SerializeField] public Vector2 JumpingPreviousVelocityMultiplier { get; set; }
-    [field:SerializeField] public Vector2 JumpingPreviousAccelerationMultiplier { get; set; }
+
+    [Header("Jump")]
+    [SerializeField] public float JumpBurstForce;
+    [SerializeField] public bool IsUsingJumpApexBonus;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpApexBonus))] public float ApexYVelocityThreshold;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpApexBonus))] public float ApexHorizontalBonusAcceleration;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpApexBonus))] public float ApexGravityMultiplier;
+    [SerializeField] public bool IsUsingJumpEarlyRelease;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpEarlyRelease))] public float EarlyReleaseGravityMultiplier;
+    [SerializeField] public bool IsUsingJumpImmediateDescend;
+    [SerializeField] public bool IsUsingJumpMinimumHeight;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpMinimumHeight))] public float MinimumJumpHeight;
+    [SerializeField] public bool IsUsingJumpStrongerGravityDescend;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpStrongerGravityDescend))] public float DescendingGravityMultiplier;
+    [SerializeField] public bool IsUsingJumpInputBuffer;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpInputBuffer))] public float JumpBufferTime;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpInputBuffer))] public bool AppliesIfCanceled;
+    [SerializeField] public bool IsUsingJumpCoyoteTime;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpCoyoteTime))] public float JumpCoyoteTime;
+    [SerializeField] public bool IsUsingJumpUniqueAirControl;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpUniqueAirControl))] public CharacterLocomotionState AirLocomotion;
+    [SerializeField] public bool IsUsingJumpArcTerminalFall;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpArcTerminalFall))] public float JumpArcTerminalVelocity;
+    [SerializeField] public bool IsUsingJumpRunningStart;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpRunningStart))] public float RunningStartBoostAngle;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpRunningStart))] public Curve RunningStartBonusVelocity;
+    [SerializeField] public bool IsUsingMultipleJumps;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingMultipleJumps))] public int MultipleJumpCount;
+    [SerializeField] public bool IsUsingJumpChargeUp;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpChargeUp))] public Curve ChargePowerCurve;
+    [SerializeField] public bool IsUsingJumpPreviousVelocityAlteration;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpPreviousVelocityAlteration))] public Vector2 JumpingPreviousVelocityMultiplier;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpPreviousVelocityAlteration))] public Vector2 JumpingPreviousAccelerationMultiplier;
     /**/
-    public bool InAir { get; set; }
-    public bool InApex { get; set; }
-    public float TimeOfJumpPressed { get; set; }
-    public bool JumpEarlyRelease { get; set; }
-    public bool EarlyOutJump { get; set; }
-    public bool ShouldJump { get; set; }
-    public bool InJump { get; set; }
-    public JumpPoint JumpTakeoffPoint { get; set; } = new JumpPoint();
-    public SVector2 CalculatedJumpForce { get; set; } = new SVector2();
+    [HideInInspector] public bool InAir;
+    [HideInInspector] public bool InApex;
+    [HideInInspector] public float TimeOfJumpPressed;
+    [HideInInspector] public bool JumpEarlyRelease;
+    [HideInInspector] public bool EarlyOutJump;
+    [HideInInspector] public bool ShouldJump;
+    [HideInInspector] public bool InJump;
+    [HideInInspector] public JumpPoint JumpTakeoffPoint = new JumpPoint();
+    [HideInInspector] public SVector2 CalculatedJumpForce = new SVector2();
     //---------------------------------------------------------------------------------------
-    
+    /*
     [field:Header("Dash")]
     public float DashTime { get; set; }
     public float DashDuration { get; set; }
@@ -357,6 +330,7 @@ public class CharacterData2
     public bool IsUsingDashPreviousVelocityAlteration { get; set; }
     [Question]
     public bool IsUsingDashCollisionCancel { get; set; }
+    */
     /**/
     
     //---------------------------------------------------------------------------------------
@@ -382,44 +356,38 @@ Full Velocity Cancel
 Early Out - Ground | Wall | Jump
 
      */
-    
-    [field:Header("Adjustment")]
-    [Question]
-    [field:SerializeField] public bool IsUsingAdjustmentAscendingGroundCornerClip { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingAdjustmentAscendingRoofCornerClip { get; set; }
-    [field:SerializeField] public CharacterCorrectionRay LeftRoofDetector { get; set; }
-    [field:SerializeField] public CharacterCorrectionRay RightRoofDetector { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingAdjustmentLedgeLander { get; set; }
-    [field:SerializeField] public CharacterCorrectionRay LeftLedgeDetector { get; set; }
-    [field:SerializeField] public CharacterCorrectionRay RightLedgeDetector { get; set; }
+
+    [Header("Adjustment")]
+    [SerializeField] public bool IsUsingAdjustmentAscendingGroundCornerClip;
+    [SerializeField] public bool IsUsingAdjustmentAscendingRoofCornerClip;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingAdjustmentAscendingRoofCornerClip))] public CharacterCorrectionRay LeftRoofDetector = new();
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingAdjustmentAscendingRoofCornerClip))] public CharacterCorrectionRay RightRoofDetector = new();
+    [SerializeField] public bool IsUsingAdjustmentLedgeLander;
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingAdjustmentLedgeLander))] public CharacterCorrectionRay LeftLedgeDetector = new();
+    [SerializeField, AllowNesting, ShowIf(nameof(IsUsingAdjustmentLedgeLander))] public CharacterCorrectionRay RightLedgeDetector = new();
     /**/
     
     //---------------------------------------------------------------------------------------
-    
+
     [Header("Collision")]
-    [Question]
-    [field:SerializeField] public bool IsUsingCollisionStandOnEdge { get; set; }
-    [field:SerializeField] public CharacterContact GroundContact { get; set; }
-    [field:SerializeField] public CharacterContact RoofContact { get; set; }
-    [field:SerializeField] public CharacterContact LeftWallContact { get; set; }
-    [field:SerializeField] public CharacterContact RightWallContact { get; set; }
+    [SerializeField] public bool IsUsingCollisionStandOnEdge;
+    [SerializeField] public CharacterContact GroundContact = new();
+    [SerializeField] public CharacterContact RoofContact = new();
+    [SerializeField] public CharacterContact LeftWallContact = new();
+    [SerializeField] public CharacterContact RightWallContact = new();
     //Dash Rays
     /**/
     
     //---------------------------------------------------------------------------------------
 
-    [field:Header("Physics")]
-    [field:SerializeField] public Rigidbody2D RigidBody { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingPhysicsEuler { get; set; }
-    [Question]
-    [field:SerializeField] public bool IsUsingPhysicsVerlet { get; set; }
+    [Header("Physics")]
+    [SerializeField] public Rigidbody2D RigidBody;
+    [SerializeField] public bool IsUsingPhysicsEuler;
+    [SerializeField] public bool IsUsingPhysicsVerlet;
     /**/
-    
+
     //---------------------------------------------------------------------------------------
-    
+
 }
 
 
