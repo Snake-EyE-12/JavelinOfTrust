@@ -13,60 +13,55 @@ public class CharacterInput : MonoBehaviour
 
     public void OnJumpKeyEvaluated(InputAction.CallbackContext context)
     {
-        if (context.performed) frameInput.jumpStarted = true;
-        if (context.canceled) frameInput.jumpEnded = true;
+        if (context.performed) frameInput.jump.Press();
+        if (context.canceled) frameInput.jump.Release();
     }
 
     public void OnAttackKeyEvaluated(InputAction.CallbackContext context)
     {
-        if (context.performed) frameInput.attackStarted = true;
-        if (context.canceled) frameInput.attackEnded = true;
+        if (context.performed) frameInput.attack.Press();
+        if (context.canceled) frameInput.attack.Release();
     }
 
     public void OnDashKeyEvaluated(InputAction.CallbackContext context)
     {
-        if (context.performed) frameInput.dashStarted = true;
-        if (context.canceled) frameInput.dashEnded = true;
+        if (context.performed) frameInput.dash.Press();
+        if (context.canceled) frameInput.dash.Release();
     }
     
     public void OnSprintKeyEvaluated(InputAction.CallbackContext context)
     {
-        if (context.performed) frameInput.sprintStarted = true;
-        if (context.canceled) frameInput.sprintEnded = true;
+        if (context.performed) frameInput.sprint.Press();
+        if (context.canceled) frameInput.sprint.Release();
     }
     
     public void OnInteractKeyEvaluated(InputAction.CallbackContext context)
     {
-        if (context.performed) frameInput.interactStarted = true;
-        if (context.canceled) frameInput.interactEnded = true;
+        if (context.performed) frameInput.interact.Press();
+        if (context.canceled) frameInput.interact.Release();
     }
 
     public void OnCrouchKeyEvaluated(InputAction.CallbackContext context)
     {
-        if (context.performed) frameInput.sprintStarted = true;
-        if (context.canceled) frameInput.sprintEnded = true;
+        if (context.performed) frameInput.crouch.Press();
+        if (context.canceled) frameInput.crouch.Release();
     }
     
     public void OnGripKeyEvaluated(InputAction.CallbackContext context)
     {
-        if (context.performed) frameInput.gripStarted = true;
-        if (context.canceled) frameInput.gripEnded = true;
+        if (context.performed) frameInput.grip.Press();
+        if (context.canceled) frameInput.grip.Release();
     }
 
     private void LateUpdate()
     {
-        frameInput.jumpStarted = false;
-        frameInput.jumpEnded = false;
-        frameInput.attackStarted = false;
-        frameInput.attackEnded = false;
-        frameInput.dashStarted = false;
-        frameInput.dashEnded = false;
-        frameInput.sprintStarted = false;
-        frameInput.sprintEnded = false;
-        frameInput.interactStarted = false;
-        frameInput.interactEnded = false;
-        frameInput.crouchStarted = false;
-        frameInput.crouchEnded = false;
+        frameInput.jump.Reset();
+        frameInput.dash.Reset();
+        frameInput.attack.Reset();
+        frameInput.grip.Reset();
+        frameInput.interact.Reset();
+        frameInput.sprint.Reset();
+        frameInput.crouch.Reset();
     }
 
     public CharacterFrameInput GetFrameInput()
@@ -75,21 +70,43 @@ public class CharacterInput : MonoBehaviour
     }
 }
 
-public struct CharacterFrameInput
+public class CharacterFrameInput
 {
     public Vector2 direction;
-    public bool jumpStarted;
-    public bool jumpEnded;
-    public bool dashStarted;
-    public bool dashEnded;
-    public bool attackStarted;
-    public bool attackEnded;
-    public bool gripStarted;
-    public bool gripEnded;
-    public bool interactStarted;
-    public bool interactEnded;
-    public bool sprintStarted;
-    public bool sprintEnded;
-    public bool crouchStarted;
-    public bool crouchEnded;
+    public BooleanInput jump = new BooleanInput();
+    public BooleanInput dash = new BooleanInput();
+    public BooleanInput attack = new BooleanInput();
+    public BooleanInput grip = new BooleanInput();
+    public BooleanInput interact = new BooleanInput();
+    public BooleanInput sprint = new BooleanInput();
+    public BooleanInput crouch = new BooleanInput();
+}
+
+[Flags]
+public enum InputState
+{
+    Pressed = 1,
+    Down = 2,
+    Up = 4
+}
+public class BooleanInput
+{
+    private InputState state; // U D P 
+    public bool Down => state.HasFlag(InputState.Down);
+    public bool Up => state.HasFlag(InputState.Up);
+    public bool Pressed => state.HasFlag(InputState.Pressed);
+    public void Press() // Down Pressed
+    {
+        state = (InputState)3;
+    }
+
+    public void Release() // Up
+    {
+        state = (InputState)4;
+    }
+
+    public void Reset() 
+    {
+        state &= (InputState)1;
+    }
 }

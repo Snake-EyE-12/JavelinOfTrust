@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using CharacterProcess;
 using UnityEngine;
 public interface Processor<T>
 {
@@ -11,17 +12,22 @@ public abstract class BaseProcessor<T> : Processor<T>
     public virtual Processor<T> SetNext(Processor<T> next) => nextProcessor = next;
     public virtual void Process(T data) => nextProcessor?.Process(data);
 }
-public abstract class DiscreteProcessor<T> : BaseProcessor<T>
+public abstract class OperationalProcessor<T>
 {
-    protected List<Processor<T>> processors = new List<Processor<T>>();
-    public virtual Processor<T> SetNext(Processor<T> next)
+    public abstract void Operate(T data);
+}
+
+public class OperationalController<T>
+{
+    private List<OperationalProcessor<T>> processors = new ();
+    public OperationalController<T> SetNext(OperationalProcessor<T> next)
     {
         processors.Add(next);
         return this;
     }
-    public sealed override void Process(T data)
+
+    public void Process(T data)
     {
-        processors.ForEach((x) => x.Process(data));
+        processors.ForEach((x) => x.Operate(data));
     }
-    public abstract void Operate(T data);
 }
