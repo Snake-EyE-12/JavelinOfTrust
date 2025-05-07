@@ -1,13 +1,11 @@
 using System;
 using System.Collections.Generic;
-using CharacterProcess;
-using NaughtyAttributes;
-using UnityEditor;
+using CharacterProcess.Gimmicks;
 using UnityEngine;
 
-public class CharacterController2 : MonoBehaviour
+public class CharacterProcessController : MonoBehaviour
 {
-    private OperationalController<CharacterData2> chain = new();
+    private OperationalController<CharacterDataSettings> chain = new();
 
     private void BuildProcess()
     {
@@ -68,7 +66,7 @@ public class CharacterController2 : MonoBehaviour
     {
         BuildProcess();
     }
-    [SerializeField] private CharacterData2 data;
+    [SerializeField] private CharacterDataSettings data;
     private void Update()
     {
         chain.Process(data);
