@@ -254,7 +254,7 @@ public class CharacterData2
     
     //---------------------------------------------------------------------------------------
 
-    [Header("Jump")] // Holding Jump
+    [Header("Jump")] // Holding Jump // Pass through breaks early release
     [SerializeField] public float JumpBurstForce;
     [SerializeField] public bool IsUsingJumpApexBonus;
     [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpApexBonus))] public float ApexYVelocityThreshold;
