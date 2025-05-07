@@ -1798,7 +1798,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!50 &616925204
 Rigidbody2D:
   serializedVersion: 5
@@ -4623,243 +4623,235 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data:
-    InputSystem: {fileID: 1358916355}
-    IsUsingSpeedClamp: 0
-    IsUsingSpeedLimiter: 1
-    Damping: 0.9
-    Velocity:
-      Value: {x: 0, y: 0}
-    Acceleration:
-      Additive: {x: 0, y: 0}
-      Multiplicative: {x: 0, y: 0}
-    WalkLocomotion:
-      <Acceleration>k__BackingField: 20
-      <ReversalAcceleration>k__BackingField: 40
-      <CoastDamping>k__BackingField: 0.99
-      <MaxSpeed>k__BackingField: 10
-    HorizontalCutOffVelocity: 0.1
-    IsUsingSprint: 0
-    SprintLocomotion:
-      <Acceleration>k__BackingField: 0
-      <ReversalAcceleration>k__BackingField: 0
-      <CoastDamping>k__BackingField: 0
-      <MaxSpeed>k__BackingField: 0
-    IsUsingCrouch: 0
-    CrouchLocomotion:
-      <Acceleration>k__BackingField: 0
-      <ReversalAcceleration>k__BackingField: 0
-      <CoastDamping>k__BackingField: 0
-      <MaxSpeed>k__BackingField: 0
-    IsUsingSlopeControl: 0
-    MaximumClimbAngle: 0
-    MaximumSlideDownAngle: 0
-    StayOnGround: 0
-    SlopeCheckDistance: 0
-    ActiveLocomotion:
-      <Acceleration>k__BackingField: 0
-      <ReversalAcceleration>k__BackingField: 0
-      <CoastDamping>k__BackingField: 0
-      <MaxSpeed>k__BackingField: 0
-    IsUsingGravity: 1
-    Gravity: 10
-    IsUsingTerminalVelocity: 1
-    TerminalVelocity: 20
-    IsUsingHoverTime: 0
-    HoverDuration: 0
-    GravityMultiplierCurve:
-      curve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      xRange: {x: 0, y: 0}
-      yRange: {x: 0, y: 0}
-    IsUsingMass: 0
-    Weight: 0
-    CalculatedMaxFallSpeed: 0
-    CalculatedGravity:
-      Additive: {x: 0, y: 0}
-      Multiplicative: {x: 0, y: 0}
-    IsUsingLandingStickyFeet: 0
-    StickyFeetDuration: 0
-    StickyFeetVelocityTimeToMultiplier:
-      curve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      xRange: {x: 0, y: 0}
-      yRange: {x: 0, y: 0}
-    StickyFeetAccelerationTimeToMultiplier:
-      curve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      xRange: {x: 0, y: 0}
-      yRange: {x: 0, y: 0}
-    IsUsingLandingDirectionLock: 0
-    LandingDirectionLockDuration: 0
-    LockedOtherDirectionDamper: 0
-    IsUsingLandingStun: 0
-    LandingStunHeightToDuration:
-      curve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      xRange: {x: 0, y: 0}
-      yRange: {x: 0, y: 0}
-    IsUsingLandingVelocityBurst: 0
-    LandingBurstAngle: 0
-    LandingBurstForce: 0
-    PeakHeight: 0
-    FallHeight: 0
-    JumpBurstForce: 10
-    IsUsingJumpApexBonus: 0
-    ApexYVelocityThreshold: 0.2
-    ApexHorizontalBonusAcceleration: 2
-    ApexGravityMultiplier: 0.2
-    IsUsingJumpEarlyRelease: 1
-    IsUsingJumpEarlyReleaseGravityMultiplier: 0
-    EarlyReleaseGravityMultiplier: 6
-    IsUsingJumpImmediateDescend: 1
-    IsUsingJumpMinimumHeight: 1
-    MinimumJumpHeight: 2
-    IsUsingJumpStrongerGravityDescend: 1
-    DescendingGravityMultiplier: 2
-    IsUsingJumpInputBuffer: 1
-    JumpBufferTime: 0.1
-    JumpBuffersTaps: 1
-    IsUsingJumpCoyoteTime: 1
-    JumpCoyoteTime: 0.1
-    IsUsingJumpUniqueAirControl: 0
-    AirLocomotion:
-      <Acceleration>k__BackingField: 0
-      <ReversalAcceleration>k__BackingField: 0
-      <CoastDamping>k__BackingField: 0
-      <MaxSpeed>k__BackingField: 10
-    IsUsingJumpArcTerminalFall: 0
-    JumpArcTerminalVelocity: 0
-    IsUsingJumpRunningStart: 1
-    RunningStartBoostAngle: 10
-    RunningStartBonusVelocity:
-      curve:
-        serializedVersion: 2
-        m_Curve:
-        - serializedVersion: 3
-          time: 0
-          value: 0
-          inSlope: 0
-          outSlope: 0
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0
-        - serializedVersion: 3
-          time: 1
-          value: 1
-          inSlope: 2.4611742
-          outSlope: 2.4611742
-          tangentMode: 0
-          weightedMode: 0
-          inWeight: 0.17334676
-          outWeight: 0
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      xRange: {x: 0, y: 0.5}
-      yRange: {x: 1, y: 1.2}
-    IsUsingMultipleJumps: 0
-    MultipleJumpCount: 0
-    IsUsingJumpChargeUp: 0
-    ChargePowerCurve:
-      curve:
-        serializedVersion: 2
-        m_Curve: []
-        m_PreInfinity: 2
-        m_PostInfinity: 2
-        m_RotationOrder: 4
-      xRange: {x: 0, y: 0}
-      yRange: {x: 0, y: 0}
-    IsUsingJumpPreviousVelocityAlteration: 1
-    JumpingPreviousVelocityMultiplier: {x: 1, y: 0}
-    JumpingPreviousAccelerationMultiplier: {x: 1, y: 0}
-    InApex: 0
-    TimeOfJumpPressed: 0
-    JumpEarlyRelease: 0
-    EarlyOutJump: 0
-    ShouldJump: 0
-    InJump: 0
-    CalculatedJumpForce:
-      Value: {x: 0, y: 0}
-    IsUsingAdjustmentAscendingGroundCornerClip: 0
-    IsUsingAdjustmentAscendingRoofCornerClip: 1
-    LeftRoofDetector:
-      mask:
-        serializedVersion: 2
-        m_Bits: 256
-      origin: {x: -0.5, y: 1}
-      direction: {x: 0, y: 0.4}
-      correction: {x: 0.2, y: 0}
-    RightRoofDetector:
-      mask:
-        serializedVersion: 2
-        m_Bits: 256
-      origin: {x: 0.5, y: 1}
-      direction: {x: 0, y: 0.4}
-      correction: {x: -0.2, y: 0}
-    IsUsingAdjustmentLedgeLander: 1
-    LeftLedgeDetector:
-      mask:
-        serializedVersion: 2
-        m_Bits: 256
-      origin: {x: -0.5, y: -1}
-      direction: {x: -0.4, y: 0}
-      correction: {x: 0, y: 0.2}
-    RightLedgeDetector:
-      mask:
-        serializedVersion: 2
-        m_Bits: 256
-      origin: {x: 0.5, y: -1}
-      direction: {x: 0.4, y: 0}
-      correction: {x: 0, y: 0.2}
-    IsUsingCollisionStandOnEdge: 0
-    GroundContact:
-      <bounds>k__BackingField:
-        m_Center: {x: 0, y: -1, z: 0}
-        m_Extent: {x: 0.4, y: 0.1, z: 0}
-      <mask>k__BackingField:
-        serializedVersion: 2
-        m_Bits: 768
-    RoofContact:
-      <bounds>k__BackingField:
-        m_Center: {x: 0, y: 1, z: 0}
-        m_Extent: {x: 0.4, y: 0.1, z: 0}
-      <mask>k__BackingField:
-        serializedVersion: 2
-        m_Bits: 256
-    LeftWallContact:
-      <bounds>k__BackingField:
-        m_Center: {x: -0.5, y: 0, z: 0}
-        m_Extent: {x: 0.1, y: 0.8, z: 0}
-      <mask>k__BackingField:
-        serializedVersion: 2
-        m_Bits: 256
-    RightWallContact:
-      <bounds>k__BackingField:
-        m_Center: {x: 0.5, y: 0, z: 0}
-        m_Extent: {x: 0.1, y: 0.8, z: 0}
-      <mask>k__BackingField:
-        serializedVersion: 2
-        m_Bits: 256
-    RigidBody: {fileID: 1414430841}
-    IsUsingPhysicsEuler: 1
-    IsUsingPhysicsVerlet: 0
+    input:
+      InputSystem: {fileID: 1358916355}
+    speed:
+      IsUsingSpeedClamp: 0
+      IsUsingSpeedLimiter: 1
+      Damping: 0.97
+    locomotion:
+      Velocity:
+        Value: {x: 0, y: -3.0933561}
+      Acceleration:
+        Additive: {x: 0, y: 0}
+        Multiplicative: {x: 1, y: 1}
+      WalkLocomotion:
+        <Acceleration>k__BackingField: 20
+        <ReversalAcceleration>k__BackingField: 40
+        <CoastDamping>k__BackingField: 0.99
+        <MaxSpeed>k__BackingField: 5
+      HorizontalCutOffVelocity: 0.1
+      ActiveLocomotion:
+        <Acceleration>k__BackingField: 20
+        <ReversalAcceleration>k__BackingField: 40
+        <CoastDamping>k__BackingField: 0.99
+        <MaxSpeed>k__BackingField: 30
+    gravity:
+      Gravity: 70
+      IsUsingTerminalVelocity: 1
+      TerminalVelocity: 25
+      CalculatedMaxFallSpeed: 25
+      CalculatedGravity:
+        Additive: {x: 0, y: 0}
+        Multiplicative: {x: 1, y: 1}
+    landing:
+      IsUsingLandingStickyFeet: 0
+      StickyFeetDuration: 0
+      StickyFeetVelocityTimeToMultiplier:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        xRange: {x: 0, y: 0}
+        yRange: {x: 0, y: 0}
+      StickyFeetAccelerationTimeToMultiplier:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        xRange: {x: 0, y: 0}
+        yRange: {x: 0, y: 0}
+      IsUsingLandingDirectionLock: 0
+      LandingDirectionLockDuration: 0
+      LockedOtherDirectionDamper: 0
+      IsUsingLandingStun: 0
+      LandingStunHeightToDuration:
+        curve:
+          serializedVersion: 2
+          m_Curve: []
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        xRange: {x: 0, y: 0}
+        yRange: {x: 0, y: 0}
+      PeakHeight: 6.504999
+      FallHeight: 5.0006223
+    sprint:
+      SprintLocomotion:
+        <Acceleration>k__BackingField: 30
+        <ReversalAcceleration>k__BackingField: 60
+        <CoastDamping>k__BackingField: 0.9
+        <MaxSpeed>k__BackingField: 10
+    crouch:
+      CrouchLocomotion:
+        <Acceleration>k__BackingField: 10
+        <ReversalAcceleration>k__BackingField: 10
+        <CoastDamping>k__BackingField: 1
+        <MaxSpeed>k__BackingField: 1
+    jump:
+      JumpBurstForce: 27
+      IsUsingJumpApexBonus: 1
+      ApexYVelocityThreshold: 0.2
+      ApexHorizontalBonusAcceleration: 1.1
+      ApexGravityMultiplier: 0.5
+      IsUsingJumpEarlyRelease: 1
+      IsUsingJumpEarlyReleaseGravityMultiplier: 0
+      EarlyReleaseGravityMultiplier: 0
+      IsUsingJumpImmediateDescend: 1
+      IsUsingJumpMinimumHeight: 1
+      MinimumJumpHeight: 0.3
+      IsUsingJumpStrongerGravityDescend: 1
+      DescendingGravityMultiplier: 2
+      IsUsingJumpInputBuffer: 1
+      JumpBufferTime: 0.1
+      JumpBuffersTaps: 1
+      IsUsingJumpCoyoteTime: 1
+      JumpCoyoteTime: 0.1
+      IsUsingJumpUniqueAirControl: 1
+      AirLocomotion:
+        <Acceleration>k__BackingField: 50
+        <ReversalAcceleration>k__BackingField: 60
+        <CoastDamping>k__BackingField: 1
+        <MaxSpeed>k__BackingField: 15
+      IsUsingJumpArcTerminalFall: 0
+      JumpArcTerminalVelocity: 0
+      IsUsingJumpRunningStart: 1
+      RunningStartBoostAngle: 5
+      RunningStartBonusVelocity:
+        curve:
+          serializedVersion: 2
+          m_Curve:
+          - serializedVersion: 3
+            time: 0
+            value: 0
+            inSlope: 0
+            outSlope: 0
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          - serializedVersion: 3
+            time: 1
+            value: 1
+            inSlope: 2
+            outSlope: 2
+            tangentMode: 0
+            weightedMode: 0
+            inWeight: 0
+            outWeight: 0
+          m_PreInfinity: 2
+          m_PostInfinity: 2
+          m_RotationOrder: 4
+        xRange: {x: 0, y: 30}
+        yRange: {x: 1, y: 1.2}
+      IsUsingMultipleJumps: 1
+      MultipleJumpCount: 2
+      IsUsingJumpPreviousVelocityAlteration: 1
+      JumpingPreviousVelocityMultiplier: {x: 1, y: 0}
+      JumpingPreviousAccelerationMultiplier: {x: 1, y: 0}
+      InApex: 0
+      TimeOfJumpPressed: 262.8468
+      JumpEarlyRelease: 0
+      EarlyOutJump: 0
+      ShouldJump: 0
+      InJump: 0
+      CalculatedJumpForce:
+        Value: {x: 0, y: 27}
+      InJumpArc: 0
+      JumpCount: 0
+    adjustment:
+      IsUsingAdjustmentAscendingGroundCornerClip: 1
+      LeftGroundDetector:
+        mask:
+          serializedVersion: 2
+          m_Bits: 768
+        origin: {x: -0.3, y: -1.11}
+        direction: {x: -0.3, y: 0}
+        correction: {x: -0.2, y: 0.1}
+      RightGroundDetector:
+        mask:
+          serializedVersion: 2
+          m_Bits: 768
+        origin: {x: 0.3, y: -1.11}
+        direction: {x: 0.3, y: 0}
+        correction: {x: 0.2, y: 0.1}
+      IsUsingAdjustmentAscendingRoofCornerClip: 1
+      LeftRoofDetector:
+        mask:
+          serializedVersion: 2
+          m_Bits: 256
+        origin: {x: -0.5, y: 1}
+        direction: {x: 0, y: 0.4}
+        correction: {x: 0.2, y: 0}
+      RightRoofDetector:
+        mask:
+          serializedVersion: 2
+          m_Bits: 256
+        origin: {x: 0.5, y: 1}
+        direction: {x: 0, y: 0.4}
+        correction: {x: -0.2, y: 0}
+      IsUsingAdjustmentLedgeLander: 1
+      LeftLedgeDetector:
+        mask:
+          serializedVersion: 2
+          m_Bits: 256
+        origin: {x: -0.5, y: -1}
+        direction: {x: -0.4, y: 0}
+        correction: {x: 0, y: 0.2}
+      RightLedgeDetector:
+        mask:
+          serializedVersion: 2
+          m_Bits: 256
+        origin: {x: 0.5, y: -1}
+        direction: {x: 0.4, y: 0}
+        correction: {x: 0, y: 0.2}
+    collision:
+      GroundContact:
+        <bounds>k__BackingField:
+          m_Center: {x: 0, y: -1, z: 0}
+          m_Extent: {x: 0.4, y: 0.1, z: 0}
+        <mask>k__BackingField:
+          serializedVersion: 2
+          m_Bits: 768
+      RoofContact:
+        <bounds>k__BackingField:
+          m_Center: {x: 0, y: 1, z: 0}
+          m_Extent: {x: 0.2, y: 0.1, z: 0}
+        <mask>k__BackingField:
+          serializedVersion: 2
+          m_Bits: 256
+      LeftWallContact:
+        <bounds>k__BackingField:
+          m_Center: {x: -0.5, y: 0, z: 0}
+          m_Extent: {x: 0.1, y: 0.5, z: 0}
+        <mask>k__BackingField:
+          serializedVersion: 2
+          m_Bits: 256
+      RightWallContact:
+        <bounds>k__BackingField:
+          m_Center: {x: 0.5, y: 0, z: 0}
+          m_Extent: {x: 0.1, y: 0.5, z: 0}
+        <mask>k__BackingField:
+          serializedVersion: 2
+          m_Bits: 256
+    physics:
+      RigidBody: {fileID: 1414430841}
+      IsUsingPhysicsEuler: 1
+      IsUsingPhysicsVerlet: 0
 --- !u!1 &1526133186
 GameObject:
   m_ObjectHideFlags: 0

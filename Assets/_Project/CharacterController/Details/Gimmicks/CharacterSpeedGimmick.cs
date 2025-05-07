@@ -17,11 +17,11 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingSpeedClamp) return;
-            if (Mathf.Abs(data.Velocity.Value.x) > data.ActiveLocomotion.MaxSpeed)
+            if (!data.speed.IsUsingSpeedClamp) return;
+            if (Mathf.Abs(data.locomotion.Velocity.Value.x) > data.locomotion.ActiveLocomotion.MaxSpeed)
             {
-                int movementDirection = MathUtils.Sign(data.Input.direction.x);
-                data.Velocity.Value.x = data.ActiveLocomotion.MaxSpeed * movementDirection;
+                int movementDirection = MathUtils.Sign(data.input.Input.direction.x);
+                data.locomotion.Velocity.Value.x = data.locomotion.ActiveLocomotion.MaxSpeed * movementDirection;
             }
         }
     }
@@ -30,12 +30,12 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingSpeedLimiter) return;
-            float xMag = Mathf.Abs(data.Velocity.Value.x);
-            if (xMag > data.ActiveLocomotion.MaxSpeed)
+            if (!data.speed.IsUsingSpeedLimiter) return;
+            float xMag = Mathf.Abs(data.locomotion.Velocity.Value.x);
+            if (xMag > data.locomotion.ActiveLocomotion.MaxSpeed)
             {
-                float decay = Mathf.Pow(1f - data.Damping, Time.deltaTime);
-                data.Velocity.Value.x *= decay;
+                float decay = Mathf.Pow(1f - data.speed.Damping, Time.deltaTime);
+                data.locomotion.Velocity.Value.x *= decay;
             }
         }
     }

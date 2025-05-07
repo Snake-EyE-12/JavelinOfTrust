@@ -15,7 +15,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            data.Input = data.InputSystem.GetFrameInput();
+            data.input.Input = data.input.InputSystem.GetFrameInput();
         }
     }
 }

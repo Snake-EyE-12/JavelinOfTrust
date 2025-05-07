@@ -14,8 +14,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingCrouch) return;
-            if (data.Input.crouch.Pressed) data.ActiveLocomotion = data.CrouchLocomotion;
+            if (data.input.Input.crouch.Pressed) data.locomotion.ActiveLocomotion = data.crouch.CrouchLocomotion;
         }
     }
 }

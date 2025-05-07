@@ -16,9 +16,9 @@ namespace CharacterProcess.Gimmicks
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingDirectionLock))] public float LockedOtherDirectionDamper;
         [SerializeField] public bool IsUsingLandingStun;
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingStun))] public Curve LandingStunHeightToDuration;
-        [SerializeField] public bool IsUsingLandingVelocityBurst;
-        [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingVelocityBurst))] public float LandingBurstAngle;
-        [SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingVelocityBurst))] public float LandingBurstForce;
+        //[SerializeField] public bool IsUsingLandingVelocityBurst;
+        //[SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingVelocityBurst))] public float LandingBurstAngle;
+        //[SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingVelocityBurst))] public float LandingBurstForce;
         /**/
         [HideInInspector] public float PeakHeight;
         [HideInInspector] public float FallHeight;
@@ -28,12 +28,12 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingLandingStickyFeet) return;
-            float timeInStickyFeet = Time.time - data.GroundContact.TimeOfContactEnter;
-            if (timeInStickyFeet < data.StickyFeetDuration)
+            if (!data.landing.IsUsingLandingStickyFeet) return;
+            float timeInStickyFeet = Time.time - data.collision.GroundContact.TimeOfContactEnter;
+            if (timeInStickyFeet < data.landing.StickyFeetDuration)
             {
-                data.Acceleration.Multiplicative *= data.StickyFeetAccelerationTimeToMultiplier.Evaluate(timeInStickyFeet);
-                data.Velocity.Value *= data.StickyFeetVelocityTimeToMultiplier.Evaluate(timeInStickyFeet);
+                data.locomotion.Acceleration.Multiplicative *= data.landing.StickyFeetAccelerationTimeToMultiplier.Evaluate(timeInStickyFeet);
+                data.locomotion.Velocity.Value *= data.landing.StickyFeetVelocityTimeToMultiplier.Evaluate(timeInStickyFeet);
             }
         }
 
@@ -43,16 +43,16 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingLandingDirectionLock) return;
-            float timeInLock = Time.time - data.GroundContact.TimeOfContactEnter;
-            if (timeInLock < data.LandingDirectionLockDuration)
+            if (!data.landing.IsUsingLandingDirectionLock) return;
+            float timeInLock = Time.time - data.collision.GroundContact.TimeOfContactEnter;
+            if (timeInLock < data.landing.LandingDirectionLockDuration)
             {
-                int movementDirection = MathUtils.Sign(data.Input.direction.x);
-                int velocityDirection = MathUtils.Sign(data.Velocity.Value.x);
+                int movementDirection = MathUtils.Sign(data.input.Input.direction.x);
+                int velocityDirection = MathUtils.Sign(data.locomotion.Velocity.Value.x);
                 if (movementDirection != 0 && movementDirection != velocityDirection) //Question if vel is 0
                 {
-                    float decay = Mathf.Pow(1f - data.LockedOtherDirectionDamper, Time.deltaTime);
-                    data.Velocity.Value.x *= decay;
+                    float decay = Mathf.Pow(1f - data.landing.LockedOtherDirectionDamper, Time.deltaTime);
+                    data.locomotion.Velocity.Value.x *= decay;
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if(data.PeakHeight < data.RigidBody.transform.position.y) data.PeakHeight = data.RigidBody.transform.position.y;
+            if(data.landing.PeakHeight < data.physics.RigidBody.transform.position.y) data.landing.PeakHeight = data.physics.RigidBody.transform.position.y;
         }
     }
 
@@ -70,11 +70,11 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingLandingStun) return;
-            float timeInStun = Time.time - data.GroundContact.TimeOfContactEnter;
-            if (timeInStun < data.LandingStunHeightToDuration.Evaluate(timeInStun))
+            if (!data.landing.IsUsingLandingStun) return;
+            float timeInStun = Time.time - data.collision.GroundContact.TimeOfContactEnter;
+            if (timeInStun < data.landing.LandingStunHeightToDuration.Evaluate(timeInStun))
             {
-                data.Acceleration.Additive.x = 0;
+                data.locomotion.Acceleration.Additive.x = 0;
             }
         }
     }

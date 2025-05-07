@@ -6,7 +6,7 @@ namespace CharacterProcess.Gimmicks
     [Serializable]
     public class CharacterCollisionGimmick : ICharacterGimmick
     {
-        [SerializeField] public bool IsUsingCollisionStandOnEdge;
+        //[SerializeField] public bool IsUsingCollisionStandOnEdge;
         [SerializeField] public CharacterContact GroundContact = new();
         [SerializeField] public CharacterContact RoofContact = new();
         [SerializeField] public CharacterContact LeftWallContact = new();
@@ -17,7 +17,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (data.GroundContact.Contact && data.Velocity.Value.y < 0) data.Velocity.Value.y = 0;
+            if (data.collision.GroundContact.Contact && data.locomotion.Velocity.Value.y < 0) data.locomotion.Velocity.Value.y = 0;
         }
 
     }
@@ -26,8 +26,8 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (data.LeftWallContact.Contact && data.Velocity.Value.x < 0) data.Velocity.Value.x = 0;
-            if (data.RightWallContact.Contact && data.Velocity.Value.x > 0) data.Velocity.Value.x = 0;
+            if (data.collision.LeftWallContact.Contact && data.locomotion.Velocity.Value.x < 0) data.locomotion.Velocity.Value.x = 0;
+            if (data.collision.RightWallContact.Contact && data.locomotion.Velocity.Value.x > 0) data.locomotion.Velocity.Value.x = 0;
         }
 
     }
@@ -36,7 +36,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            data.RoofContact.Update(data.RigidBody.transform);
+            data.collision.RoofContact.Update(data.physics.RigidBody.transform);
         }
     }
     
@@ -44,7 +44,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            data.GroundContact.Update(data.RigidBody.transform);
+            data.collision.GroundContact.Update(data.physics.RigidBody.transform);
         }
     }
 
@@ -52,8 +52,8 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            data.LeftWallContact.Update(data.RigidBody.transform);
-            data.RightWallContact.Update(data.RigidBody.transform);
+            data.collision.LeftWallContact.Update(data.physics.RigidBody.transform);
+            data.collision.RightWallContact.Update(data.physics.RigidBody.transform);
         }
     }
 

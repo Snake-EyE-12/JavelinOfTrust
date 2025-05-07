@@ -14,6 +14,7 @@ public class CharacterProcessController : MonoBehaviour
             .SetNext(new JumpBufferListener())
             .SetNext(new GroundCollisionDetection()) 
             .SetNext(new GroundContactJumpResetter())
+            .SetNext(new JumpCounterResetter())
             .SetNext(new JumpingEvaluationResetter())
             .SetNext(new WallCollisionDetection())
             .SetNext(new RoofCollisionDetection())
@@ -24,6 +25,7 @@ public class CharacterProcessController : MonoBehaviour
             .SetNext(new ProcessLocomotionForwardAcceleration())
             .SetNext(new ProcessLocomotionReversalAcceleration())
             .SetNext(new ProcessLocomotionCoasting())
+            .SetNext(new JumpCountUser())
             .SetNext(new JumpBufferApplicator())
             .SetNext(new JumpCoyoteInformant())
             .SetNext(new GroundedJumpApplicator())
@@ -40,6 +42,8 @@ public class CharacterProcessController : MonoBehaviour
             .SetNext(new EarlyReleaseCalculator())
             .SetNext(new EarlyReleaseGravityMultiplierApplicator())
             .SetNext(new RoofCollisionVelocityZeroer())
+            .SetNext(new JumpArcDetector())
+            .SetNext(new JumpArcTerminalFall())
             .SetNext(new TerminalFallSpeedCalculator())
             .SetNext(new GravityApplicator())
             .SetNext(new GroundCollisionVelocityZeroer())
@@ -57,6 +61,7 @@ public class CharacterProcessController : MonoBehaviour
             .SetNext(new LocomotionSpeedLimiter())
             .SetNext(new PhysicsVelocityApplicator())
             .SetNext(new GapPositionCorrector())
+            .SetNext(new MakeJumpCorrector())
             .SetNext(new HeadCollisionAvoidance())
             ;
     }
@@ -74,23 +79,63 @@ public class CharacterProcessController : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.green;
-        if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.GroundContact.bounds, data.RigidBody.transform.position);
-        if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.RoofContact.bounds, data.RigidBody.transform.position);
-        if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.LeftWallContact.bounds, data.RigidBody.transform.position);
-        if(data.RigidBody != null) GizmoExtensions.DrawBounds(data.RightWallContact.bounds, data.RigidBody.transform.position);
+        Gizmos.color = Color.green; //Bounds
+        if(data.physics.RigidBody != null) GizmoExtensions.DrawBounds(data.collision.GroundContact.bounds, data.physics.RigidBody.transform.position);
+        if(data.physics.RigidBody != null) GizmoExtensions.DrawBounds(data.collision.RoofContact.bounds, data.physics.RigidBody.transform.position);
+        if(data.physics.RigidBody != null) GizmoExtensions.DrawBounds(data.collision.LeftWallContact.bounds, data.physics.RigidBody.transform.position);
+        if(data.physics.RigidBody != null) GizmoExtensions.DrawBounds(data.collision.RightWallContact.bounds, data.physics.RigidBody.transform.position);
         
-        Gizmos.color = Color.blue;
-        Gizmos.DrawRay(transform.position + (Vector3)data.LeftLedgeDetector.origin + (Vector3)data.LeftLedgeDetector.correction, data.LeftLedgeDetector.direction);
-        Gizmos.DrawRay(transform.position + (Vector3)data.RightLedgeDetector.origin + (Vector3)data.RightLedgeDetector.correction, data.RightLedgeDetector.direction);
-        Gizmos.DrawRay(transform.position + (Vector3)data.LeftRoofDetector.origin + (Vector3)data.LeftRoofDetector.correction, data.LeftRoofDetector.direction);
-        Gizmos.DrawRay(transform.position + (Vector3)data.RightRoofDetector.origin + (Vector3)data.RightRoofDetector.correction, data.RightRoofDetector.direction);
+        Gizmos.color = Color.blue; //Adjustments
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.LeftLedgeDetector.origin + (Vector3)data.adjustment.LeftLedgeDetector.correction, data.adjustment.LeftLedgeDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.RightLedgeDetector.origin + (Vector3)data.adjustment.RightLedgeDetector.correction, data.adjustment.RightLedgeDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.LeftRoofDetector.origin + (Vector3)data.adjustment.LeftRoofDetector.correction, data.adjustment.LeftRoofDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.RightRoofDetector.origin + (Vector3)data.adjustment.RightRoofDetector.correction, data.adjustment.RightRoofDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.LeftGroundDetector.origin + (Vector3)data.adjustment.LeftGroundDetector.correction, data.adjustment.LeftGroundDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.RightGroundDetector.origin + (Vector3)data.adjustment.RightGroundDetector.correction, data.adjustment.RightGroundDetector.direction);
         Gizmos.color = Color.cyan;
-        Gizmos.DrawRay(transform.position + (Vector3)data.LeftLedgeDetector.origin, data.LeftLedgeDetector.direction);
-        Gizmos.DrawRay(transform.position + (Vector3)data.RightLedgeDetector.origin, data.RightLedgeDetector.direction);
-        Gizmos.DrawRay(transform.position + (Vector3)data.LeftRoofDetector.origin, data.LeftRoofDetector.direction);
-        Gizmos.DrawRay(transform.position + (Vector3)data.RightRoofDetector.origin, data.RightRoofDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.LeftLedgeDetector.origin, data.adjustment.LeftLedgeDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.RightLedgeDetector.origin, data.adjustment.RightLedgeDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.LeftRoofDetector.origin, data.adjustment.LeftRoofDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.RightRoofDetector.origin, data.adjustment.RightRoofDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.LeftGroundDetector.origin, data.adjustment.LeftGroundDetector.direction);
+        Gizmos.DrawRay(transform.position + (Vector3)data.adjustment.RightGroundDetector.origin, data.adjustment.RightGroundDetector.direction);
+        
+            
+            /*
+        Gizmos.color = Color.red;
+        Vector3 jumpCenter = data.jump.InJumpArc ? data.jump.JumpTakeoffPoint.point + data.collision.GroundContact.bounds.center : transform.position + data.collision.GroundContact.bounds.center;
+        float height = data.jump.JumpBurstForce * data.jump.JumpBurstForce / (2 * data.gravity.Gravity);
+        float jumpDistanceAtHeight = data.locomotion.WalkLocomotion.MaxSpeed * data.jump.JumpBurstForce / data.gravity.Gravity;
+        float totalDistance = data.locomotion.WalkLocomotion.MaxSpeed * -data.jump.JumpBurstForce / data.gravity.Gravity;
+        
+        Vector3 peak = jumpCenter + new Vector3(jumpDistanceAtHeight, height);
+        Gizmos.DrawLine(jumpCenter, peak);
+        float threshHeight = ((data.jump.ApexYVelocityThreshold * data.jump.ApexYVelocityThreshold) - (data.jump.JumpBurstForce * data.jump.JumpBurstForce)) / (2 * -data.gravity.Gravity);
+        //Gizmos.DrawWireSphere(jumpCenter + Vector3.up * threshHeight, 0.1f);
+        
+        float timeInUpwardsApex = data.jump.ApexYVelocityThreshold / data.gravity.Gravity;
+        float timeInDownwardsApex = data.jump.ApexYVelocityThreshold / (data.gravity.Gravity * data.jump.ApexGravityMultiplier);
+        float distanceTraveledInApex = data.locomotion.WalkLocomotion.MaxSpeed * (timeInUpwardsApex + timeInDownwardsApex);
+        
+        Gizmos.DrawLine(peak, peak + Vector3.right * distanceTraveledInApex);
+        
+        Gizmos.color = new Color(0.75f, 0.5f, 0.0f);
+        Gizmos.DrawLine(peak + Vector3.up * (threshHeight - height), peak + Vector3.right * distanceTraveledInApex + Vector3.up * (threshHeight - height));
+        
+        // //Draw Jump Indicators
+        float bufferZone = data.gravity.TerminalVelocity * data.jump.JumpBufferTime;
+        Vector2 coyoteZone = new Vector2(data.locomotion.WalkLocomotion.MaxSpeed * data.jump.JumpCoyoteTime, 0.5f * -data.gravity.Gravity * data.jump.JumpCoyoteTime * data.jump.JumpCoyoteTime);
+        Gizmos.color = Color.yellow;
+        Vector2 coyoteEndPoint = jumpCenter + (Vector3)coyoteZone;
+        Vector2 bufferEndPoint = jumpCenter + Vector3.down * bufferZone;
+        Gizmos.DrawLine(jumpCenter, coyoteEndPoint);
+        Gizmos.DrawLine(coyoteEndPoint + (0.1f * Vector2.Perpendicular(coyoteEndPoint - (Vector2)jumpCenter).normalized), coyoteEndPoint + (-0.1f * Vector2.Perpendicular(coyoteEndPoint - (Vector2)jumpCenter).normalized));
+        Gizmos.DrawLine(jumpCenter, bufferEndPoint);
+        Gizmos.DrawLine(bufferEndPoint + (0.1f * Vector2.left), bufferEndPoint + (0.1f * Vector2.right));
+        */
+        
     }
+    
 
     
 

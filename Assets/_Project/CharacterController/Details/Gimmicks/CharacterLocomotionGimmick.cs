@@ -10,7 +10,7 @@ namespace CharacterProcess.Gimmicks
         [SerializeField] public Velocity Velocity;
         [SerializeField] public MovementVector2 Acceleration;
         [SerializeField] public CharacterLocomotionState WalkLocomotion;
-        [SerializeField] public float HorizontalCutOffVelocity;
+        [SerializeField, Min(0)] public float HorizontalCutOffVelocity;
         /**/
         [HideInInspector] public CharacterLocomotionState ActiveLocomotion;
     }
@@ -19,8 +19,8 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            data.Velocity.Value += data.Acceleration * Time.deltaTime;
-            data.Acceleration.Reset();
+            data.locomotion.Velocity.Value += data.locomotion.Acceleration * Time.deltaTime;
+            data.locomotion.Acceleration.Reset();
         }
     }
     
@@ -28,12 +28,12 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            int movementDirection = MathUtils.Sign(data.Input.direction.x);
-            int velDirection = MathUtils.Sign(data.Velocity.Value.x);
+            int movementDirection = MathUtils.Sign(data.input.Input.direction.x);
+            int velDirection = MathUtils.Sign(data.locomotion.Velocity.Value.x);
 
             if (movementDirection != 0 && (velDirection == movementDirection || velDirection == 0))
             {
-                data.Acceleration.Additive.x += data.ActiveLocomotion.Acceleration * movementDirection;
+                data.locomotion.Acceleration.Additive.x += data.locomotion.ActiveLocomotion.Acceleration * movementDirection;
             }
         }
     }
@@ -42,12 +42,12 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            int movementDirection = MathUtils.Sign(data.Input.direction.x);
-            int velDirection = MathUtils.Sign(data.Velocity.Value.x);
+            int movementDirection = MathUtils.Sign(data.input.Input.direction.x);
+            int velDirection = MathUtils.Sign(data.locomotion.Velocity.Value.x);
 
             if (movementDirection != 0 && velDirection != 0 && movementDirection != velDirection)
             {
-                data.Acceleration.Additive.x += data.ActiveLocomotion.ReversalAcceleration * movementDirection;
+                data.locomotion.Acceleration.Additive.x += data.locomotion.ActiveLocomotion.ReversalAcceleration * movementDirection;
             }
         }
     }
@@ -56,13 +56,13 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            int movementDirection = MathUtils.Sign(data.Input.direction.x);
-            int velDirection = MathUtils.Sign(data.Velocity.Value.x);
+            int movementDirection = MathUtils.Sign(data.input.Input.direction.x);
+            int velDirection = MathUtils.Sign(data.locomotion.Velocity.Value.x);
 
             if (movementDirection == 0 && velDirection != 0)
             {
-                float decay = Mathf.Pow(1f - data.ActiveLocomotion.CoastDamping, Time.deltaTime);
-                data.Velocity.Value.x *= decay;
+                float decay = Mathf.Pow(1f - data.locomotion.ActiveLocomotion.CoastDamping, Time.deltaTime);
+                data.locomotion.Velocity.Value.x *= decay;
             }
         }
     }
@@ -71,29 +71,20 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (MathUtils.Sign(data.Input.direction.x) == 0 && 
-                Mathf.Abs(data.Velocity.Value.x) < data.HorizontalCutOffVelocity)
+            if (MathUtils.Sign(data.input.Input.direction.x) == 0 && 
+                Mathf.Abs(data.locomotion.Velocity.Value.x) < data.locomotion.HorizontalCutOffVelocity)
             {
-                data.Velocity.Value.x = 0;
-                data.Acceleration.Additive.x = 0;
+                data.locomotion.Velocity.Value.x = 0;
+                data.locomotion.Acceleration.Additive.x = 0;
             }
         }
     }
     
-    public class PhysicsVelocityApplicator : BaseCharacterProcessor
-    {
-        public override void Operate(CharacterDataSettings data)
-        {
-            if (!data.IsUsingPhysicsEuler) return;
-            data.RigidBody.linearVelocity = data.Velocity.Value;
-        }
-    }
-
     public class LocomotionWalkDetector : BaseCharacterProcessor
     {
         public override void Operate(CharacterDataSettings data)
         {
-            data.ActiveLocomotion = data.WalkLocomotion;
+            data.locomotion.ActiveLocomotion = data.locomotion.WalkLocomotion;
         }
     }
 }

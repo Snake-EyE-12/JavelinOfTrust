@@ -10,4 +10,13 @@ namespace CharacterProcess.Gimmicks
         [SerializeField] public bool IsUsingPhysicsEuler;
         [SerializeField] public bool IsUsingPhysicsVerlet;
     }
+    
+    public class PhysicsVelocityApplicator : BaseCharacterProcessor
+    {
+        public override void Operate(CharacterDataSettings data)
+        {
+            if (!data.physics.IsUsingPhysicsEuler) return;
+            data.physics.RigidBody.linearVelocity = data.locomotion.Velocity.Value;
+        }
+    }
 }

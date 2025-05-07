@@ -5,9 +5,9 @@ using UnityEngine;
 namespace CharacterProcess.Gimmicks
 {
     [Serializable]
-    public class CharacterJumpGimmick : ICharacterGimmick
+    public class CharacterJumpGimmick : ICharacterGimmick //Bunny Hop
     {
-        [SerializeField] public float JumpBurstForce;
+        [SerializeField, Min(0)] public float JumpBurstForce;
         [SerializeField] public bool IsUsingJumpApexBonus;
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpApexBonus))] public float ApexYVelocityThreshold;
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpApexBonus))] public float ApexHorizontalBonusAcceleration;
@@ -34,8 +34,8 @@ namespace CharacterProcess.Gimmicks
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpRunningStart))] public Curve RunningStartBonusVelocity;
         [SerializeField] public bool IsUsingMultipleJumps;
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingMultipleJumps))] public int MultipleJumpCount;
-        [SerializeField] public bool IsUsingJumpChargeUp;
-        [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpChargeUp))] public Curve ChargePowerCurve;
+        //[SerializeField] public bool IsUsingJumpChargeUp;
+        //[SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpChargeUp))] public Curve ChargePowerCurve;
         [SerializeField] public bool IsUsingJumpPreviousVelocityAlteration;
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpPreviousVelocityAlteration))] public Vector2 JumpingPreviousVelocityMultiplier;
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpPreviousVelocityAlteration))] public Vector2 JumpingPreviousAccelerationMultiplier;
@@ -48,14 +48,57 @@ namespace CharacterProcess.Gimmicks
         [HideInInspector] public bool InJump;
         [HideInInspector] public JumpPoint JumpTakeoffPoint = new JumpPoint();
         [HideInInspector] public SVector2 CalculatedJumpForce = new SVector2();
+        [HideInInspector] public bool InJumpArc;
+        [HideInInspector] public int JumpCount;
+    }
+
+    public class JumpCountUser : BaseCharacterProcessor
+    {
+        public override void Operate(CharacterDataSettings data)
+        {
+            if (!data.jump.IsUsingMultipleJumps) return;
+            if (data.input.Input.jump.Down && data.jump.JumpCount < data.jump.MultipleJumpCount)
+            {
+                data.jump.ShouldJump = true;
+                data.jump.InApex = false;
+                data.jump.EarlyOutJump = false;
+                data.jump.JumpEarlyRelease = false;
+            }
+        }
+    }
+    public class JumpCounterResetter : BaseCharacterProcessor
+    {
+        public override void Operate(CharacterDataSettings data)
+        {
+            if(data.collision.GroundContact.EnteredContact) data.jump.JumpCount = 0;
+        }
+    }
+
+    public class JumpArcDetector : BaseCharacterProcessor
+    {
+        public override void Operate(CharacterDataSettings data)
+        {
+            data.jump.InJumpArc = data.physics.RigidBody.transform.position.y > data.jump.JumpTakeoffPoint.point.y && data.jump.InJump;
+        }
+    }
+    public class JumpArcTerminalFall : BaseCharacterProcessor
+    {
+        public override void Operate(CharacterDataSettings data)
+        {
+            if (!data.jump.IsUsingJumpArcTerminalFall) return;
+            if (data.jump.InJumpArc)
+            {
+                data.gravity.CalculatedMaxFallSpeed = data.jump.JumpArcTerminalVelocity;
+            }
+        }
     }
     
     public class JumpBufferListener : BaseCharacterProcessor
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpInputBuffer) return;
-            if (data.Input.jump.Down) data.TimeOfJumpPressed = Time.time;
+            if (!data.jump.IsUsingJumpInputBuffer) return;
+            if (data.input.Input.jump.Down) data.jump.TimeOfJumpPressed = Time.time;
         }
     }
 
@@ -63,10 +106,10 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpInputBuffer) return;
-            if (data.GroundContact.EnteredContact && data.TimeOfJumpPressed + data.JumpBufferTime > Time.time)
+            if (!data.jump.IsUsingJumpInputBuffer) return;
+            if (data.collision.GroundContact.EnteredContact && data.jump.TimeOfJumpPressed + data.jump.JumpBufferTime > Time.time)
             {
-                if (data.JumpBuffersTaps || data.Input.jump.Pressed) data.ShouldJump = true;
+                if (data.jump.JumpBuffersTaps || data.input.Input.jump.Pressed) data.jump.ShouldJump = true;
             }
         }
     }
@@ -75,7 +118,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (data.Input.jump.Down && data.GroundContact.Contact) data.ShouldJump = true;
+            if (data.input.Input.jump.Down && data.collision.GroundContact.Contact) data.jump.ShouldJump = true;
         }
     }
 
@@ -83,7 +126,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (data.GroundContact.Contact) data.InJump = false;
+            if (data.collision.GroundContact.Contact) data.jump.InJump = false;
         }
     }
 
@@ -91,9 +134,9 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (data.Input.jump.Down && data.GroundContact.TimeOfContactExit + data.JumpCoyoteTime > Time.time)
+            if (data.input.Input.jump.Down && data.collision.GroundContact.TimeOfContactExit + data.jump.JumpCoyoteTime > Time.time)
             {
-                data.ShouldJump = true;
+                data.jump.ShouldJump = true;
             }
         }
     
@@ -103,8 +146,8 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            data.CalculatedJumpForce.Value.x = 0;
-            data.CalculatedJumpForce.Value.y = data.JumpBurstForce;
+            data.jump.CalculatedJumpForce.Value.x = 0;
+            data.jump.CalculatedJumpForce.Value.y = data.jump.JumpBurstForce;
         }
     }
 
@@ -112,12 +155,12 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpRunningStart) return;
-            data.CalculatedJumpForce.Value *= data.RunningStartBonusVelocity.Evaluate(Mathf.Abs(data.Velocity.Value.x));
-            int movementDirection = MathUtils.Sign(data.Input.direction.x);
+            if (!data.jump.IsUsingJumpRunningStart) return;
+            data.jump.CalculatedJumpForce.Value *= data.jump.RunningStartBonusVelocity.Evaluate(Mathf.Abs(data.locomotion.Velocity.Value.x));
+            int movementDirection = MathUtils.Sign(data.input.Input.direction.x);
             if (movementDirection != 0)
             {
-                data.CalculatedJumpForce.Value = Quaternion.Euler(0, 0, -data.RunningStartBoostAngle * movementDirection) * data.CalculatedJumpForce.Value;
+                data.jump.CalculatedJumpForce.Value = Quaternion.Euler(0, 0, -data.jump.RunningStartBoostAngle * movementDirection) * data.jump.CalculatedJumpForce.Value;
             }
         }
     }
@@ -126,12 +169,13 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (data.ShouldJump)
+            if (data.jump.ShouldJump)
             {
-                data.InJump = true;
-                data.JumpTakeoffPoint.point = data.RigidBody.transform.position;
-                data.JumpTakeoffPoint.time = Time.time;
-                data.Velocity.Value += data.CalculatedJumpForce.Value;
+                data.jump.JumpCount++;
+                data.jump.InJump = true;
+                data.jump.JumpTakeoffPoint.point = data.physics.RigidBody.transform.position;
+                data.jump.JumpTakeoffPoint.time = Time.time;
+                data.locomotion.Velocity.Value += data.jump.CalculatedJumpForce.Value;
             }
         }
     }
@@ -140,11 +184,11 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpPreviousVelocityAlteration) return;
-            if (data.ShouldJump)
+            if (!data.jump.IsUsingJumpPreviousVelocityAlteration) return;
+            if (data.jump.ShouldJump)
             {
-                data.Velocity.Value *= data.JumpingPreviousVelocityMultiplier;
-                data.Acceleration.Multiplicative *= data.JumpingPreviousAccelerationMultiplier;
+                data.locomotion.Velocity.Value *= data.jump.JumpingPreviousVelocityMultiplier;
+                data.locomotion.Acceleration.Multiplicative *= data.jump.JumpingPreviousAccelerationMultiplier;
             }
         }
     }
@@ -153,7 +197,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            data.ShouldJump = false;
+            data.jump.ShouldJump = false;
         }
     }
 
@@ -162,8 +206,8 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpStrongerGravityDescend) return;
-            if (data.InJump && data.Velocity.Value.y < 0) data.CalculatedGravity.Multiplicative.y *= data.DescendingGravityMultiplier;
+            if (!data.jump.IsUsingJumpStrongerGravityDescend) return;
+            if (data.jump.InJump && data.locomotion.Velocity.Value.y < 0) data.gravity.CalculatedGravity.Multiplicative.y *= data.jump.DescendingGravityMultiplier;
         }
     }
 
@@ -171,8 +215,8 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpApexBonus) return;
-            data.InApex = data.InJump && Mathf.Abs(data.Velocity.Value.y) < data.ApexYVelocityThreshold;
+            if (!data.jump.IsUsingJumpApexBonus) return;
+            data.jump.InApex = data.jump.InJump && Mathf.Abs(data.locomotion.Velocity.Value.y) < data.jump.ApexYVelocityThreshold;
         }
     }
 
@@ -180,10 +224,10 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpApexBonus) return;
-            if (data.InApex)
+            if (!data.jump.IsUsingJumpApexBonus) return;
+            if (data.jump.InApex)
             {
-                data.Acceleration.Multiplicative.x *= data.ApexHorizontalBonusAcceleration * MathUtils.Sign(data.Input.direction.x);
+                data.locomotion.Acceleration.Multiplicative.x *= data.jump.ApexHorizontalBonusAcceleration * MathUtils.Sign(data.input.Input.direction.x);
             }
         }
     }
@@ -192,8 +236,8 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpApexBonus) return;
-            if (data.InApex) data.CalculatedGravity.Multiplicative.y *= data.ApexGravityMultiplier;
+            if (!data.jump.IsUsingJumpApexBonus) return;
+            if (data.jump.InApex) data.gravity.CalculatedGravity.Multiplicative.y *= data.jump.ApexGravityMultiplier;
         }
     }
 
@@ -201,10 +245,10 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!(data.IsUsingJumpEarlyRelease && data.IsUsingJumpEarlyReleaseGravityMultiplier)) return;
-            if (data.EarlyOutJump)
+            if (!(data.jump.IsUsingJumpEarlyRelease && data.jump.IsUsingJumpEarlyReleaseGravityMultiplier)) return;
+            if (data.jump.EarlyOutJump)
             {
-                data.CalculatedGravity.Multiplicative.y *= data.EarlyReleaseGravityMultiplier;
+                data.gravity.CalculatedGravity.Multiplicative.y *= data.jump.EarlyReleaseGravityMultiplier;
             }
         }
     }
@@ -213,9 +257,9 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpEarlyRelease) return;
-            if (data.Input.jump.Up && data.InJump) data.JumpEarlyRelease = true;
-            if (data.GroundContact.Contact) data.JumpEarlyRelease = false;
+            if (!data.jump.IsUsingJumpEarlyRelease) return;
+            if (data.input.Input.jump.Up && data.jump.InJump) data.jump.JumpEarlyRelease = true;
+            if (data.collision.GroundContact.Contact) data.jump.JumpEarlyRelease = false;
         }
     }
 
@@ -223,7 +267,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (data.RoofContact.Contact && data.Velocity.Value.y > 0) data.Velocity.Value.y = 0;
+            if (data.collision.RoofContact.Contact && data.locomotion.Velocity.Value.y > 0) data.locomotion.Velocity.Value.y = 0;
         }
     }
 
@@ -233,10 +277,10 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!(data.IsUsingJumpEarlyRelease && data.IsUsingJumpImmediateDescend)) return;
-            if (data.EarlyOutJump && data.Velocity.Value.y > 0)
+            if (!(data.jump.IsUsingJumpEarlyRelease && data.jump.IsUsingJumpImmediateDescend)) return;
+            if (data.jump.EarlyOutJump && data.locomotion.Velocity.Value.y > 0)
             {
-                data.Velocity.Value.y = 0;
+                data.locomotion.Velocity.Value.y = 0;
             }
         }
     }
@@ -245,9 +289,9 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            data.EarlyOutJump = data.JumpEarlyRelease;
-            if (!data.IsUsingJumpMinimumHeight) return;
-            data.EarlyOutJump = data.JumpEarlyRelease && data.RigidBody.transform.position.y - data.JumpTakeoffPoint.point.y > data.MinimumJumpHeight;
+            data.jump.EarlyOutJump = data.jump.JumpEarlyRelease;
+            if (!data.jump.IsUsingJumpMinimumHeight) return;
+            data.jump.EarlyOutJump = data.jump.JumpEarlyRelease && data.physics.RigidBody.transform.position.y - data.jump.JumpTakeoffPoint.point.y > data.jump.MinimumJumpHeight;
         }
     }
     

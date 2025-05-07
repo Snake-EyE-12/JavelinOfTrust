@@ -7,14 +7,14 @@ namespace CharacterProcess.Gimmicks
     [Serializable]
     public class CharacterGravityGimmick : ICharacterGimmick
     {
-        [SerializeField] public float Gravity;
+        [SerializeField, Min(0)] public float Gravity;
         [SerializeField] public bool IsUsingTerminalVelocity;
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingTerminalVelocity))] public float TerminalVelocity;
-        [SerializeField] public bool IsUsingHoverTime;
-        [SerializeField, AllowNesting, ShowIf(nameof(IsUsingHoverTime))] public float HoverDuration;
-        [SerializeField, AllowNesting, ShowIf(nameof(IsUsingHoverTime))] public Curve GravityMultiplierCurve;
-        [SerializeField] public bool IsUsingMass;
-        [SerializeField, AllowNesting, ShowIf(nameof(IsUsingMass))] public float Weight;
+        //[SerializeField] public bool IsUsingHoverTime;
+        //[SerializeField, AllowNesting, ShowIf(nameof(IsUsingHoverTime))] public float HoverDuration;
+        //[SerializeField, AllowNesting, ShowIf(nameof(IsUsingHoverTime))] public Curve GravityMultiplierCurve;
+        //[SerializeField] public bool IsUsingMass;
+        //[SerializeField, AllowNesting, ShowIf(nameof(IsUsingMass))] public float Weight;
         /**/
         [HideInInspector] public float CalculatedMaxFallSpeed;
         [HideInInspector] public MovementVector2 CalculatedGravity;
@@ -24,10 +24,10 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (data.GroundContact.EnteredContact)
+            if (data.collision.GroundContact.EnteredContact)
             {
-                data.FallHeight = data.PeakHeight - data.RigidBody.transform.position.y;
-                data.PeakHeight = float.MinValue;
+                data.landing.FallHeight = data.landing.PeakHeight - data.physics.RigidBody.transform.position.y;
+                data.landing.PeakHeight = float.MinValue;
             }
         }
     }
@@ -36,8 +36,8 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingJumpUniqueAirControl) return;
-            if (!data.GroundContact.Contact) data.ActiveLocomotion = data.AirLocomotion;
+            if (!data.jump.IsUsingJumpUniqueAirControl) return;
+            if (!data.collision.GroundContact.Contact) data.locomotion.ActiveLocomotion = data.jump.AirLocomotion;
         }
     }
 
@@ -45,15 +45,15 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingTerminalVelocity) return;
-            data.CalculatedMaxFallSpeed = data.TerminalVelocity;
+            if (!data.gravity.IsUsingTerminalVelocity) return;
+            data.gravity.CalculatedMaxFallSpeed = data.gravity.TerminalVelocity;
         }
     }
     public class FallSpeedClamper : BaseCharacterProcessor
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (data.Velocity.Value.y < -data.CalculatedMaxFallSpeed) data.Velocity.Value.y = -data.CalculatedMaxFallSpeed;
+            if (data.locomotion.Velocity.Value.y < -data.gravity.CalculatedMaxFallSpeed) data.locomotion.Velocity.Value.y = -data.gravity.CalculatedMaxFallSpeed;
         }
     }
 
@@ -62,9 +62,8 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingGravity) return;
-            data.Acceleration.Additive.y += data.CalculatedGravity.y;
-            data.CalculatedGravity.Reset();
+            data.locomotion.Acceleration.Additive.y += data.gravity.CalculatedGravity.y;
+            data.gravity.CalculatedGravity.Reset();
         }
     }
 
@@ -72,8 +71,7 @@ namespace CharacterProcess.Gimmicks
     {
         public override void Operate(CharacterDataSettings data)
         {
-            if (!data.IsUsingGravity) return;
-            data.CalculatedGravity.Additive.y -= data.Gravity;
+            data.gravity.CalculatedGravity.Additive.y -= data.gravity.Gravity;
         }
     }
 }
