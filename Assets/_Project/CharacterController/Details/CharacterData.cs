@@ -17,8 +17,9 @@ public class CharacterDataSettings
     [SerializeField] public CharacterAdjustmentGimmick adjustment;
     [SerializeField] public CharacterCollisionGimmick collision;
     [SerializeField] public CharacterPhysicsGimmick physics;
+    [SerializeField] public CharacterAttackingGimmick attack;
 
-    
+
     //---------------------------------------------------------------------------------------
     /*
     [field:Header("Dash")]
@@ -55,9 +56,9 @@ public class CharacterDataSettings
     public bool IsUsingDashCollisionCancel { get; set; }
     */
     /**/
-    
+
     //---------------------------------------------------------------------------------------
-    
+
     /*
 Clipping Correction
 Corner Correction

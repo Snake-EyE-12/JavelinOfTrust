@@ -21,6 +21,8 @@ public class Javelin : MonoBehaviour
         startTime = Time.time;
     }
 
+    public float GetPowerThrownPercent() => power / minMaxPower.y;
+
     [SerializeField] private Rigidbody2D body;
     [SerializeField] private float fallOffVelocityTime;
     [SerializeField] private float inheritedPercent;
@@ -28,7 +30,6 @@ public class Javelin : MonoBehaviour
     {
         if (!inAir) return;
         float normalizedTimeHeld = Mathf.Clamp01((Time.time - startTime) / fallOffVelocityTime);
-        Debug.Log("percent of inherited: " + ((1 - normalizedTimeHeld) * inheritedPercent));
         body.linearVelocity = (dir * power) + ((1 - normalizedTimeHeld) * inheritedPercent * ownerVel);
     }
 
@@ -38,6 +39,20 @@ public class Javelin : MonoBehaviour
         inAir = false;
         body.linearVelocity = Vector2.zero;
         transform.position += ((Vector3)contact - collisionPoint.position);
+    }
+
+    public void HitMovingObject(Transform objectHit, Vector2 contactPoint)
+    {
+        HitWall(contactPoint);
+        if(objectHit.TryGetComponent(out Rigidbody2D hinge)) ConnectTo(hinge);
+    }
+
+    [SerializeField] private FixedJoint2D joint;
+    private void ConnectTo(Rigidbody2D hinge)
+    {
+        joint.enabled = true;
+        joint.connectedBody = hinge;
+        transform.SetParent(hinge.transform);
     }
 
     [SerializeField] private AnimationCurve powerCurve;

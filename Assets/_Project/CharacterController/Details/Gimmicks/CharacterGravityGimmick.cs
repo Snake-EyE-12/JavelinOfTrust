@@ -16,8 +16,8 @@ namespace CharacterProcess.Gimmicks
         //[SerializeField] public bool IsUsingMass;
         //[SerializeField, AllowNesting, ShowIf(nameof(IsUsingMass))] public float Weight;
         /**/
-        [HideInInspector] public float CalculatedMaxFallSpeed;
-        [HideInInspector] public MovementVector2 CalculatedGravity;
+        [NonSerialized] public float CalculatedMaxFallSpeed;
+        [NonSerialized] public MovementVector2 CalculatedGravity = new MovementVector2();
     }
     
     public class FallHeightCalculator : BaseCharacterProcessor

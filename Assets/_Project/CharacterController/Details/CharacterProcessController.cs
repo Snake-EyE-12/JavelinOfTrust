@@ -12,6 +12,7 @@ public class CharacterProcessController : MonoBehaviour
         chain
             .SetNext(new InputSetter())
             .SetNext(new JumpBufferListener())
+            .SetNext(new StartAttackListener())
             .SetNext(new GroundCollisionDetection()) 
             .SetNext(new GroundContactJumpResetter())
             .SetNext(new JumpCounterResetter())
@@ -25,6 +26,7 @@ public class CharacterProcessController : MonoBehaviour
             .SetNext(new ProcessLocomotionForwardAcceleration())
             .SetNext(new ProcessLocomotionReversalAcceleration())
             .SetNext(new ProcessLocomotionCoasting())
+            .SetNext(new ApplyAimingSlowness())
             .SetNext(new JumpCountUser())
             .SetNext(new JumpBufferApplicator())
             .SetNext(new JumpCoyoteInformant())
@@ -63,6 +65,7 @@ public class CharacterProcessController : MonoBehaviour
             .SetNext(new GapPositionCorrector())
             .SetNext(new MakeJumpCorrector())
             .SetNext(new HeadCollisionAvoidance())
+            .SetNext(new Attack())
             ;
     }
 

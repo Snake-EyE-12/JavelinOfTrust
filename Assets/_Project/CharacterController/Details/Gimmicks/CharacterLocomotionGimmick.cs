@@ -12,7 +12,7 @@ namespace CharacterProcess.Gimmicks
         [SerializeField] public CharacterLocomotionState WalkLocomotion;
         [SerializeField, Min(0)] public float HorizontalCutOffVelocity;
         /**/
-        [HideInInspector] public CharacterLocomotionState ActiveLocomotion;
+        [NonSerialized] public CharacterLocomotionState ActiveLocomotion;
     }
     
     public class AccelerationApplicator : BaseCharacterProcessor

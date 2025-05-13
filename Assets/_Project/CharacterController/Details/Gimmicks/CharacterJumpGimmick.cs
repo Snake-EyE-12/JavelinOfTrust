@@ -40,16 +40,16 @@ namespace CharacterProcess.Gimmicks
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpPreviousVelocityAlteration))] public Vector2 JumpingPreviousVelocityMultiplier;
         [SerializeField, AllowNesting, ShowIf(nameof(IsUsingJumpPreviousVelocityAlteration))] public Vector2 JumpingPreviousAccelerationMultiplier;
         /**/
-        [HideInInspector] public bool InApex;
-        [HideInInspector] public float TimeOfJumpPressed;
-        [HideInInspector] public bool JumpEarlyRelease;
-        [HideInInspector] public bool EarlyOutJump;
-        [HideInInspector] public bool ShouldJump;
-        [HideInInspector] public bool InJump;
-        [HideInInspector] public JumpPoint JumpTakeoffPoint = new JumpPoint();
-        [HideInInspector] public SVector2 CalculatedJumpForce = new SVector2();
-        [HideInInspector] public bool InJumpArc;
-        [HideInInspector] public int JumpCount;
+        [NonSerialized] public bool InApex;
+        [NonSerialized] public float TimeOfJumpPressed;
+        [NonSerialized] public bool JumpEarlyRelease;
+        [NonSerialized] public bool EarlyOutJump;
+        [NonSerialized] public bool ShouldJump;
+        [NonSerialized] public bool InJump;
+        [NonSerialized] public JumpPoint JumpTakeoffPoint = new JumpPoint();
+        [NonSerialized] public SVector2 CalculatedJumpForce = new SVector2();
+        [NonSerialized] public bool InJumpArc;
+        [NonSerialized] public int JumpCount;
     }
 
     public class JumpCountUser : BaseCharacterProcessor

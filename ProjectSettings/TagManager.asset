@@ -3,7 +3,9 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Bird
+  - Target
   layers:
   - Default
   - TransparentFX
@@ -16,14 +18,14 @@ TagManager:
   - World
   - Platform
   - 
+  - Target
   - 
   - 
+  - Player
   - 
+  - PixelShader
   - 
-  - 
-  - 
-  - 
-  - 
+  - Spear
   - 
   - 
   - 
@@ -40,6 +42,30 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Background
+    uniqueID: 1150290387
+    locked: 0
+  - name: background Details
+    uniqueID: 3812696771
+    locked: 0
+  - name: Background Creatures
+    uniqueID: 1780926881
+    locked: 0
+  - name: SpearHead
+    uniqueID: 1564105529
+    locked: 0
+  - name: Floor Items
+    uniqueID: 517857325
+    locked: 0
+  - name: Ground
+    uniqueID: 1914875041
+    locked: 0
+  - name: Spear
+    uniqueID: 1226194869
+    locked: 0
+  - name: Player
+    uniqueID: 4294913441
     locked: 0
   m_RenderingLayers:
   - Default

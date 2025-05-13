@@ -20,8 +20,8 @@ namespace CharacterProcess.Gimmicks
         //[SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingVelocityBurst))] public float LandingBurstAngle;
         //[SerializeField, AllowNesting, ShowIf(nameof(IsUsingLandingVelocityBurst))] public float LandingBurstForce;
         /**/
-        [HideInInspector] public float PeakHeight;
-        [HideInInspector] public float FallHeight;
+        [NonSerialized] public float PeakHeight;
+        [NonSerialized] public float FallHeight;
     }
     
     public class LandingFrictionApplicator : BaseCharacterProcessor
