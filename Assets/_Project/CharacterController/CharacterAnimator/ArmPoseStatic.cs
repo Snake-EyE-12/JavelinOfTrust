@@ -13,6 +13,7 @@ public class ArmPoseStatic : CharacterArmState
 
     public override void Tick(CharacterDataSettings data)
     {
-        leftHand.position = Vector3.Lerp(leftHand.position, leftHandDestination, lerpSpeed);
+        leftHand.position = Vector3.Lerp(leftHand.position, leftPreset + transform.position, lerpSpeed);
+        rightHand.position = Vector3.Lerp(rightHand.position, rightPreset + transform.position, lerpSpeed);
     }
 }

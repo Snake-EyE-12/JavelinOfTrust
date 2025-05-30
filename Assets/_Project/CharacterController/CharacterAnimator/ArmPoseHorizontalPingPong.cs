@@ -15,6 +15,7 @@ public class ArmPoseHorizontalPingPong : CharacterArmState
 
     public override void Tick(CharacterDataSettings data)
     {
-        leftHand.position = Vector3.Lerp(leftHand.position + Vector3.right * ((Mathf.PingPong(Time.time * pingPongSpeed, span)) - (span * 0.5f)), leftHandDestination, lerpSpeed);
+        leftHand.position = Vector3.Lerp(leftHand.position + Vector3.right * ((Mathf.PingPong(Time.time * pingPongSpeed, span)) - (span * 0.5f)), leftPreset + transform.position, lerpSpeed);
+        rightHand.position = Vector3.Lerp(rightHand.position + Vector3.right * ((Mathf.PingPong(Time.time * pingPongSpeed, span)) - (span * 0.5f)), rightPreset + transform.position, lerpSpeed);
     }
 }

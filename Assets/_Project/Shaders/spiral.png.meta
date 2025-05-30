@@ -435,7 +435,19 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      spiral_0: -2507022010289347524
+      spiral_1: 7896397963940786992
+      spiral_10: 8784749101140472221
+      spiral_11: 7276099258116525948
+      spiral_2: -8429315868133687778
+      spiral_3: -8721185468393579516
+      spiral_4: 6725172585624395711
+      spiral_5: 6000538439049714456
+      spiral_6: 7927558469573637196
+      spiral_7: 3487246930416671887
+      spiral_8: -6887723199987677244
+      spiral_9: 3363955481407979040
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

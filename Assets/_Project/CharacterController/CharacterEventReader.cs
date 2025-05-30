@@ -73,11 +73,11 @@ public class CharacterEventReader : MonoBehaviour
         jumping = false;
         movingHorizontally = Mathf.Abs(data.locomotion.Velocity.Value.x) > 0.01f;
         rising = data.locomotion.Velocity.Value.y > 0.01f;
-        falling = data.locomotion.Velocity.Value.y < -0.01f;
+        falling = data.locomotion.Velocity.Value.y < -0.01f && !data.collision.GroundContact.Contact;
     }
-    private void CalculateState()
+
+    private void CalcArms()
     {
-        // Arms
         if(throwing) SwitchArmState(armsThrowing);
         else
         {
@@ -96,8 +96,10 @@ public class CharacterEventReader : MonoBehaviour
                 }
             }
         }
-        
-        // Legs
+    }
+
+    private void CalcLegs()
+    {
         if(jumping) SwitchLegState(legsTakeOff);
         else
         {
@@ -112,6 +114,11 @@ public class CharacterEventReader : MonoBehaviour
                 }
             }
         }
+    }
+    private void CalculateState()
+    {
+        CalcArms();
+        CalcLegs();
     }
 
 
@@ -160,37 +167,37 @@ public abstract class CharacterLimbPoser : MonoBehaviour
 }
 public abstract class CharacterArmState : CharacterLimbPoser, ICharacterEventStateBase
 {
-    [SerializeField] protected Vector3 leftHandDestination;
-    [SerializeField] protected Vector3 rightHandDestination;
+    [SerializeField] protected Vector3 leftPreset;
+    [SerializeField] protected Vector3 rightPreset;
     public abstract void Exit();
 
     public abstract void Enter();
 
     public abstract void Tick(CharacterDataSettings data);
 
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(leftHandDestination + transform.position, 0.1f);
+        Gizmos.DrawSphere(leftPreset + transform.position, 0.1f);
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(rightHandDestination + transform.position, 0.1f);
+        Gizmos.DrawSphere(rightPreset + transform.position, 0.1f);
     }
 }
 public abstract class CharacterLegState : CharacterLimbPoser, ICharacterEventStateBase
 {
-    [SerializeField] protected Vector3 leftFootDestination;
-    [SerializeField] protected Vector3 rightFootDestination;
+    [SerializeField] protected Vector3 leftPreset;
+    [SerializeField] protected Vector3 rightPreset;
     public abstract void Exit();
 
     public abstract void Enter();
 
     public abstract void Tick(CharacterDataSettings data);
     
-    private void OnDrawGizmosSelected()
+    protected virtual void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(leftFootDestination + transform.position, 0.1f);
+        Gizmos.DrawSphere(leftPreset + transform.position, 0.1f);
         Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(rightFootDestination + transform.position, 0.1f);
+        Gizmos.DrawSphere(rightPreset + transform.position, 0.1f);
     }
 }
