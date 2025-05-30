@@ -36,6 +36,7 @@ public class Javelin : MonoBehaviour
     [SerializeField] private Transform collisionPoint;
     public void HitWall(Vector2 contact)
     {
+        if(!inAir) return;
         inAir = false;
         body.linearVelocity = Vector2.zero;
         transform.position += ((Vector3)contact - collisionPoint.position);
@@ -43,6 +44,7 @@ public class Javelin : MonoBehaviour
 
     public void HitMovingObject(Transform objectHit, Vector2 contactPoint)
     {
+        if(!inAir) return;
         HitWall(contactPoint);
         if(objectHit.TryGetComponent(out Rigidbody2D hinge)) ConnectTo(hinge);
     }

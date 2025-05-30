@@ -10,6 +10,9 @@ public class CharacterAttackingGimmick : ICharacterGimmick
     /**/
     [NonSerialized] public float timeOfAttackStart;
     [NonSerialized] public bool attacking;
+    /**/
+    public Action OnStartAttackEvent = delegate { };
+    public Action OnEndAttackEvent = delegate { };
 }
 
 public class StartAttackListener : BaseCharacterProcessor
@@ -20,6 +23,7 @@ public class StartAttackListener : BaseCharacterProcessor
         {
             data.attack.timeOfAttackStart = Time.time;
             data.attack.attacking = true;
+            data.attack.OnStartAttackEvent.Invoke();
         }
     }
 }
@@ -40,9 +44,10 @@ public class Attack : BaseCharacterProcessor
         {
             Vector2 inputDirection = data.input.Input.direction;
             if (inputDirection == Vector2.zero) inputDirection = new Vector2(data.input.lastMovementDirection.x, 0);
-            Javelin javelin = GameObject.Instantiate(data.attack.javelinPrefab, data.physics.RigidBody.transform.position, data.physics.RigidBody.transform.rotation, data.physics.RigidBody.transform);
+            Javelin javelin = GameObject.Instantiate(data.attack.javelinPrefab, data.physics.RigidBody.transform.position, data.physics.RigidBody.transform.rotation);
             javelin.Throw(Time.time - data.attack.timeOfAttackStart, data.locomotion.Velocity.Value, data.physics.RigidBody.transform, inputDirection);
             data.attack.attacking = false;
+            data.attack.OnEndAttackEvent.Invoke();
         }
     }
 }

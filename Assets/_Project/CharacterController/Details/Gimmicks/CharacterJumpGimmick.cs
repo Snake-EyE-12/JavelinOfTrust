@@ -50,6 +50,8 @@ namespace CharacterProcess.Gimmicks
         [NonSerialized] public SVector2 CalculatedJumpForce = new SVector2();
         [NonSerialized] public bool InJumpArc;
         [NonSerialized] public int JumpCount;
+        /**/
+        public Action OnJumpEvent = delegate { };
     }
 
     public class JumpCountUser : BaseCharacterProcessor
@@ -176,6 +178,7 @@ namespace CharacterProcess.Gimmicks
                 data.jump.JumpTakeoffPoint.point = data.physics.RigidBody.transform.position;
                 data.jump.JumpTakeoffPoint.time = Time.time;
                 data.locomotion.Velocity.Value += data.jump.CalculatedJumpForce.Value;
+                data.jump.OnJumpEvent.Invoke();
             }
         }
     }

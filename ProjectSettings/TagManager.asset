@@ -61,6 +61,9 @@ TagManager:
   - name: Ground
     uniqueID: 1914875041
     locked: 0
+  - name: GroundGrass
+    uniqueID: 1436075101
+    locked: 0
   - name: Spear
     uniqueID: 1226194869
     locked: 0

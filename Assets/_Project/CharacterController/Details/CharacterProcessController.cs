@@ -79,6 +79,7 @@ public class CharacterProcessController : MonoBehaviour
     {
         chain.Process(data);
     }
+    public CharacterDataSettings GetData() => data;
 
     private void OnDrawGizmosSelected()
     {

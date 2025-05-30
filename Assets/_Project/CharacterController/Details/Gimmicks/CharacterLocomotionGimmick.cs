@@ -13,6 +13,8 @@ namespace CharacterProcess.Gimmicks
         [SerializeField, Min(0)] public float HorizontalCutOffVelocity;
         /**/
         [NonSerialized] public CharacterLocomotionState ActiveLocomotion;
+        /**/
+        public Action OnZeroedVelocityEvent = delegate { };
     }
     
     public class AccelerationApplicator : BaseCharacterProcessor
@@ -76,6 +78,7 @@ namespace CharacterProcess.Gimmicks
             {
                 data.locomotion.Velocity.Value.x = 0;
                 data.locomotion.Acceleration.Additive.x = 0;
+                data.locomotion.OnZeroedVelocityEvent.Invoke();
             }
         }
     }

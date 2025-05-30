@@ -617,8 +617,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inAir: 0
   body: {fileID: 7270281038603506728}
-  fallOffVelocityTime: 0.3
-  inheritedPercent: 0.9
+  fallOffVelocityTime: 0.2
+  inheritedPercent: 0.2
   collisionPoint: {fileID: 4006036253575020101}
   joint: {fileID: 7823202641671458281}
   powerCurve:
